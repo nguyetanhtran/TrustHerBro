@@ -20,6 +20,5 @@ npm run dev
 
 Tạo giá trị trong `.env.local`:
 
-- `OPENAI_API_KEY`
-- `VBEE_API_KEY`
+- `OPENAI_API_KEY` (chat + text-to-speech)
 - `MAPS_API_KEY`
