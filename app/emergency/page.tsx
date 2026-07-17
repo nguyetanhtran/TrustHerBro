@@ -1,5 +1,4 @@
 import type { CSSProperties } from "react";
-import { ModeIndicator } from "../../components/mode-switch/ModeIndicator";
 import emergencyContacts from "../../lib/data/emergencyContacts.json";
 
 const cardStyle: CSSProperties = {
@@ -40,15 +39,14 @@ const numberButtonStyle: CSSProperties = {
 export default function EmergencyPage() {
   return (
     <main style={{ maxWidth: 860, margin: "0 auto", padding: "40px 24px 72px" }}>
-      <ModeIndicator mode="emergency" label="Emergency" />
       <h1>Get help now</h1>
       <p>
         Big buttons, no typing required. This page works even on a weak
-        connection — the numbers below dial directly from your phone.
+        connection - the numbers below dial directly from your phone.
       </p>
 
       <a href="tel:113" style={sosButtonStyle}>
-        SOS — Call Police (113)
+        SOS - Call Police (113)
       </a>
 
       <section style={cardStyle}>
@@ -56,7 +54,22 @@ export default function EmergencyPage() {
         <div style={{ display: "grid", gap: 12, marginTop: 12 }}>
           {emergencyContacts.localEmergencyNumbers.map((entry) => (
             <a key={entry.number} href={`tel:${entry.number}`} style={numberButtonStyle}>
-              {entry.label} — {entry.number}
+              {entry.label} - {entry.number}
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <section style={cardStyle}>
+        <strong>Tourist support hotlines</strong>
+        <div style={{ display: "grid", gap: 12, marginTop: 12 }}>
+          {emergencyContacts.touristSupportNumbers.map((entry) => (
+            <a
+              key={entry.number}
+              href={`tel:${entry.number.replace(/\s/g, "")}`}
+              style={numberButtonStyle}
+            >
+              {entry.label} - {entry.number}
             </a>
           ))}
         </div>
@@ -74,7 +87,18 @@ export default function EmergencyPage() {
 
       <section style={cardStyle}>
         <strong>Nearest hospital</strong>
-        <p style={{ marginBottom: 0 }}>{emergencyContacts.hospitalGuidance}</p>
+        <p>{emergencyContacts.hospitalGuidance}</p>
+        <div style={{ display: "grid", gap: 12 }}>
+          {emergencyContacts.hospitals.map((hospital) => (
+            <a
+              key={`${hospital.name}-${hospital.city}`}
+              href={`tel:${hospital.phone.replace(/\s/g, "")}`}
+              style={numberButtonStyle}
+            >
+              {hospital.name} ({hospital.city}) - {hospital.phone}
+            </a>
+          ))}
+        </div>
       </section>
 
       <section style={cardStyle}>
@@ -87,7 +111,7 @@ export default function EmergencyPage() {
               href={`tel:${embassy.phone.replace(/\s/g, "")}`}
               style={numberButtonStyle}
             >
-              {embassy.country} ({embassy.city}) — {embassy.phone}
+              {embassy.country} ({embassy.city}) - {embassy.phone}
             </a>
           ))}
         </div>

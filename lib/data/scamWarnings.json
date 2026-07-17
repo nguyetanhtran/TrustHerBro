@@ -1,14 +1,115 @@
 [
   {
+    "id": "bird-food-photo",
     "title": "Bird-food photo scam",
-    "description": "A stranger hands over bird food or props for photos, then demands inflated payment."
+    "category": "street",
+    "description": "A stranger hands over bird food or props for photos, then demands inflated payment.",
+    "signals": [
+      "someone insists you hold or wear something",
+      "a photo is taken before any price is mentioned",
+      "payment is demanded only afterwards",
+      "common around Hoan Kiem Lake and tourist landmarks"
+    ],
+    "howToHandle": [
+      "Politely hand the item straight back and keep walking.",
+      "Do not accept 'free' gifts or props from strangers.",
+      "If pressured, say you have no cash and move toward a crowd."
+    ]
   },
   {
+    "id": "taxi-meter-refusal",
     "title": "Taxi meter refusal",
-    "description": "Drivers avoid the meter and pressure travelers into unclear fixed prices after pickup."
+    "category": "transport",
+    "description": "Drivers avoid the meter and pressure travelers into an unclear fixed price after pickup.",
+    "signals": [
+      "driver refuses to start the meter",
+      "a fixed price is offered only after you get in",
+      "price feels much higher than a ride-hailing estimate"
+    ],
+    "howToHandle": [
+      "Ask for the meter before departure; if refused, don't board.",
+      "Compare with a Grab/Be estimate first.",
+      "Prefer Grab, Be, or the official airport taxi rank."
+    ]
   },
   {
+    "id": "meter-tampering",
+    "title": "Fast / tampered meter",
+    "category": "transport",
+    "description": "The meter runs abnormally fast or jumps, inflating the fare far above the real distance.",
+    "signals": [
+      "meter climbs unusually fast",
+      "fare far exceeds the ride-hailing estimate for the same route",
+      "driver takes a longer detour"
+    ],
+    "howToHandle": [
+      "Screenshot the Grab/Be estimate before the trip as a reference.",
+      "Note the plate and only pay the reasonable amount.",
+      "Ask to be dropped at a busy, staffed place and leave."
+    ]
+  },
+  {
+    "id": "money-exchange-swap",
+    "title": "Money-exchange short-change",
+    "category": "money",
+    "description": "At an unofficial exchange counter the total is short-changed or bills are swapped by sleight of hand.",
+    "signals": [
+      "exchange done on the street or in a shop, not a bank",
+      "notes counted quickly then handed back to 'recount'",
+      "rate is suspiciously good"
+    ],
+    "howToHandle": [
+      "Only exchange at banks or licensed counters.",
+      "Count the money yourself and don't hand it back.",
+      "Know the current rate before you exchange."
+    ]
+  },
+  {
+    "id": "ghost-tour",
+    "title": "Ghost / unlicensed tour",
+    "category": "tour",
+    "description": "A tour is sold cheaply on the street or online but is unlicensed, downgraded, or never shows up.",
+    "signals": [
+      "sold by a stranger or an unverifiable page",
+      "full payment demanded upfront in cash",
+      "no company name, license, or reviews you can check"
+    ],
+    "howToHandle": [
+      "Book through your hotel or a reviewable platform.",
+      "Avoid paying the full amount in cash upfront.",
+      "Verify the company name and recent reviews first."
+    ]
+  },
+  {
+    "id": "overpriced-menu",
+    "title": "No-price / tourist menu overcharge",
+    "category": "money",
+    "description": "A place has no printed prices (or a separate tourist menu) and charges far above normal at the end.",
+    "signals": [
+      "no prices shown on the menu or board",
+      "staff won't confirm the price before serving",
+      "bill is far higher than expected"
+    ],
+    "howToHandle": [
+      "Ask for the exact price before ordering.",
+      "Prefer places with clearly printed prices.",
+      "Take a photo of the menu/price board when you order."
+    ]
+  },
+  {
+    "id": "hotel-closed-redirect",
     "title": "Hotel closed redirect",
-    "description": "A stranger claims your hotel is closed and tries to redirect you to a different property."
+    "category": "accommodation",
+    "description": "A stranger or driver claims your hotel is closed or full and tries to redirect you to a different property.",
+    "signals": [
+      "someone volunteers that your booking is closed/full",
+      "they push a different hotel they 'know'",
+      "they discourage you from calling your hotel"
+    ],
+    "howToHandle": [
+      "Call your hotel directly to confirm.",
+      "Ignore unsolicited redirects and go to your booked address.",
+      "Don't hand over your phone, passport, or booking details."
+    ]
   }
 ]

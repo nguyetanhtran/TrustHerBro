@@ -1,0 +1,44 @@
+[
+  {
+    "id": "leave-me-alone",
+    "category": "boundary",
+    "vietnamese": "Làm ơn để tôi yên.",
+    "phonetic": "lam uhn deh toy yehn",
+    "english": "Please leave me alone."
+  },
+  {
+    "id": "help-directions",
+    "category": "cover",
+    "vietnamese": "Cho tôi hỏi đường một chút.",
+    "phonetic": "cho toy hoy duong mot chut",
+    "english": "Can you help me with directions?"
+  },
+  {
+    "id": "calling-hotel",
+    "category": "cover",
+    "vietnamese": "Tôi đang gọi cho khách sạn của tôi.",
+    "phonetic": "toy dang goy cho khak san cua toy",
+    "english": "I'm calling my hotel."
+  },
+  {
+    "id": "waiting-for-friend",
+    "category": "cover",
+    "vietnamese": "Tôi đang đợi bạn của tôi ở đây.",
+    "phonetic": "toy dang doy ban cua toy uh day",
+    "english": "I'm waiting for my friend here."
+  },
+  {
+    "id": "need-help",
+    "category": "help",
+    "vietnamese": "Làm ơn giúp tôi.",
+    "phonetic": "lam uhn zoop toy",
+    "english": "Please help me."
+  },
+  {
+    "id": "stop-here",
+    "category": "transport",
+    "vietnamese": "Cho tôi xuống đây.",
+    "phonetic": "cho toy zoong day",
+    "english": "Let me out here."
+  }
+]

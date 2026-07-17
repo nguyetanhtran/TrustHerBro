@@ -5,7 +5,7 @@ import { useState } from "react";
 import type { TrustCheckResult } from "../../lib/ai/types";
 import { ChatInput } from "../../components/shared/ChatInput";
 import { TrustBadge } from "../../components/shared/TrustBadge";
-import { ModeIndicator } from "../../components/mode-switch/ModeIndicator";
+import { VoiceScamCheck } from "../../components/assistant/VoiceScamCheck";
 
 const cardStyle: CSSProperties = {
   padding: 20,
@@ -44,7 +44,6 @@ export default function AssistantPage() {
 
   return (
     <main style={{ maxWidth: 860, margin: "0 auto", padding: "40px 24px 72px" }}>
-      <ModeIndicator mode="assistant" label="Assistant" />
       <h1>Ask about a price, place, or person</h1>
       <p>
         Type a taxi fare, a hotel name, or a situation and get a trust check
@@ -91,6 +90,8 @@ export default function AssistantPage() {
           ) : null}
         </section>
       ) : null}
+
+      <VoiceScamCheck />
 
       <section style={cardStyle}>
         <strong>Q:</strong> Is this taxi price normal from the airport?
