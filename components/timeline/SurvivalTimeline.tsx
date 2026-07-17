@@ -4,9 +4,11 @@ import { TimelineStepCard } from "./TimelineStepCard";
 export function SurvivalTimeline({
   title,
   steps,
+  accommodation,
 }: {
   title: string;
   steps: TimelineStep[];
+  accommodation?: string;
 }) {
   return (
     <section
@@ -21,7 +23,7 @@ export function SurvivalTimeline({
     >
       <h2 style={{ margin: 0 }}>{title}</h2>
       {steps.map((step) => (
-        <TimelineStepCard key={step.id} step={step} />
+        <TimelineStepCard key={step.id} step={step} accommodation={accommodation} />
       ))}
     </section>
   );
