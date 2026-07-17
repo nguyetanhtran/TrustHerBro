@@ -22,7 +22,7 @@ export function DiscreetModeToggle({
       <span>
         <strong>Discreet Mode</strong>
         <br />
-        <small>Voice guidance via Vbee TTS</small>
+        <small>English guidance read quietly through your earphones</small>
       </span>
       <input
         type="checkbox"
