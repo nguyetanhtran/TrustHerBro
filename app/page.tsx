@@ -1,6 +1,8 @@
 import type { CSSProperties } from "react";
 import Link from "next/link";
+import { cookies } from "next/headers";
 import { ModeIndicator } from "../components/mode-switch/ModeIndicator";
+import { createClient } from "../utils/supabase/server";
 
 const shellStyle: CSSProperties = {
   maxWidth: 1100,
@@ -33,7 +35,11 @@ const cardStyle: CSSProperties = {
   border: "1px solid #e2e8f0",
 };
 
-export default function HomePage() {
+export default async function HomePage() {
+  const cookieStore = await cookies();
+  const supabase = createClient(cookieStore);
+  const { data: todos } = await supabase.from("todos").select();
+
   return (
     <main style={shellStyle}>
       <div style={heroCard}>
@@ -46,6 +52,23 @@ export default function HomePage() {
           onboarding, jump into Safety Mode, or open static stubs for assistant
           and emergency flows.
         </p>
+
+        <section
+          style={{
+            marginTop: 20,
+            padding: 18,
+            borderRadius: 18,
+            background: "#f8fafc",
+            border: "1px solid #e2e8f0",
+          }}
+        >
+          <strong>Supabase Todos</strong>
+          <ul style={{ marginBottom: 0 }}>
+            {todos?.map((todo) => (
+              <li key={todo.id}>{todo.name}</li>
+            )) ?? <li>No todos found.</li>}
+          </ul>
+        </section>
 
         <div style={gridStyle}>
           <Link href="/onboarding" style={cardStyle}>
