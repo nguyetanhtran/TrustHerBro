@@ -1,0 +1,6 @@
+[
+  { "name": "Old Quarter Hostel", "city": "Hà Nội", "area": "Hoan Kiem", "femaleRating": 9.3, "reviewCount": 42 },
+  { "name": "Hanoi Backpackers Hostel", "city": "Hà Nội", "area": "Old Quarter", "femaleRating": 8.9, "reviewCount": 65 },
+  { "name": "Saigon Street Hostel", "city": "TP. Hồ Chí Minh", "area": "District 1", "femaleRating": 9.0, "reviewCount": 38 },
+  { "name": "Danang Beach Hostel", "city": "Đà Nẵng", "area": "My Khe Beach", "femaleRating": 9.1, "reviewCount": 27 }
+]
