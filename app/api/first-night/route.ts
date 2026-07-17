@@ -5,8 +5,8 @@ import type { OnboardingAnswers, SurvivalTimelinePayload } from "../../../lib/ai
 import { sampleTimeline } from "../../../lib/ai/types";
 
 function buildFallbackTimeline(answers: Partial<OnboardingAnswers>): SurvivalTimelinePayload {
-  const city = answers.destination || "your destination";
-  const hotel = answers.stayType || "your accommodation";
+  const city = answers.city || "your destination";
+  const hotel = answers.accommodation || "your accommodation";
 
   return {
     title: `First night plan for ${city}`,
@@ -51,7 +51,7 @@ export async function POST(request: Request) {
 
   try {
     const result = await runOpenAIJson<SurvivalTimelinePayload>({
-      systemPrompt: buildFirstNightPrompt(),
+      systemPrompt: buildFirstNightPrompt(answers),
       userPrompt: JSON.stringify(answers),
       fallback,
     });

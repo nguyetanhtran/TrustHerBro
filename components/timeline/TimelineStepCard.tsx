@@ -1,4 +1,6 @@
 import type { TimelineStep } from "../../lib/ai/types";
+import { buildMapsSearchLink } from "../../lib/utils/mapsLink";
+import { TrustBadge } from "../shared/TrustBadge";
 
 const colors: Record<TimelineStep["riskLevel"], string> = {
   low: "#dcfce7",
@@ -6,7 +8,15 @@ const colors: Record<TimelineStep["riskLevel"], string> = {
   high: "#fee2e2",
 };
 
-export function TimelineStepCard({ step }: { step: TimelineStep }) {
+export function TimelineStepCard({
+  step,
+  accommodation,
+}: {
+  step: TimelineStep;
+  accommodation?: string;
+}) {
+  const isCheckinStep = step.id === "checkin" || step.id === "hotel";
+
   return (
     <article
       style={{
@@ -31,6 +41,20 @@ export function TimelineStepCard({ step }: { step: TimelineStep }) {
       </div>
       <p style={{ marginBottom: 8 }}>{step.description}</p>
       <small style={{ color: "#475569" }}>{step.time}</small>
+
+      <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 10, flexWrap: "wrap" }}>
+        {typeof step.trustScore === "number" ? <TrustBadge score={step.trustScore} /> : null}
+        {isCheckinStep && accommodation ? (
+          <a
+            href={buildMapsSearchLink(`${accommodation}, Vietnam`)}
+            target="_blank"
+            rel="noreferrer"
+            style={{ fontSize: 13, fontWeight: 600, color: "#ea580c" }}
+          >
+            Open in Google Maps
+          </a>
+        ) : null}
+      </div>
     </article>
   );
 }
