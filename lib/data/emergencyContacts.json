@@ -1,0 +1,13 @@
+{
+  "localEmergencyNumbers": [
+    { "label": "Police", "number": "113" },
+    { "label": "Fire", "number": "114" },
+    { "label": "Ambulance / Medical", "number": "115" }
+  ],
+  "embassyGuidance": "Save your embassy's 24/7 citizen hotline before you travel. Search \"[your country] embassy Vietnam emergency contact\" and add it to your phone's favorites.",
+  "hospitalGuidance": "Search \"bệnh viện gần đây\" (nearest hospital) in Google Maps or ask hotel/hostel staff — this works even with basic Vietnamese.",
+  "helpPhrase": {
+    "vietnamese": "Xin lỗi, tôi đang gặp nguy hiểm và cần giúp đỡ. Xin hãy gọi số 113 (công an) hoặc 115 (cấp cứu) giúp tôi. Cảm ơn bạn.",
+    "english": "Sorry, I am in danger and need help. Please call 113 (police) or 115 (ambulance) for me. Thank you."
+  }
+}
