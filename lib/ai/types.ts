@@ -16,6 +16,7 @@ export type TimelineStep = {
   title: string;
   description: string;
   riskLevel: "low" | "medium" | "high";
+  trustScore?: number;
 };
 
 export type SurvivalTimelinePayload = {

@@ -1,0 +1,12 @@
+[
+  { "city": "Hà Nội", "route": "Noi Bai Airport → Old Quarter", "method": "Grab", "priceRangeVnd": [180000, 220000], "etaMin": 45 },
+  { "city": "Hà Nội", "route": "Noi Bai Airport → Old Quarter", "method": "Airport bus (86)", "priceRangeVnd": [30000, 45000], "etaMin": 60 },
+  { "city": "Hà Nội", "route": "Noi Bai Airport → Old Quarter", "method": "Metered taxi", "priceRangeVnd": [200000, 280000], "etaMin": 45, "note": "estimate, insist the driver uses the meter" },
+
+  { "city": "TP. Hồ Chí Minh", "route": "Tan Son Nhat Airport → District 1", "method": "Grab", "priceRangeVnd": [120000, 160000], "etaMin": 30 },
+  { "city": "TP. Hồ Chí Minh", "route": "Tan Son Nhat Airport → District 1", "method": "Bus 109", "priceRangeVnd": [20000, 20000], "etaMin": 45 },
+  { "city": "TP. Hồ Chí Minh", "route": "Tan Son Nhat Airport → District 1", "method": "Metered taxi", "priceRangeVnd": [150000, 200000], "etaMin": 30, "note": "estimate, insist the driver uses the meter" },
+
+  { "city": "Đà Nẵng", "route": "Da Nang Airport → City Center", "method": "Grab", "priceRangeVnd": [60000, 90000], "etaMin": 15 },
+  { "city": "Đà Nẵng", "route": "Da Nang Airport → City Center", "method": "Metered taxi", "priceRangeVnd": [80000, 120000], "etaMin": 15, "note": "estimate, insist the driver uses the meter" }
+]
