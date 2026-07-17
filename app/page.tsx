@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { ModeIndicator } from "../components/mode-switch/ModeIndicator";
+import { ModeRouterEntry } from "../components/mode-switch/ModeRouterEntry";
 import { createClient } from "../utils/supabase/server";
 
 const shellStyle: CSSProperties = {
@@ -52,6 +53,8 @@ export default async function HomePage() {
           onboarding, jump into Safety Mode, or open static stubs for assistant
           and emergency flows.
         </p>
+
+        <ModeRouterEntry />
 
         <section
           style={{

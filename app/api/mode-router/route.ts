@@ -5,10 +5,10 @@ import type { AppMode } from "../../../lib/ai/types";
 
 function detectMode(input: string): AppMode {
   const text = input.toLowerCase();
-  if (/(unsafe|followed|scared|help now|danger|emergency)/.test(text)) {
+  if (/(unsafe|follow|scared|help now|danger|emergency)/.test(text)) {
     return "safety";
   }
-  if (/(first night|just arrived|new city|arrive|landing)/.test(text)) {
+  if (/(first night|just arrived|just landed|new city|arriv|landing)/.test(text)) {
     return "first-night";
   }
   if (/(sos|ambulance|police|attack)/.test(text)) {
