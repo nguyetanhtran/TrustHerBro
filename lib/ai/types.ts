@@ -1,13 +1,13 @@
 export type AppMode = "assistant" | "first-night" | "safety" | "emergency";
 
 export type OnboardingAnswers = {
-  destination: string;
+  city: string;
   arrivalTime: string;
-  transportPlan: string;
-  stayType: string;
-  budgetLevel: string;
-  languageComfort: string;
-  topConcern: string;
+  accommodation: string;
+  travelingAlone: boolean;
+  firstTimeInVN: boolean;
+  hasTransport: boolean;
+  hasMobileData: boolean;
 };
 
 export type TimelineStep = {
