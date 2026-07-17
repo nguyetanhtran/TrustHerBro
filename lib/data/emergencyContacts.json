@@ -7,7 +7,6 @@
   "embassyGuidance": "Numbers below are unverified — confirm on your embassy's official site before relying on them. Not your country listed? Search \"[your country] embassy Vietnam emergency contact\".",
   "embassies": [
     { "country": "United States", "city": "Hanoi", "phone": "+84 24 3850 5000" },
-    { "country": "United States (Consulate)", "city": "Ho Chi Minh City", "phone": "+84 28 3520 4200" },
     { "country": "United Kingdom", "city": "Hanoi", "phone": "+84 24 3936 0500" },
     { "country": "Australia", "city": "Hanoi", "phone": "+84 24 3774 0100" },
     { "country": "Canada", "city": "Hanoi", "phone": "+84 24 3734 5000" }
