@@ -4,7 +4,14 @@
     { "label": "Fire", "number": "114" },
     { "label": "Ambulance / Medical", "number": "115" }
   ],
-  "embassyGuidance": "Save your embassy's 24/7 citizen hotline before you travel. Search \"[your country] embassy Vietnam emergency contact\" and add it to your phone's favorites.",
+  "embassyGuidance": "Numbers below are unverified — confirm on your embassy's official site before relying on them. Not your country listed? Search \"[your country] embassy Vietnam emergency contact\".",
+  "embassies": [
+    { "country": "United States", "city": "Hanoi", "phone": "+84 24 3850 5000" },
+    { "country": "United States (Consulate)", "city": "Ho Chi Minh City", "phone": "+84 28 3520 4200" },
+    { "country": "United Kingdom", "city": "Hanoi", "phone": "+84 24 3936 0500" },
+    { "country": "Australia", "city": "Hanoi", "phone": "+84 24 3774 0100" },
+    { "country": "Canada", "city": "Hanoi", "phone": "+84 24 3734 5000" }
+  ],
   "hospitalGuidance": "Search \"bệnh viện gần đây\" (nearest hospital) in Google Maps or ask hotel/hostel staff — this works even with basic Vietnamese.",
   "helpPhrase": {
     "vietnamese": "Xin lỗi, tôi đang gặp nguy hiểm và cần giúp đỡ. Xin hãy gọi số 113 (công an) hoặc 115 (cấp cứu) giúp tôi. Cảm ơn bạn.",

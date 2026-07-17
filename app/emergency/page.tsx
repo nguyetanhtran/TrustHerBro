@@ -79,7 +79,18 @@ export default function EmergencyPage() {
 
       <section style={cardStyle}>
         <strong>Embassy contact</strong>
-        <p style={{ marginBottom: 0 }}>{emergencyContacts.embassyGuidance}</p>
+        <p>{emergencyContacts.embassyGuidance}</p>
+        <div style={{ display: "grid", gap: 12 }}>
+          {emergencyContacts.embassies.map((embassy) => (
+            <a
+              key={`${embassy.country}-${embassy.city}`}
+              href={`tel:${embassy.phone.replace(/\s/g, "")}`}
+              style={numberButtonStyle}
+            >
+              {embassy.country} ({embassy.city}) — {embassy.phone}
+            </a>
+          ))}
+        </div>
       </section>
     </main>
   );
