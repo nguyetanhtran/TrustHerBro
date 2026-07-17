@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { CSSProperties, ReactNode } from "react";
+import { ModeNav } from "../components/mode-switch/ModeNav";
 
 export const metadata: Metadata = {
   title: "TrustHerBro",
@@ -22,7 +23,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="vi">
-      <body style={bodyStyle}>{children}</body>
+      <body style={bodyStyle}>
+        <ModeNav />
+        {children}
+      </body>
     </html>
   );
 }

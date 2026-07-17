@@ -4,14 +4,22 @@
     { "label": "Fire", "number": "114" },
     { "label": "Ambulance / Medical", "number": "115" }
   ],
-  "embassyGuidance": "Numbers below are unverified — confirm on your embassy's official site before relying on them. Not your country listed? Search \"[your country] embassy Vietnam emergency contact\".",
+  "touristSupportNumbers": [
+    { "label": "Vietnam National Tourism Helpline", "number": "1039" },
+    { "label": "Ho Chi Minh City Visitor Support", "number": "028 3822 1188" }
+  ],
+  "hospitalGuidance": "Search \"bệnh viện gần đây\" (nearest hospital) in Google Maps or ask hotel or hostel staff - this works even with basic Vietnamese.",
+  "hospitals": [
+    { "name": "Vinmec Times City", "city": "Hanoi", "phone": "+84 24 3974 3556" },
+    { "name": "FV Hospital", "city": "Ho Chi Minh City", "phone": "+84 28 5411 3333" }
+  ],
+  "embassyGuidance": "Numbers below are a starting point - confirm on your embassy's official site before relying on them. If your country is not listed, search \"[your country] embassy Vietnam emergency contact\".",
   "embassies": [
     { "country": "United States", "city": "Hanoi", "phone": "+84 24 3850 5000" },
     { "country": "United Kingdom", "city": "Hanoi", "phone": "+84 24 3936 0500" },
     { "country": "Australia", "city": "Hanoi", "phone": "+84 24 3774 0100" },
     { "country": "Canada", "city": "Hanoi", "phone": "+84 24 3734 5000" }
   ],
-  "hospitalGuidance": "Search \"bệnh viện gần đây\" (nearest hospital) in Google Maps or ask hotel/hostel staff — this works even with basic Vietnamese.",
   "helpPhrase": {
     "vietnamese": "Xin lỗi, tôi đang gặp nguy hiểm và cần giúp đỡ. Xin hãy gọi số 113 (công an) hoặc 115 (cấp cứu) giúp tôi. Cảm ơn bạn.",
     "english": "Sorry, I am in danger and need help. Please call 113 (police) or 115 (ambulance) for me. Thank you."
