@@ -1,4 +1,11 @@
+"use client";
+
 import type { CSSProperties } from "react";
+import { useState } from "react";
+import type { TrustCheckResult } from "../../lib/ai/types";
+import { ChatInput } from "../../components/shared/ChatInput";
+import { TrustBadge } from "../../components/shared/TrustBadge";
+import { ModeIndicator } from "../../components/mode-switch/ModeIndicator";
 
 const cardStyle: CSSProperties = {
   padding: 20,
@@ -9,10 +16,81 @@ const cardStyle: CSSProperties = {
 };
 
 export default function AssistantPage() {
+  const [result, setResult] = useState<TrustCheckResult | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleSend(subject: string) {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch("/api/trust-check", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ subject }),
+      });
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data?.error ?? "Trust check failed.");
+      }
+      const data = (await response.json()) as TrustCheckResult;
+      setResult(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Trust check failed.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <main style={{ maxWidth: 860, margin: "0 auto", padding: "40px 24px 72px" }}>
-      <h1>Assistant Stub</h1>
-      <p>Static examples for the future assistant flow.</p>
+      <ModeIndicator mode="assistant" label="Assistant" />
+      <h1>Ask about a price, place, or person</h1>
+      <p>
+        Type a taxi fare, a hotel name, or a situation and get a trust check
+        based on community reports and known scam warnings.
+      </p>
+
+      <ChatInput
+        disabled={loading}
+        placeholder="Example: Grand Palace Hotel airport pickup"
+        onSend={handleSend}
+      />
+
+      {error ? (
+        <section style={{ ...cardStyle, borderColor: "#fecaca", color: "#b91c1c" }}>
+          {error}
+        </section>
+      ) : null}
+
+      {result ? (
+        <section style={cardStyle}>
+          <TrustBadge score={result.trustScore} label={result.verdict} />
+          <p>
+            <strong>{result.subject}</strong>
+          </p>
+          {result.warnings.length > 0 ? (
+            <div>
+              <strong>Warnings:</strong>
+              <ul>
+                {result.warnings.map((warning) => (
+                  <li key={warning}>{warning}</li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+          {result.supportingReasons.length > 0 ? (
+            <div>
+              <strong>What travelers say:</strong>
+              <ul>
+                {result.supportingReasons.map((reason) => (
+                  <li key={reason}>{reason}</li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+        </section>
+      ) : null}
 
       <section style={cardStyle}>
         <strong>Q:</strong> Is this taxi price normal from the airport?
