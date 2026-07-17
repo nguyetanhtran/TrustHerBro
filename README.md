@@ -1,6 +1,6 @@
 # TrustHerBro
 
-Scaffold ban dau cho ung dung Next.js App Router gom:
+Scaffold ban đầu cho ứng dụng Next.js App Router gồm:
 
 - Landing page va mode entry
 - First Night onboarding
@@ -9,16 +9,16 @@ Scaffold ban dau cho ung dung Next.js App Router gom:
 - Assistant va Emergency stubs
 - API routes mock de noi logic AI/TTS sau
 
-## Chay local
+## Run Local
 
 ```bash
 npm install
 npm run dev
 ```
 
-## Bien moi truong
+## Environment
 
-Tao gia tri trong `.env.local`:
+Tạo giá trị trong `.env.local`:
 
 - `OPENAI_API_KEY`
 - `VBEE_API_KEY`
