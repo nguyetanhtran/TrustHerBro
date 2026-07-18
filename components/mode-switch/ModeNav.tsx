@@ -4,6 +4,7 @@ import type { CSSProperties } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { AppMode } from "../../lib/ai/types";
+import { AccountMenu } from "../auth/AccountMenu";
 
 type ModeLink = {
   mode: AppMode;
@@ -51,8 +52,23 @@ const innerStyle: CSSProperties = {
   padding: "10px 24px",
   display: "flex",
   alignItems: "center",
+  justifyContent: "space-between",
   flexWrap: "wrap",
   gap: 8,
+};
+
+const leftGroupStyle: CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  flexWrap: "wrap",
+  gap: 8,
+};
+
+const brandStyle: CSSProperties = {
+  fontWeight: 800,
+  color: "#0f172a",
+  textDecoration: "none",
+  fontSize: 16,
 };
 
 const homeStyle: CSSProperties = {
@@ -84,16 +100,20 @@ const pillBase: CSSProperties = {
   border: "1px solid transparent",
 };
 
-// Global mode navigation. Rendered once from the root layout:
-//  - hidden on the landing page (it's already the entry point)
-//  - Emergency keeps only a small Home button, to honor its minimal-UI intent
+// Global top bar. Rendered once from the root layout:
+//  - hidden on the auth/onboarding screens (/login, /welcome)
+//  - landing shows just the brand + account menu
+//  - Emergency keeps only Home (minimal UI) + account menu
 //  - every other mode gets Home + one-tap switching, current mode highlighted
+//  - the account menu (email + Log out) sits on the right everywhere it shows
 export function ModeNav() {
   const pathname = usePathname() ?? "/";
 
-  if (pathname === "/") return null;
+  // No chrome on the pre-app screens.
+  if (pathname === "/login" || pathname === "/welcome") return null;
 
   const current = modeForPath(pathname);
+  const isLanding = pathname === "/";
 
   const homeLink = (
     <Link href="/" style={homeStyle}>
@@ -101,17 +121,18 @@ export function ModeNav() {
     </Link>
   );
 
-  if (current === "emergency") {
-    return (
-      <nav style={barStyle} aria-label="Navigation">
-        <div style={innerStyle}>{homeLink}</div>
-      </nav>
+  let left;
+  if (isLanding) {
+    left = (
+      <Link href="/" style={brandStyle}>
+        TrustHerBro
+      </Link>
     );
-  }
-
-  return (
-    <nav style={barStyle} aria-label="Switch mode">
-      <div style={innerStyle}>
+  } else if (current === "emergency") {
+    left = homeLink;
+  } else {
+    left = (
+      <>
         {homeLink}
         <span style={dividerStyle} aria-hidden />
         {MODES.map((item) => {
@@ -137,6 +158,15 @@ export function ModeNav() {
             </Link>
           );
         })}
+      </>
+    );
+  }
+
+  return (
+    <nav style={barStyle} aria-label="Navigation">
+      <div style={innerStyle}>
+        <div style={leftGroupStyle}>{left}</div>
+        <AccountMenu />
       </div>
     </nav>
   );

@@ -2,7 +2,7 @@ import type { CSSProperties } from "react";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { ModeIndicator } from "../components/mode-switch/ModeIndicator";
-import { ModeRouterEntry } from "../components/mode-switch/ModeRouterEntry";
+import { CompanionChat } from "../components/companion/CompanionChat";
 import { createClient } from "../utils/supabase/server";
 
 const shellStyle: CSSProperties = {
@@ -49,12 +49,13 @@ export default async function HomePage() {
           TrustHerBro
         </h1>
         <p style={{ fontSize: 18, lineHeight: 1.6, maxWidth: 700 }}>
-          Safety-first copilot for solo female travelers. Start with First Night
-          onboarding, jump into Safety Mode, or open static stubs for assistant
-          and emergency flows.
+          Safety-first copilot for solo female travelers. Ask a question, speak,
+          or snap a photo of a price — I&apos;ll point you to the right mode.
         </p>
 
-        <ModeRouterEntry />
+        <div style={{ marginTop: 24 }}>
+          <CompanionChat />
+        </div>
 
         <section
           style={{
@@ -84,15 +85,15 @@ export default async function HomePage() {
           </Link>
           <Link href="/safety" style={cardStyle}>
             <strong>Safety Mode</strong>
-            <p>Chat UI with emergency escalation and discreet mode toggle.</p>
+            <p>Preventive help: safe routes, phrases, discreet mode.</p>
           </Link>
           <Link href="/assistant" style={cardStyle}>
-            <strong>Assistant Stub</strong>
-            <p>Static sample Q&A content for the future assistant.</p>
+            <strong>Assistant</strong>
+            <p>Trust checks and voice scam detection.</p>
           </Link>
           <Link href="/emergency" style={cardStyle}>
-            <strong>Emergency Stub</strong>
-            <p>SOS actions and emergency contact placeholders.</p>
+            <strong>Emergency</strong>
+            <p>SOS actions and emergency contacts.</p>
           </Link>
         </div>
       </div>
