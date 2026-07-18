@@ -4,6 +4,7 @@ import type { CSSProperties } from "react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "../../utils/supabase/client";
+import { useLanguage } from "../../lib/i18n/LanguageContext";
 
 const buttonStyle: CSSProperties = {
   padding: "8px 12px",
@@ -18,6 +19,7 @@ const buttonStyle: CSSProperties = {
 
 export function AccountMenu() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [email, setEmail] = useState<string | null>(null);
 
   useEffect(() => {
@@ -45,7 +47,7 @@ export function AccountMenu() {
         {email}
       </span>
       <button type="button" onClick={handleLogout} style={buttonStyle}>
-        Log out
+        {t("account.logout")}
       </button>
     </div>
   );

@@ -3,6 +3,7 @@ import { runOpenAIJson } from "../../../lib/ai/openai";
 import { buildScamCheckPrompt } from "../../../lib/ai/prompts/scamCheckPrompt";
 import scamWarnings from "../../../lib/data/scamWarnings.json";
 import type { ScamCheckResult, ScamMatch, ScamPattern } from "../../../lib/ai/types";
+import type { LanguageCode } from "../../../lib/i18n/translations";
 
 const patterns = scamWarnings as ScamPattern[];
 const patternById = new Map(patterns.map((pattern) => [pattern.id, pattern]));
@@ -81,6 +82,7 @@ function resolveMatches(raw: RawScamResult): ScamMatch[] {
 export async function POST(request: Request) {
   const body = await request.json();
   const description = String(body?.description ?? "");
+  const language = (body?.language as LanguageCode) ?? "en";
 
   if (!description.trim()) {
     return NextResponse.json(
@@ -94,7 +96,7 @@ export async function POST(request: Request) {
   let raw: RawScamResult;
   try {
     raw = await runOpenAIJson<RawScamResult>({
-      systemPrompt: buildScamCheckPrompt(),
+      systemPrompt: buildScamCheckPrompt(language),
       userPrompt: description,
       fallback: fallbackRaw,
     });

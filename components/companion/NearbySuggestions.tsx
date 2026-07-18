@@ -4,6 +4,7 @@ import type { CSSProperties } from "react";
 import { useState } from "react";
 import type { NearbyPlace, NearbySuggestionsResult } from "../../lib/ai/types";
 import { buildMapsSearchLink } from "../../lib/utils/mapsLink";
+import { useLanguage } from "../../lib/i18n/LanguageContext";
 
 const shellStyle: CSSProperties = {
   marginTop: 24,
@@ -44,6 +45,7 @@ function formatPriceLevel(level?: number) {
 }
 
 function PlaceCard({ place }: { place: NearbyPlace }) {
+  const { t } = useLanguage();
   const price = formatPriceLevel(place.priceLevel);
 
   return (
@@ -51,8 +53,10 @@ function PlaceCard({ place }: { place: NearbyPlace }) {
       <strong style={{ display: "block", marginBottom: 6 }}>{place.name}</strong>
       <p style={{ margin: "0 0 8px", color: "#475569", lineHeight: 1.5 }}>{place.address}</p>
       <p style={{ margin: "0 0 12px", fontSize: 14, color: "#0f172a" }}>
-        {typeof place.rating === "number" ? `Rating ${place.rating.toFixed(1)}` : "No rating yet"}
-        {place.userRatingsTotal ? ` • ${place.userRatingsTotal} reviews` : ""}
+        {typeof place.rating === "number"
+          ? `${t("nearby.rating")} ${place.rating.toFixed(1)}`
+          : t("nearby.noRating")}
+        {place.userRatingsTotal ? ` • ${place.userRatingsTotal} ${t("nearby.reviews")}` : ""}
         {price ? ` • ${price}` : ""}
       </p>
       <a
@@ -61,20 +65,21 @@ function PlaceCard({ place }: { place: NearbyPlace }) {
         rel="noreferrer"
         style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}
       >
-        Open in Maps
+        {t("timeline.openMaps")}
       </a>
     </article>
   );
 }
 
 export function NearbySuggestions() {
+  const { t } = useLanguage();
   const [data, setData] = useState<NearbySuggestionsResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   async function handleFindNearby() {
     if (typeof navigator === "undefined" || !navigator.geolocation) {
-      setError("Your browser does not support location access.");
+      setError(t("nearby.noGeoSupport"));
       return;
     }
 
@@ -92,12 +97,12 @@ export function NearbySuggestions() {
           const result = (await response.json()) as NearbySuggestionsResult & { error?: string };
 
           if (!response.ok) {
-            throw new Error(result.error || "Could not load nearby suggestions.");
+            throw new Error(result.error || t("nearby.loadError"));
           }
 
           setData(result);
         } catch (err) {
-          setError(err instanceof Error ? err.message : "Could not load nearby suggestions.");
+          setError(err instanceof Error ? err.message : t("nearby.loadError"));
         } finally {
           setLoading(false);
         }
@@ -106,8 +111,8 @@ export function NearbySuggestions() {
         setLoading(false);
         setError(
           geoError.code === geoError.PERMISSION_DENIED
-            ? "Location permission was denied. Enable it to get nearby suggestions."
-            : "Could not read your location right now.",
+            ? t("nearby.permissionDenied")
+            : t("nearby.locationError"),
         );
       },
       { enableHighAccuracy: true, timeout: 10000 },
@@ -118,13 +123,11 @@ export function NearbySuggestions() {
     <section style={shellStyle}>
       <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
         <div>
-          <h2 style={{ margin: 0 }}>Nearby picks</h2>
-          <p style={{ margin: "6px 0 0", color: "#475569" }}>
-            Find food and fun spots around you using your current location.
-          </p>
+          <h2 style={{ margin: 0 }}>{t("nearby.title")}</h2>
+          <p style={{ margin: "6px 0 0", color: "#475569" }}>{t("nearby.description")}</p>
         </div>
         <button type="button" onClick={handleFindNearby} disabled={loading} style={buttonStyle}>
-          {loading ? "Finding nearby..." : "Find food & fun near me"}
+          {loading ? t("nearby.finding") : t("nearby.findButton")}
         </button>
       </div>
 
@@ -134,27 +137,29 @@ export function NearbySuggestions() {
 
       {data ? (
         <>
-          <p style={{ marginTop: 14, color: "#475569" }}>Using location around {data.areaLabel}</p>
+          <p style={{ marginTop: 14, color: "#475569" }}>
+            {t("nearby.usingLocation")} {data.areaLabel}
+          </p>
 
           <div style={gridStyle}>
             <div>
-              <h3>Places to eat</h3>
+              <h3>{t("nearby.placesToEat")}</h3>
               <div style={{ display: "grid", gap: 12 }}>
                 {data.food.length ? (
                   data.food.map((place) => <PlaceCard key={place.id} place={place} />)
                 ) : (
-                  <p style={{ color: "#64748b" }}>No nearby food suggestions found.</p>
+                  <p style={{ color: "#64748b" }}>{t("nearby.noFood")}</p>
                 )}
               </div>
             </div>
 
             <div>
-              <h3>Places to explore</h3>
+              <h3>{t("nearby.placesToExplore")}</h3>
               <div style={{ display: "grid", gap: 12 }}>
                 {data.fun.length ? (
                   data.fun.map((place) => <PlaceCard key={place.id} place={place} />)
                 ) : (
-                  <p style={{ color: "#64748b" }}>No nearby activity suggestions found.</p>
+                  <p style={{ color: "#64748b" }}>{t("nearby.noFun")}</p>
                 )}
               </div>
             </div>

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { buildCompanionPrompt } from "../../../lib/ai/prompts/companionPrompt";
+import type { LanguageCode } from "../../../lib/i18n/translations";
 import type { AppMode } from "../../../lib/ai/types";
 
 type CompanionResult = {
@@ -41,6 +42,7 @@ export async function POST(request: Request) {
   const body = await request.json();
   const message = String(body?.message ?? "").trim();
   const image = typeof body?.image === "string" ? body.image : null;
+  const language = (body?.language as LanguageCode) ?? "en";
 
   if (!message && !image) {
     return NextResponse.json({ error: "Say something or add a photo." }, { status: 400 });
@@ -73,7 +75,7 @@ export async function POST(request: Request) {
         temperature: 0.3,
         response_format: { type: "json_object" },
         messages: [
-          { role: "system", content: buildCompanionPrompt() },
+          { role: "system", content: buildCompanionPrompt(language) },
           { role: "user", content: userContent },
         ],
       }),

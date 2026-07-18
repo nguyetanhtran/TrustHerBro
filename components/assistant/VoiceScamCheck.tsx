@@ -5,6 +5,7 @@ import type { CSSProperties } from "react";
 import type { ScamCheckResult } from "../../lib/ai/types";
 import { useVoiceRecorder } from "../../lib/utils/useVoiceRecorder";
 import { PrivacyNotice } from "../shared/PrivacyNotice";
+import { useLanguage } from "../../lib/i18n/LanguageContext";
 
 const cardStyle: CSSProperties = {
   padding: 20,
@@ -34,17 +35,21 @@ const buttonBase: CSSProperties = {
   cursor: "pointer",
 };
 
-function verdictColors(result: ScamCheckResult): { bg: string; fg: string; label: string } {
+function verdictColors(
+  result: ScamCheckResult,
+  labels: { scam: string; check: string; clear: string },
+): { bg: string; fg: string; label: string } {
   if (result.isLikelyScam) {
-    return { bg: "#fee2e2", fg: "#991b1b", label: "Likely a known scam" };
+    return { bg: "#fee2e2", fg: "#991b1b", label: labels.scam };
   }
   if (result.matches.length > 0) {
-    return { bg: "#fef9c3", fg: "#854d0e", label: "Worth double-checking" };
+    return { bg: "#fef9c3", fg: "#854d0e", label: labels.check };
   }
-  return { bg: "#dcfce7", fg: "#166534", label: "No clear scam signal" };
+  return { bg: "#dcfce7", fg: "#166534", label: labels.clear };
 }
 
 export function VoiceScamCheck() {
+  const { language, t } = useLanguage();
   const recorder = useVoiceRecorder();
   const [text, setText] = useState("");
   const [result, setResult] = useState<ScamCheckResult | null>(null);
@@ -79,7 +84,7 @@ export function VoiceScamCheck() {
       const res = await fetch("/api/scam-check", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ description: text }),
+        body: JSON.stringify({ description: text, language }),
       });
       const data = (await res.json()) as ScamCheckResult;
       setResult(data);
@@ -88,20 +93,23 @@ export function VoiceScamCheck() {
     }
   }
 
-  const verdict = result ? verdictColors(result) : null;
+  const verdict = result
+    ? verdictColors(result, {
+        scam: t("scamCheck.verdictScam"),
+        check: t("scamCheck.verdictCheck"),
+        clear: t("scamCheck.verdictClear"),
+      })
+    : null;
 
   return (
     <section style={cardStyle}>
-      <h2 style={{ marginTop: 0 }}>Is this a scam?</h2>
-      <p style={{ color: "#64748b", marginTop: 0 }}>
-        Describe what's happening — speak or type, in any language. I'll check it
-        against known scam patterns and tell you how to handle it.
-      </p>
+      <h2 style={{ marginTop: 0 }}>{t("scamCheck.title")}</h2>
+      <p style={{ color: "#64748b", marginTop: 0 }}>{t("scamCheck.description")}</p>
 
       <textarea
         value={text}
         onChange={(event) => setText(event.target.value)}
-        placeholder="Example: The driver won't turn on the meter and wants a fixed price."
+        placeholder={t("scamCheck.placeholder")}
         style={textareaStyle}
       />
 
@@ -117,7 +125,7 @@ export function VoiceScamCheck() {
             color: recorder.recording ? "#ffffff" : "#0f172a",
           }}
         >
-          {recorder.recording ? "■ Stop" : "🎤 Speak"}
+          {recorder.recording ? `■ ${t("scamCheck.stop")}` : `🎤 ${t("scamCheck.speak")}`}
         </button>
         <button
           type="button"
@@ -125,12 +133,12 @@ export function VoiceScamCheck() {
           disabled={loading || transcribing || !text.trim()}
           style={{ ...buttonBase, flex: 1, background: "#1d4ed8", color: "#fff" }}
         >
-          {loading ? "Checking…" : "Check it"}
+          {loading ? t("scamCheck.checking") : t("scamCheck.checkIt")}
         </button>
       </div>
 
       {transcribing ? (
-        <p style={{ color: "#64748b", margin: "0 0 12px" }}>Transcribing your voice…</p>
+        <p style={{ color: "#64748b", margin: "0 0 12px" }}>{t("scamCheck.transcribing")}</p>
       ) : null}
       {recorder.error ? (
         <p style={{ color: "#b91c1c", margin: "0 0 12px" }}>{recorder.error}</p>

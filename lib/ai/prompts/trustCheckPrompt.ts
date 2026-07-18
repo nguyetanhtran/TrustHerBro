@@ -2,6 +2,7 @@ import transportPrices from "../../data/transportPrices.json";
 import scamWarnings from "../../data/scamWarnings.json";
 import communityReports from "../../data/communityReports.json";
 import type { ScamPattern } from "../types";
+import { LANGUAGE_NAMES, type LanguageCode } from "../../i18n/translations";
 
 type TransportPrice = {
   city: string;
@@ -22,7 +23,8 @@ function formatVnd(value: number) {
   return value.toLocaleString("en-US");
 }
 
-export function buildTrustCheckPrompt() {
+export function buildTrustCheckPrompt(language: LanguageCode = "en") {
+  const languageName = LANGUAGE_NAMES[language] ?? LANGUAGE_NAMES.en;
   const prices = (transportPrices as TransportPrice[])
     .map(
       (entry) =>
@@ -40,6 +42,7 @@ export function buildTrustCheckPrompt() {
 
   return [
     "You are a trust-check assistant for solo female travelers in Vietnam.",
+    `Write "verdict" and every string in "supportingReasons" and "warnings" entirely in ${languageName}.`,
     'The traveler describes a price, place, or situation (e.g. "500k đi Phố Cổ" = 500,000 VND to Old Quarter, a hotel name, a stranger\'s offer). Input may be Vietnamese, English, or mixed, and may use shorthand like "500k" for 500,000 VND or "1tr" for 1,000,000 VND.',
     "Ground your answer in the reference data below — do not invent prices, places, or facts that aren't supported by it.",
     "",

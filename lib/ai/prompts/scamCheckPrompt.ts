@@ -1,7 +1,9 @@
 import scamWarnings from "../../data/scamWarnings.json";
 import type { ScamPattern } from "../types";
+import { LANGUAGE_NAMES, type LanguageCode } from "../../i18n/translations";
 
-export function buildScamCheckPrompt() {
+export function buildScamCheckPrompt(language: LanguageCode = "en") {
+  const languageName = LANGUAGE_NAMES[language] ?? LANGUAGE_NAMES.en;
   const catalog = (scamWarnings as ScamPattern[])
     .map(
       (pattern) =>
@@ -11,6 +13,7 @@ export function buildScamCheckPrompt() {
 
   return [
     "You help a tourist in Vietnam figure out if a situation they describe is a known scam.",
+    `Write "advice" and each match's "why" entirely in ${languageName}.`,
     "The description may be spoken and transcribed, in any language, and may be vague or worded very differently from the catalog — reason about the meaning, not the exact words.",
     "Match it against the scam-pattern catalog below and return the pattern ids that genuinely fit.",
     "",

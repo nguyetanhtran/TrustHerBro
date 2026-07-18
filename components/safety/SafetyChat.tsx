@@ -14,6 +14,7 @@ import { SafetyPhrasesCard } from "./SafetyPhrasesCard";
 import { CheckInCard } from "./CheckInCard";
 import { DiscreetModeToggle } from "./DiscreetModeToggle";
 import { EscalateToEmergency } from "./EscalateToEmergency";
+import { useLanguage } from "../../lib/i18n/LanguageContext";
 
 const toggleStyle = {
   display: "flex",
@@ -25,18 +26,12 @@ const toggleStyle = {
   background: "#f8fafc",
 } as const;
 
-const initialMessages: ChatMessage[] = [
-  {
-    id: "welcome",
-    role: "assistant",
-    content:
-      "I'm right here with you. Tell me what feels off — we'll sort it out together, calmly.",
-  },
-];
-
 export function SafetyChat() {
   const router = useRouter();
-  const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
+  const { language, t } = useLanguage();
+  const [messages, setMessages] = useState<ChatMessage[]>(() => [
+    { id: "welcome", role: "assistant", content: t("safety.welcome") },
+  ]);
   const [assessment, setAssessment] = useState<RiskAssessment | null>(null);
   const [discreetMode, setDiscreetMode] = useState(false);
   const [shareLocation, setShareLocation] = useState(false);
@@ -78,6 +73,7 @@ export function SafetyChat() {
         body: JSON.stringify({
           message: value,
           location: shareLocation ? coordsRef.current ?? undefined : undefined,
+          language,
         }),
       });
       const data = (await response.json()) as RiskAssessment;
@@ -135,17 +131,15 @@ export function SafetyChat() {
           <SituationChips disabled={loading} onPick={requestAssessment} />
           <ChatInput
             disabled={loading}
-            placeholder="Or type it in your own words…"
+            placeholder={t("safety.inputPlaceholder")}
             onSend={requestAssessment}
           />
           <DiscreetModeToggle enabled={discreetMode} onChange={handleDiscreetChange} />
           <label style={toggleStyle}>
             <span>
-              <strong>Share my location</strong>
+              <strong>{t("safety.shareLocation")}</strong>
               <br />
-              <small style={{ color: "#64748b" }}>
-                Off by default. Turn on for a route tailored to where you are.
-              </small>
+              <small style={{ color: "#64748b" }}>{t("safety.shareLocationHint")}</small>
             </span>
             <input
               type="checkbox"
@@ -153,7 +147,7 @@ export function SafetyChat() {
               onChange={(event) => handleLocationChange(event.target.checked)}
             />
           </label>
-          <PrivacyNotice what="What you type here (and your location, only if shared)" />
+          <PrivacyNotice what={t("safety.privacyWhat")} />
         </div>
       </div>
 
