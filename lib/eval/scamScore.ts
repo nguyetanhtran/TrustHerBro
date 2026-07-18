@@ -1,5 +1,5 @@
 import scamWarnings from "../data/scamWarnings.json";
-import type { ScamPattern } from "../types";
+import type { ScamPattern } from "../ai/types";
 import { SCAM_CONFIDENCE_THRESHOLD } from "./thresholds";
 
 const patterns = scamWarnings as ScamPattern[];
