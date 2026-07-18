@@ -18,7 +18,7 @@ export function BackgroundDecorations() {
       style={{
         position: "fixed",
         inset: 0,
-        zIndex: 0,
+        zIndex: -1,
         overflow: "hidden",
         pointerEvents: "none",
         background: theme.colors.background,
