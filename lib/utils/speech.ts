@@ -77,3 +77,21 @@ export function speakGuidance(text: string) {
 export function playVietnamesePhrase(text: string) {
   return playServerTts(text, "vi", "vi-VN");
 }
+
+const BCP47_BY_LANGUAGE: Record<string, string> = {
+  en: "en-US",
+  ko: "ko-KR",
+  zh: "zh-CN",
+  ru: "ru-RU",
+  vi: "vi-VN",
+};
+
+/**
+ * Speak text in any of the app's supported languages — used by the
+ * Translate conversation, where either side's language can vary, unlike the
+ * fixed en/vi pair the two helpers above were written for.
+ */
+export function speakInLanguage(text: string, langCode: string) {
+  const browserLang = BCP47_BY_LANGUAGE[langCode] ?? "en-US";
+  return playServerTts(text, langCode, browserLang);
+}

@@ -43,7 +43,7 @@ Giao diện và mức độ can thiệp của ứng dụng sẽ tự động tha
 
 ---
 
-## 🛠️ Phân tích kỹ thuật chuyên sâu (Dành cho Ban giám khảo)
+## 🛠️ Phân tích kỹ thuật chuyên sâu
 
 Ứng dụng của chúng tôi được xây dựng trên nền tảng **Next.js App Router** hiện đại, tối ưu hóa cho việc render tại Edge, nhận biết bối cảnh theo thời gian thực và đảm bảo hiệu năng ổn định ngay cả dưới điều kiện sóng điện thoại yếu.
 

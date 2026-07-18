@@ -132,7 +132,20 @@ export type TranslationKey =
   | "nearby.placesConvenience"
   | "nearby.noConvenience"
   | "nearby.placesSimCard"
-  | "nearby.noSimCard";
+  | "nearby.noSimCard"
+  | "translate.title"
+  | "translate.description"
+  | "translate.travelerToggle"
+  | "translate.localToggle"
+  | "translate.inputPlaceholder"
+  | "translate.send"
+  | "translate.sending"
+  | "translate.addPhoto"
+  | "translate.play"
+  | "translate.historyTitle"
+  | "translate.searchPlaceholder"
+  | "translate.noHistory"
+  | "translate.noResults";
 
 export const translations: Record<LanguageCode, Record<TranslationKey, string>> = {
   en: {
@@ -275,6 +288,19 @@ export const translations: Record<LanguageCode, Record<TranslationKey, string>> 
     "nearby.noConvenience": "No nearby convenience stores found.",
     "nearby.placesSimCard": "Buy a SIM / mobile data nearby",
     "nearby.noSimCard": "No nearby SIM card shops found.",
+    "translate.title": "Two-Way Translator",
+    "translate.description": "Speak or type, and I'll translate for the person in front of you — in text and out loud.",
+    "translate.travelerToggle": "You speak",
+    "translate.localToggle": "Local person speaks",
+    "translate.inputPlaceholder": "Type or tap the mic…",
+    "translate.send": "Translate",
+    "translate.sending": "Translating…",
+    "translate.addPhoto": "Photo",
+    "translate.play": "Play",
+    "translate.historyTitle": "Conversation history",
+    "translate.searchPlaceholder": "Search this conversation…",
+    "translate.noHistory": "No messages yet — start the conversation above.",
+    "translate.noResults": "No messages match your search.",
   },
   ko: {
     "onboarding.city": "어느 도시에 도착하셨나요?",
@@ -413,6 +439,19 @@ export const translations: Record<LanguageCode, Record<TranslationKey, string>> 
     "nearby.noConvenience": "주변 편의점 추천을 찾을 수 없습니다.",
     "nearby.placesSimCard": "근처에서 유심/모바일 데이터 구매",
     "nearby.noSimCard": "주변 유심 매장을 찾을 수 없습니다.",
+    "translate.title": "양방향 통역",
+    "translate.description": "말하거나 입력하면 앞에 있는 상대방을 위해 텍스트와 음성으로 통역해 드립니다.",
+    "translate.travelerToggle": "당신이 말하기",
+    "translate.localToggle": "현지인이 말하기",
+    "translate.inputPlaceholder": "입력하거나 마이크를 누르세요…",
+    "translate.send": "통역하기",
+    "translate.sending": "통역 중…",
+    "translate.addPhoto": "사진",
+    "translate.play": "재생",
+    "translate.historyTitle": "대화 기록",
+    "translate.searchPlaceholder": "이 대화 검색…",
+    "translate.noHistory": "아직 메시지가 없습니다 — 위에서 대화를 시작하세요.",
+    "translate.noResults": "검색 결과와 일치하는 메시지가 없습니다.",
   },
   zh: {
     "onboarding.city": "您到达的是哪个城市?",
@@ -550,6 +589,19 @@ export const translations: Record<LanguageCode, Record<TranslationKey, string>> 
     "nearby.noConvenience": "未找到附近的便利店推荐。",
     "nearby.placesSimCard": "附近购买SIM卡/移动数据",
     "nearby.noSimCard": "未找到附近的SIM卡店。",
+    "translate.title": "双向翻译",
+    "translate.description": "说话或打字,我会为你面前的人提供文字和语音翻译。",
+    "translate.travelerToggle": "你说话",
+    "translate.localToggle": "当地人说话",
+    "translate.inputPlaceholder": "输入或点击麦克风…",
+    "translate.send": "翻译",
+    "translate.sending": "翻译中…",
+    "translate.addPhoto": "照片",
+    "translate.play": "播放",
+    "translate.historyTitle": "对话记录",
+    "translate.searchPlaceholder": "搜索此对话…",
+    "translate.noHistory": "还没有消息 — 在上方开始对话。",
+    "translate.noResults": "没有符合搜索条件的消息。",
   },
   ru: {
     "onboarding.city": "В какой город вы прибыли?",
@@ -692,6 +744,19 @@ export const translations: Record<LanguageCode, Record<TranslationKey, string>> 
     "nearby.noConvenience": "Рекомендации по магазинам у дома поблизости не найдены.",
     "nearby.placesSimCard": "Купить SIM-карту / мобильный интернет рядом",
     "nearby.noSimCard": "Магазины SIM-карт поблизости не найдены.",
+    "translate.title": "Двусторонний переводчик",
+    "translate.description": "Говорите или печатайте — я переведу для человека рядом с вами, текстом и голосом.",
+    "translate.travelerToggle": "Говорите вы",
+    "translate.localToggle": "Говорит местный житель",
+    "translate.inputPlaceholder": "Введите текст или нажмите на микрофон…",
+    "translate.send": "Перевести",
+    "translate.sending": "Перевожу…",
+    "translate.addPhoto": "Фото",
+    "translate.play": "Воспроизвести",
+    "translate.historyTitle": "История разговора",
+    "translate.searchPlaceholder": "Поиск по этому разговору…",
+    "translate.noHistory": "Пока нет сообщений — начните разговор выше.",
+    "translate.noResults": "Нет сообщений, соответствующих запросу.",
   },
   vi: {
     "onboarding.city": "Bạn đến thành phố nào?",
@@ -831,5 +896,18 @@ export const translations: Record<LanguageCode, Record<TranslationKey, string>> 
     "nearby.noConvenience": "Không tìm thấy gợi ý cửa hàng tiện lợi gần đây.",
     "nearby.placesSimCard": "Mua SIM / data di động gần đây",
     "nearby.noSimCard": "Không tìm thấy cửa hàng SIM gần đây.",
+    "translate.title": "Phiên dịch hai chiều",
+    "translate.description": "Nói hoặc gõ chữ, tôi sẽ dịch cho người đang nói chuyện với bạn — bằng cả chữ viết và giọng nói.",
+    "translate.travelerToggle": "Bạn nói",
+    "translate.localToggle": "Người địa phương nói",
+    "translate.inputPlaceholder": "Gõ chữ hoặc bấm micro…",
+    "translate.send": "Dịch",
+    "translate.sending": "Đang dịch…",
+    "translate.addPhoto": "Ảnh",
+    "translate.play": "Phát",
+    "translate.historyTitle": "Lịch sử trò chuyện",
+    "translate.searchPlaceholder": "Tìm trong cuộc trò chuyện này…",
+    "translate.noHistory": "Chưa có tin nhắn nào — bắt đầu trò chuyện ở trên.",
+    "translate.noResults": "Không có tin nhắn nào khớp với tìm kiếm.",
   },
 };
