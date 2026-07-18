@@ -81,7 +81,7 @@ export function SafetyStatusCard() {
         <div style={gridStyle}>
           <div style={statStyle}>
             <span style={statLabelStyle}>Safe Level</span>
-            <span style={statValueStyle} aria-label="Safe Level High">High 🔴</span>
+            <span style={statValueStyle} aria-label="Safe Level High">High 🟢</span>
           </div>
           <div style={statStyle}>
             <span style={statLabelStyle}>Scam Risk</span>

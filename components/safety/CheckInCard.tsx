@@ -2,27 +2,25 @@
 
 import { useEffect, useState } from "react";
 import type { CSSProperties } from "react";
+import { theme } from "../../lib/theme";
 
 const cardStyle: CSSProperties = {
   padding: 18,
-  borderRadius: 16,
-  background: "#f5f3ff",
-  border: "1px solid #ddd6fe",
+  borderRadius: theme.borderRadius.card,
+  background: "rgba(196, 163, 90, 0.14)",
+  border: `1px solid ${theme.colors.border}`,
+  color: theme.colors.text,
 };
 
 const buttonBase: CSSProperties = {
   padding: "10px 14px",
-  borderRadius: 12,
+  borderRadius: theme.borderRadius.button,
   border: "none",
   fontWeight: 700,
   cursor: "pointer",
+  fontFamily: "inherit",
 };
 
-/**
- * A soft companion check-in. When "stay with me" is on, it quietly waits the
- * suggested interval, then asks if she is okay. If she doesn't respond well,
- * she can escalate to Emergency Mode — but nothing here is alarming by default.
- */
 export function CheckInCard({
   intervalMinutes,
   onEscalate,
@@ -59,9 +57,9 @@ export function CheckInCard({
         <span>
           <strong>Stay with me</strong>
           <br />
-          <small style={{ color: "#6d5bb5" }}>
-            I'll quietly check in every {Math.max(1, intervalMinutes)} min until
-            you're safe.
+          <small style={{ color: theme.colors.textLight }}>
+            I&apos;ll quietly check in every {Math.max(1, intervalMinutes)} min until
+            you&apos;re safe.
           </small>
         </span>
         <input
@@ -82,14 +80,14 @@ export function CheckInCard({
           <div style={{ display: "flex", gap: 10 }}>
             <button
               type="button"
-              style={{ ...buttonBase, background: "#16a34a", color: "#fff" }}
+              style={{ ...buttonBase, background: theme.colors.teal, color: "#fff" }}
               onClick={imFine}
             >
-              I'm fine
+              I&apos;m fine
             </button>
             <button
               type="button"
-              style={{ ...buttonBase, background: "#dc2626", color: "#fff" }}
+              style={{ ...buttonBase, background: theme.colors.primary, color: "#fff" }}
               onClick={onEscalate}
             >
               Get help now

@@ -1,11 +1,16 @@
 "use client";
 
+import { Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { NearbyGuide } from "../../components/location/NearbyGuide";
 import { theme } from "../../lib/theme";
 
-export default function LocationPage() {
+function LocationContent() {
+  const searchParams = useSearchParams();
+  const autoFind = searchParams.get("find") === "1";
+
   return (
-    <main style={{ padding: "40px 0 0" }}>
+    <>
       <header
         style={{
           maxWidth: 960,
@@ -30,11 +35,27 @@ export default function LocationPage() {
           Explore around you
         </h1>
         <p style={{ margin: 0, color: theme.colors.textLight, fontSize: 15, lineHeight: 1.6 }}>
-          Trusted spots nearby, with the safety context you need before you go.
+          Search by address or use your GPS — then browse trusted spots nearby.
         </p>
       </header>
 
-      <NearbyGuide />
+      <NearbyGuide autoFind={autoFind} />
+    </>
+  );
+}
+
+export default function LocationPage() {
+  return (
+    <main style={{ padding: "40px 0 0" }}>
+      <Suspense
+        fallback={
+          <p style={{ textAlign: "center", color: theme.colors.textLight, padding: 40 }}>
+            Loading...
+          </p>
+        }
+      >
+        <LocationContent />
+      </Suspense>
     </main>
   );
 }

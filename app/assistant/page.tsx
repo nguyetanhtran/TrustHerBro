@@ -3,111 +3,78 @@
 import type { CSSProperties } from "react";
 import { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import type { TrustCheckResult } from "../../lib/ai/types";
-import { ChatInput } from "../../components/shared/ChatInput";
-import { TrustBadge } from "../../components/shared/TrustBadge";
+import {
+  AssistantActionCards,
+  type AssistantSuggestionId,
+} from "../../components/assistant/AssistantActionCards";
+import { FairPriceCheck } from "../../components/assistant/FairPriceCheck";
 import { VoiceScamCheck } from "../../components/assistant/VoiceScamCheck";
 import { useLanguage } from "../../lib/i18n/LanguageContext";
+import { theme } from "../../lib/theme";
 
 const cardStyle: CSSProperties = {
   padding: 20,
-  borderRadius: 18,
-  background: "#ffffff",
-  border: "1px solid #e2e8f0",
+  borderRadius: theme.borderRadius.card,
+  background: theme.colors.card,
+  border: `1px solid ${theme.colors.border}`,
+  boxShadow: theme.shadows.soft,
   marginTop: 16,
+  color: theme.colors.text,
 };
 
 function AssistantContent() {
-  const { language, t } = useLanguage();
+  const { t } = useLanguage();
   const searchParams = useSearchParams();
   const initialQuery = searchParams.get("q") ?? "";
+  const initialMode = (searchParams.get("mode") as AssistantSuggestionId | null) ?? null;
 
-  const [result, setResult] = useState<TrustCheckResult | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [active, setActive] = useState<AssistantSuggestionId>(
+    initialMode === "compare" || initialQuery ? "compare" : "scam",
+  );
+  const [suggestedText, setSuggestedText] = useState(initialQuery);
+  const [suggestionKey, setSuggestionKey] = useState(0);
 
-  async function handleSend(subject: string) {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await fetch("/api/trust-check", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ subject, language }),
-      });
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data?.error ?? "Trust check failed.");
-      }
-      const data = (await response.json()) as TrustCheckResult;
-      setResult(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Trust check failed.");
-    } finally {
-      setLoading(false);
-    }
+  function handlePick(id: AssistantSuggestionId, prompt: string) {
+    setActive(id);
+    setSuggestedText(prompt);
+    setSuggestionKey((key) => key + 1);
   }
 
   return (
     <main style={{ maxWidth: 860, margin: "0 auto", padding: "40px 24px 72px" }}>
-      <h1>{t("assistant.title")}</h1>
-      <p>{t("assistant.description")}</p>
+      <h1
+        style={{
+          margin: "0 0 8px",
+          fontSize: "clamp(26px, 4vw, 34px)",
+          color: theme.colors.text,
+          fontWeight: 800,
+        }}
+      >
+        {t("assistant.title")}
+      </h1>
+      <p style={{ margin: "0 0 16px", color: theme.colors.textLight, lineHeight: 1.55 }}>
+        {t("assistant.description")}
+      </p>
 
-      <ChatInput
-        disabled={loading}
-        placeholder={t("assistant.placeholder")}
-        onSend={handleSend}
-        initialValue={initialQuery}
-      />
+      <AssistantActionCards active={active} onPick={handlePick} />
 
-      {error ? (
-        <section style={{ ...cardStyle, borderColor: "#fecaca", color: "#b91c1c" }}>
-          {error}
-        </section>
-      ) : null}
-
-      {result ? (
-        <section style={cardStyle}>
-          <TrustBadge score={result.trustScore} label={result.verdict} />
-          <p>
-            <strong>{result.subject}</strong>
-          </p>
-          {result.warnings.length > 0 ? (
-            <div>
-              <strong>{t("assistant.warnings")}</strong>
-              <ul>
-                {result.warnings.map((warning) => (
-                  <li key={warning}>{warning}</li>
-                ))}
-              </ul>
-            </div>
-          ) : null}
-          {result.supportingReasons.length > 0 ? (
-            <div>
-              <strong>{t("assistant.travelersSay")}</strong>
-              <ul>
-                {result.supportingReasons.map((reason) => (
-                  <li key={reason}>{reason}</li>
-                ))}
-              </ul>
-            </div>
-          ) : null}
-        </section>
-      ) : null}
-
-      <VoiceScamCheck />
+      {active === "compare" ? (
+        <FairPriceCheck key={`price-${suggestionKey}`} suggestedText={suggestedText} />
+      ) : (
+        <VoiceScamCheck key={`scam-${suggestionKey}`} suggestedText={suggestedText} />
+      )}
 
       <section style={cardStyle}>
-        <strong>Q:</strong> {t("assistant.qa1Question")}
-        <p>
-          <strong>A:</strong> {t("assistant.qa1Answer")}
+        <strong style={{ color: theme.colors.primary }}>Q:</strong> {t("assistant.qa1Question")}
+        <p style={{ margin: "8px 0 0", color: theme.colors.textLight }}>
+          <strong style={{ color: theme.colors.text }}>A:</strong> {t("assistant.qa1Answer")}
         </p>
       </section>
 
       <section style={cardStyle}>
-        <strong>Q:</strong> {t("assistant.qa2Question")}
-        <p>
-          <strong>A:</strong> {t("assistant.qa2Answer")}
+        <strong style={{ color: theme.colors.primary }}>Q:</strong> {t("assistant.qa2Question")}
+        <p style={{ margin: "8px 0 0", color: theme.colors.textLight }}>
+          <strong style={{ color: theme.colors.text }}>A:</strong> {t("assistant.qa2Answer")}
         </p>
       </section>
     </main>
@@ -116,7 +83,13 @@ function AssistantContent() {
 
 export default function AssistantPage() {
   return (
-    <Suspense fallback={<div style={{ textAlign: "center", padding: 40 }}>Loading...</div>}>
+    <Suspense
+      fallback={
+        <div style={{ textAlign: "center", padding: 40, color: theme.colors.textLight }}>
+          Loading...
+        </div>
+      }
+    >
       <AssistantContent />
     </Suspense>
   );

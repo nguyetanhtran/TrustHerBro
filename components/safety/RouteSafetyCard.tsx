@@ -1,10 +1,11 @@
 import type { CSSProperties } from "react";
 import type { RiskAssessment } from "../../lib/ai/types";
+import { theme } from "../../lib/theme";
 
 const levelStyles: Record<RiskAssessment["level"], CSSProperties> = {
-  low: { background: "#dcfce7", color: "#166534" },
-  medium: { background: "#fef9c3", color: "#854d0e" },
-  high: { background: "#fee2e2", color: "#991b1b" },
+  low: { background: "rgba(61, 107, 98, 0.16)", color: theme.colors.tealDeep },
+  medium: { background: "rgba(196, 163, 90, 0.22)", color: theme.colors.bronze },
+  high: { background: "rgba(155, 44, 31, 0.12)", color: theme.colors.lacquer },
 };
 
 export function RouteSafetyCard({ assessment }: { assessment: RiskAssessment }) {
@@ -12,9 +13,11 @@ export function RouteSafetyCard({ assessment }: { assessment: RiskAssessment }) 
     <section
       style={{
         padding: 20,
-        borderRadius: 18,
-        background: "#ffffff",
-        border: "1px solid #e2e8f0",
+        borderRadius: theme.borderRadius.card,
+        background: theme.colors.card,
+        border: `1px solid ${theme.colors.border}`,
+        boxShadow: theme.shadows.soft,
+        color: theme.colors.text,
       }}
     >
       <div
@@ -44,7 +47,7 @@ export function RouteSafetyCard({ assessment }: { assessment: RiskAssessment }) 
         <strong>Head to:</strong> {assessment.safeRoute.destination} ·{" "}
         {assessment.safeRoute.etaMinutes} min
       </p>
-      <p style={{ color: "#475569" }}>{assessment.safeRoute.description}</p>
+      <p style={{ color: theme.colors.textLight }}>{assessment.safeRoute.description}</p>
 
       <ul style={{ marginBottom: 0 }}>
         {assessment.safeRoute.instructions.map((item) => (

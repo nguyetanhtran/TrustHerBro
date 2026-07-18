@@ -15,6 +15,7 @@ import { CheckInCard } from "./CheckInCard";
 import { DiscreetModeToggle } from "./DiscreetModeToggle";
 import { EscalateToEmergency } from "./EscalateToEmergency";
 import { useLanguage } from "../../lib/i18n/LanguageContext";
+import { theme } from "../../lib/theme";
 
 const toggleStyle = {
   display: "flex",
@@ -22,8 +23,10 @@ const toggleStyle = {
   justifyContent: "space-between",
   gap: 12,
   padding: 14,
-  borderRadius: 14,
-  background: "#f8fafc",
+  borderRadius: theme.borderRadius.button,
+  background: "rgba(196, 163, 90, 0.12)",
+  border: `1px solid ${theme.colors.border}`,
+  color: theme.colors.text,
 } as const;
 
 export function SafetyChat() {
@@ -38,7 +41,6 @@ export function SafetyChat() {
   const [loading, setLoading] = useState(false);
   const coordsRef = useRef<Coordinates | null>(null);
 
-  // Location is opt-in: we only ask the browser for it once she turns it on.
   function handleLocationChange(enabled: boolean) {
     setShareLocation(enabled);
     if (!enabled) {
@@ -85,7 +87,6 @@ export function SafetyChat() {
         { id: crypto.randomUUID(), role: "assistant", content: reply },
       ]);
 
-      // Discreet Mode: read English guidance quietly through earphones.
       if (discreetMode) {
         const spoken = [data.summary, data.actions[0]].filter(Boolean).join(". ");
         speakGuidance(spoken);
@@ -104,10 +105,12 @@ export function SafetyChat() {
     <div style={{ display: "grid", gap: 18 }}>
       <div
         style={{
-          background: "#ffffff",
+          background: theme.colors.card,
           padding: 20,
-          borderRadius: 20,
-          border: "1px solid #e2e8f0",
+          borderRadius: theme.borderRadius.card,
+          border: `1px solid ${theme.colors.border}`,
+          boxShadow: theme.shadows.soft,
+          color: theme.colors.text,
         }}
       >
         <div style={{ display: "grid", gap: 12, marginBottom: 18 }}>
@@ -116,13 +119,17 @@ export function SafetyChat() {
               key={message.id}
               style={{
                 padding: 14,
-                borderRadius: 14,
+                borderRadius: theme.borderRadius.button,
                 background:
-                  message.role === "assistant" ? "#eff6ff" : "#fff7ed",
+                  message.role === "assistant"
+                    ? "rgba(196, 163, 90, 0.14)"
+                    : "rgba(155, 44, 31, 0.08)",
               }}
             >
-              <strong style={{ textTransform: "capitalize" }}>{message.role}</strong>
-              <p style={{ marginBottom: 0 }}>{message.content}</p>
+              <strong style={{ textTransform: "capitalize", color: theme.colors.primary }}>
+                {message.role}
+              </strong>
+              <p style={{ marginBottom: 0, color: theme.colors.text }}>{message.content}</p>
             </div>
           ))}
         </div>
@@ -139,7 +146,7 @@ export function SafetyChat() {
             <span>
               <strong>{t("safety.shareLocation")}</strong>
               <br />
-              <small style={{ color: "#64748b" }}>{t("safety.shareLocationHint")}</small>
+              <small style={{ color: theme.colors.textLight }}>{t("safety.shareLocationHint")}</small>
             </span>
             <input
               type="checkbox"

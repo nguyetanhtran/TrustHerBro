@@ -1,0 +1,84 @@
+{
+  "updatedAt": "2026-07-01",
+  "source": "Seeded from traveler reports, fare boards, and tourist-area menus. Ranges use a ±30% band so honest sellers are not falsely flagged.",
+  "reviewCadence": "Refresh monthly; append traveler price reports via /api/price-report for human review.",
+  "items": [
+    {
+      "city": "Hà Nội",
+      "category": "food",
+      "item": "Bottled water 500ml (tourist area)",
+      "priceRangeVnd": [10000, 25000],
+      "note": "Above 30k is often a tourist markup"
+    },
+    {
+      "city": "Hà Nội",
+      "category": "food",
+      "item": "Phở bò (standard bowl)",
+      "priceRangeVnd": [40000, 70000],
+      "note": "Old Quarter tourist spots run higher"
+    },
+    {
+      "city": "Hà Nội",
+      "category": "food",
+      "item": "Cà phê sữa đá",
+      "priceRangeVnd": [25000, 45000]
+    },
+    {
+      "city": "Hà Nội",
+      "category": "food",
+      "item": "Bia hơi (street glass)",
+      "priceRangeVnd": [10000, 20000]
+    },
+    {
+      "city": "Hà Nội",
+      "category": "goods",
+      "item": "SIM tourist eSIM / physical day pack",
+      "priceRangeVnd": [50000, 150000],
+      "note": "Airport kiosks charge more"
+    },
+    {
+      "city": "TP. Hồ Chí Minh",
+      "category": "food",
+      "item": "Bottled water 500ml (tourist area)",
+      "priceRangeVnd": [10000, 25000]
+    },
+    {
+      "city": "TP. Hồ Chí Minh",
+      "category": "food",
+      "item": "Cơm tấm / broken rice plate",
+      "priceRangeVnd": [45000, 80000]
+    },
+    {
+      "city": "TP. Hồ Chí Minh",
+      "category": "food",
+      "item": "Cà phê sữa đá",
+      "priceRangeVnd": [30000, 55000]
+    },
+    {
+      "city": "TP. Hồ Chí Minh",
+      "category": "goods",
+      "item": "Ao dai souvenir (machine-made)",
+      "priceRangeVnd": [200000, 600000],
+      "note": "Hand-tailored is higher; pressure sales are a red flag"
+    },
+    {
+      "city": "Đà Nẵng",
+      "category": "food",
+      "item": "Seafood set (tourist beach)",
+      "priceRangeVnd": [250000, 550000],
+      "note": "Confirm price before ordering; weigh-based bills can jump"
+    },
+    {
+      "city": "Đà Nẵng",
+      "category": "food",
+      "item": "Mì Quảng bowl",
+      "priceRangeVnd": [35000, 60000]
+    },
+    {
+      "city": "Đà Nẵng",
+      "category": "goods",
+      "item": "Bottled water 500ml",
+      "priceRangeVnd": [10000, 20000]
+    }
+  ]
+}

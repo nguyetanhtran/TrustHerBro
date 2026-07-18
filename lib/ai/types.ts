@@ -98,6 +98,8 @@ export type ScamCheckResult = {
   advice: string;
   /** Honest caveat shown to the user. */
   disclaimer: string;
+  usedFallback?: boolean;
+  code?: "OK" | "NO_API_KEY" | "VISION_FAILED" | "MODEL_FAILED";
 };
 
 export type TrustCheckResult = {
@@ -106,6 +108,20 @@ export type TrustCheckResult = {
   verdict: string;
   supportingReasons: string[];
   warnings: string[];
+  /** Catalog rows the check grounded on (for UI citation). */
+  groundingMatches?: Array<{
+    label: string;
+    city?: string;
+    rangeVnd: [number, number];
+    updatedAt?: string;
+    source?: string;
+  }>;
+  /** Items read from a photo before scoring. */
+  extractedItems?: Array<{ name: string; priceVnd: number }>;
+  /** Live comparison links (Grab / Maps), not a live fare API. */
+  liveEstimates?: Array<{ label: string; url: string }>;
+  usedFallback?: boolean;
+  code?: "OK" | "NO_API_KEY" | "VISION_FAILED" | "MODEL_FAILED";
 };
 
 export type NearbyCategory = "food" | "fun" | "cafe" | "essentials" | "simCard";
@@ -121,8 +137,12 @@ export type NearbyPlace = {
   category: NearbyCategory;
   /** Straight-line distance from the user, in metres. */
   distanceMeters?: number;
-  /** Whether Google reports the place as open right now. */
+  /** Whether the place is open right now (from Google Places when available). */
   openNow?: boolean;
+  /** Today's hours line, e.g. "Monday: 8:00 AM – 10:00 PM". */
+  hoursToday?: string;
+  /** Full weekly hours from Google Places weekday_text. */
+  weekdayHours?: string[];
 };
 
 export type NearbySuggestionsResult = {

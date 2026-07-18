@@ -1,17 +1,38 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { theme } from "../../lib/theme";
+import { DongSonDecor } from "./DongSonDecor";
+import { LocationDecor } from "../location/LocationDecor";
+import { ChatDecor } from "../assistant/ChatDecor";
+import { FirstNightDecor } from "../onboarding/FirstNightDecor";
+import { TranslateDecor } from "../translate/TranslateDecor";
 
-/** Soft paper wash only — heritage art scrolls with page content instead. */
+/** Soft paper wash + page-specific heritage watermarks. */
 export function BackgroundDecorations() {
   const [mounted, setMounted] = useState(false);
+  const pathname = usePathname();
+  const isLocation = pathname === "/location" || pathname?.startsWith("/location/");
+  const isChat = pathname === "/assistant" || pathname?.startsWith("/assistant/");
+  const isTranslate = pathname === "/translate" || pathname?.startsWith("/translate/");
+  const isFirstNight =
+    pathname === "/onboarding" ||
+    pathname?.startsWith("/onboarding/") ||
+    pathname === "/timeline" ||
+    pathname?.startsWith("/timeline/");
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
   if (!mounted) return null;
+
+  let decor = <DongSonDecor />;
+  if (isLocation) decor = <LocationDecor />;
+  else if (isChat) decor = <ChatDecor />;
+  else if (isTranslate) decor = <TranslateDecor />;
+  else if (isFirstNight) decor = <FirstNightDecor />;
 
   return (
     <div
@@ -35,6 +56,7 @@ export function BackgroundDecorations() {
           `,
         }}
       />
+      {decor}
       <div
         style={{
           position: "absolute",

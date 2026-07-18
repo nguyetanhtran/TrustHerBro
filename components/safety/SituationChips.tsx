@@ -1,9 +1,8 @@
 "use client";
 
 import type { CSSProperties } from "react";
+import { theme } from "../../lib/theme";
 
-// The natural-language triggers from the spec — soft entry points instead of
-// a big red alarm button. Tapping one sends it as her message.
 const SITUATIONS = [
   "I don't feel comfortable here.",
   "This street is very empty.",
@@ -16,12 +15,13 @@ const SITUATIONS = [
 const chipStyle: CSSProperties = {
   padding: "10px 14px",
   borderRadius: 999,
-  border: "1px solid #cbd5e1",
-  background: "#ffffff",
-  color: "#334155",
+  border: `1px solid ${theme.colors.border}`,
+  background: theme.colors.card,
+  color: theme.colors.text,
   fontSize: 14,
   textAlign: "left",
   cursor: "pointer",
+  fontFamily: "inherit",
 };
 
 export function SituationChips({
@@ -33,14 +33,14 @@ export function SituationChips({
 }) {
   return (
     <div>
-      <small style={{ color: "#64748b" }}>Tell me what's going on:</small>
+      <small style={{ color: theme.colors.textLight }}>Tell me what's going on:</small>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 8 }}>
         {SITUATIONS.map((situation) => (
           <button
             key={situation}
             type="button"
             disabled={disabled}
-            style={{ ...chipStyle, cursor: disabled ? "wait" : "pointer" }}
+            style={{ ...chipStyle, cursor: disabled ? "wait" : "pointer", opacity: disabled ? 0.7 : 1 }}
             onClick={() => onPick(situation)}
           >
             {situation}

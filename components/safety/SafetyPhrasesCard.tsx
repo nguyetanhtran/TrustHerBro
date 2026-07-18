@@ -3,12 +3,15 @@
 import type { CSSProperties } from "react";
 import type { SafetyPhrase } from "../../lib/ai/types";
 import { playVietnamesePhrase } from "../../lib/utils/speech";
+import { theme } from "../../lib/theme";
 
 const cardStyle: CSSProperties = {
   padding: 20,
-  borderRadius: 18,
-  background: "#ffffff",
-  border: "1px solid #e2e8f0",
+  borderRadius: theme.borderRadius.card,
+  background: theme.colors.card,
+  border: `1px solid ${theme.colors.border}`,
+  boxShadow: theme.shadows.soft,
+  color: theme.colors.text,
 };
 
 const rowStyle: CSSProperties = {
@@ -17,19 +20,21 @@ const rowStyle: CSSProperties = {
   justifyContent: "space-between",
   gap: 12,
   padding: "12px 14px",
-  borderRadius: 14,
-  background: "#f8fafc",
+  borderRadius: theme.borderRadius.button,
+  background: "rgba(196, 163, 90, 0.12)",
+  border: `1px solid ${theme.colors.border}`,
 };
 
 const playButtonStyle: CSSProperties = {
   flexShrink: 0,
   padding: "10px 14px",
-  borderRadius: 12,
+  borderRadius: theme.borderRadius.button,
   border: "none",
-  background: "#1d4ed8",
+  background: theme.colors.primary,
   color: "#ffffff",
   fontWeight: 700,
   cursor: "pointer",
+  fontFamily: "inherit",
 };
 
 export function SafetyPhrasesCard({ phrases }: { phrases: SafetyPhrase[] }) {
@@ -38,7 +43,7 @@ export function SafetyPhrasesCard({ phrases }: { phrases: SafetyPhrase[] }) {
   return (
     <section style={cardStyle}>
       <h3 style={{ marginTop: 0 }}>Say this in Vietnamese</h3>
-      <p style={{ color: "#64748b", marginTop: 0 }}>
+      <p style={{ color: theme.colors.textLight, marginTop: 0 }}>
         Tap play to speak the phrase out loud, or show your screen to a local.
       </p>
       <div style={{ display: "grid", gap: 10 }}>
@@ -48,13 +53,11 @@ export function SafetyPhrasesCard({ phrases }: { phrases: SafetyPhrase[] }) {
               <strong style={{ fontSize: 18 }}>{phrase.vietnamese}</strong>
               <br />
               {phrase.phonetic ? (
-                <>
-                  <small style={{ color: "#0f766e", display: "block" }}>
-                    {phrase.phonetic}
-                  </small>
-                </>
+                <small style={{ color: theme.colors.bronze, display: "block" }}>
+                  {phrase.phonetic}
+                </small>
               ) : null}
-              <small style={{ color: "#64748b" }}>{phrase.english}</small>
+              <small style={{ color: theme.colors.textLight }}>{phrase.english}</small>
             </span>
             <button
               type="button"

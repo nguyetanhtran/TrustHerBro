@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import Link from "next/link";
+import { theme } from "../../lib/theme";
 
 const wrapStyle: CSSProperties = {
   display: "flex",
@@ -7,16 +8,14 @@ const wrapStyle: CSSProperties = {
   justifyContent: "center",
   gap: 8,
   padding: "12px 14px",
-  borderRadius: 14,
+  borderRadius: theme.borderRadius.button,
   background: "transparent",
-  border: "1px dashed #fca5a5",
-  color: "#b91c1c",
+  border: `1px dashed ${theme.colors.primary}`,
+  color: theme.colors.primary,
   textDecoration: "none",
   fontWeight: 600,
 };
 
-// Subtle, always-available exit to Emergency Mode. Safety Mode stays soft;
-// this is the escape hatch for when something is actually happening now.
 export function EscalateToEmergency() {
   return (
     <Link href="/emergency" style={wrapStyle}>

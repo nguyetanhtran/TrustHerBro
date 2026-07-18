@@ -1,176 +1,206 @@
 import { NextResponse } from "next/server";
-import { runOpenAIJson } from "../../../lib/ai/openai";
 import { buildTrustCheckPrompt } from "../../../lib/ai/prompts/trustCheckPrompt";
 import communityReports from "../../../lib/data/communityReports.json";
 import scamWarnings from "../../../lib/data/scamWarnings.json";
-import transportPrices from "../../../lib/data/transportPrices.json";
+import { formatCatalogMatch, loadPriceCatalog } from "../../../lib/data/priceCatalog";
 import type { TrustCheckResult } from "../../../lib/ai/types";
 import type { LanguageCode } from "../../../lib/i18n/translations";
-
-type TransportPrice = {
-  city: string;
-  route: string;
-  method: string;
-  priceRangeVnd: [number, number];
-  etaMin: number;
-  note?: string;
-};
+import { evaluatePriceAlarm } from "../../../lib/eval/priceScore";
 
 type RawTrustResult = {
   trustScore?: number;
   verdict?: string;
   supportingReasons?: string[];
   warnings?: string[];
+  extractedItems?: Array<{ name?: string; priceVnd?: number }>;
+  groundingMatch?: string;
 };
 
-function normalizeText(value: string) {
-  return value.trim().toLowerCase();
-}
+const OPENAI_CHAT_URL = "https://api.openai.com/v1/chat/completions";
 
 function formatVnd(value: number) {
   return value.toLocaleString("en-US");
 }
 
-// Parses Vietnamese shorthand amounts: "500k" -> 500000, "1tr"/"1 triệu" -> 1000000,
-// or a plain number of 4+ digits.
-function extractVndAmount(text: string): number | null {
-  const lower = text.toLowerCase();
-
-  const trMatch = lower.match(/(\d+(?:[.,]\d+)?)\s*(tr|triệu|trieu)\b/);
-  if (trMatch) return Math.round(parseFloat(trMatch[1].replace(",", ".")) * 1_000_000);
-
-  const kMatch = lower.match(/(\d+(?:[.,]\d+)?)\s*k\b/);
-  if (kMatch) return Math.round(parseFloat(kMatch[1].replace(",", ".")) * 1_000);
-
-  const plainMatch = lower.match(/(\d{4,})/);
-  if (plainMatch) return Number(plainMatch[1]);
-
-  return null;
+function buildLiveEstimates(subject: string) {
+  const q = encodeURIComponent(subject || "Vietnam taxi fare");
+  return [
+    {
+      label: "Open Grab for a ride estimate",
+      url: `https://www.grab.com/vn/en/transport/`,
+    },
+    {
+      label: "Check the route on Google Maps",
+      url: `https://www.google.com/maps/search/?api=1&query=${q}`,
+    },
+  ];
 }
 
-// Common Vietnamese names for the same places/routes used in transportPrices.json,
-// so "500k đi Phố Cổ" matches the "Old Quarter" fare entries.
-const PLACE_ALIASES: [string, string][] = [
-  ["phố cổ", "old quarter"],
-  ["pho co", "old quarter"],
-  ["nội bài", "noi bai"],
-  ["sân bay nội bài", "noi bai airport"],
-  ["tân sơn nhất", "tan son nhat"],
-  ["quận 1", "district 1"],
-  ["quan 1", "district 1"],
-  ["đà nẵng", "da nang"],
-  ["sài gòn", "ho chi minh"],
-  ["sai gon", "ho chi minh"],
-];
+function buildFallback(subject: string, catalogUpdatedAt: string): {
+  result: TrustCheckResult;
+  priced: boolean;
+} {
+  const alarm = evaluatePriceAlarm(subject);
+  const warnings = scamWarnings
+    .filter((item) => {
+      const n = subject.toLowerCase();
+      return (
+        item.title.toLowerCase().includes(n) ||
+        n.includes(item.title.toLowerCase().slice(0, 12))
+      );
+    })
+    .map((item) => item.title);
 
-function expandAliases(text: string): string {
-  let expanded = text;
-  for (const [vi, en] of PLACE_ALIASES) {
-    if (expanded.includes(vi)) expanded += ` ${en}`;
-  }
-  return expanded;
-}
-
-function findMatchingFares(text: string): TransportPrice[] {
-  const normalized = expandAliases(normalizeText(text));
-  return (transportPrices as TransportPrice[]).filter((entry) => {
-    const words = [
-      ...normalizeText(entry.route).split(/[^a-zà-ỹ0-9]+/),
-      ...normalizeText(entry.city).split(/[^a-zà-ỹ0-9]+/),
-    ].filter((word) => word.length > 3);
-    return words.some((word) => normalized.includes(word));
-  });
-}
-
-function buildFallback(subject: string): { result: TrustCheckResult; priced: boolean } {
-  const normalized = normalizeText(subject);
-  const reports = communityReports.filter(
-    (item) =>
-      normalizeText(item.subject).includes(normalized) ||
-      normalized.includes(normalizeText(item.subject)),
-  );
-  const warnings = scamWarnings.filter(
-    (item) =>
-      normalizeText(item.title).includes(normalized) ||
-      normalizeText(item.description).includes(normalized),
-  );
-
-  const amount = extractVndAmount(subject);
-  const fares = findMatchingFares(subject);
-
-  if (amount && fares.length > 0) {
-    // Pick the fare option the quoted amount actually fits closest to (e.g. a
-    // Grab-range quote should compare against Grab, not the cheapest bus option).
-    const distanceToRange = (entry: TransportPrice) => {
-      const [min, max] = entry.priceRangeVnd;
-      if (amount < min) return min - amount;
-      if (amount > max) return amount - max;
-      return 0;
-    };
-    const best = fares.reduce((a, b) => (distanceToRange(a) <= distanceToRange(b) ? a : b));
-    const [min, max] = best.priceRangeVnd;
-    const overpriced = amount > max * 1.3;
-    const fair = amount >= min * 0.7 && amount <= max * 1.3;
-
+  if (alarm.matched && alarm.amount != null && alarm.range) {
+    const [min, max] = alarm.range;
+    const overpriced = alarm.alarmed;
     return {
       priced: true,
       result: {
         subject,
-        trustScore: overpriced ? 2 : fair ? 9 : 6,
+        trustScore: overpriced ? 2 : 9,
         verdict: overpriced
-          ? `Overpriced — normal fare for ${best.route} is ${formatVnd(min)}-${formatVnd(max)} VND via ${best.method}`
-          : `Looks fair — normal fare for ${best.route} is ${formatVnd(min)}-${formatVnd(max)} VND via ${best.method}`,
+          ? `Overpriced — normal for ${alarm.label} is ${formatVnd(min)}-${formatVnd(max)} VND`
+          : `Looks fair — normal for ${alarm.label} is ${formatVnd(min)}-${formatVnd(max)} VND`,
         supportingReasons: [
-          `Reference fare (${best.method}, ${best.city}): ${formatVnd(min)}-${formatVnd(max)} VND, ~${best.etaMin} min.`,
-          ...reports.map((item) => item.summary),
+          `Typical range: ${formatVnd(min)}-${formatVnd(max)} VND.`,
+          "We only flag prices that look clearly above the usual local range.",
         ],
-        warnings: warnings.map((item) => item.title),
+        warnings,
+        groundingMatches: [
+          {
+            label: alarm.label,
+            rangeVnd: [min, max],
+            updatedAt: catalogUpdatedAt,
+            source: "catalog",
+          },
+        ],
+        liveEstimates: buildLiveEstimates(subject),
       },
     };
   }
 
-  const score = Math.min(10, Math.max(2, 10 - warnings.length * 2 + reports.length));
+  const reports = communityReports
+    .filter((item) => subject.toLowerCase().includes(item.subject.toLowerCase().slice(0, 8)))
+    .map((item) => item.summary);
+
   return {
     priced: false,
     result: {
       subject,
-      trustScore: Number(score.toFixed(1)),
-      verdict:
-        warnings.length > 0
-          ? "Needs caution"
-          : reports.length > 0
-            ? "Looks generally trusted"
-            : "Not enough signal yet",
-      supportingReasons: reports.map((item) => item.summary),
-      warnings: warnings.map((item) => item.title),
+      trustScore: warnings.length ? 2 : reports.length ? 8 : 6,
+      verdict: warnings.length
+        ? "Needs caution"
+        : reports.length
+          ? "Looks generally trusted"
+          : "Not enough signal yet — compare with Grab or another stall",
+      supportingReasons: [...reports, "Compared with typical local prices for this area."],
+      warnings,
+      liveEstimates: buildLiveEstimates(subject),
     },
   };
+}
+
+async function runTrustModel({
+  subject,
+  image,
+  language,
+  catalogItems,
+  catalogUpdatedAt,
+  catalogSource,
+  fallback,
+}: {
+  subject: string;
+  image: string | null;
+  language: LanguageCode;
+  catalogItems: Awaited<ReturnType<typeof loadPriceCatalog>>["items"];
+  catalogUpdatedAt: string;
+  catalogSource: string;
+  fallback: TrustCheckResult;
+}): Promise<{ raw: RawTrustResult; code: TrustCheckResult["code"]; usedFallback: boolean }> {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    return { raw: fallback, code: "NO_API_KEY", usedFallback: true };
+  }
+
+  const userContent = image
+    ? [
+        {
+          type: "text",
+          text:
+            subject.trim() ||
+            "Photo-only check: OCR every visible item name and VND price from this receipt/menu/price board/meter, fill extractedItems, then compare to catalog ranges.",
+        },
+        { type: "image_url", image_url: { url: image } },
+      ]
+    : subject;
+
+  let response: Response;
+  try {
+    response = await fetch(OPENAI_CHAT_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        temperature: 0.2,
+        response_format: { type: "json_object" },
+        messages: [
+          {
+            role: "system",
+            content: buildTrustCheckPrompt(language, catalogItems, catalogUpdatedAt, catalogSource),
+          },
+          { role: "user", content: userContent },
+        ],
+      }),
+    });
+  } catch {
+    return { raw: fallback, code: image ? "VISION_FAILED" : "MODEL_FAILED", usedFallback: true };
+  }
+
+  if (!response.ok) {
+    return { raw: fallback, code: image ? "VISION_FAILED" : "MODEL_FAILED", usedFallback: true };
+  }
+
+  const data = await response.json();
+  const content = data?.choices?.[0]?.message?.content;
+  if (typeof content !== "string") {
+    return { raw: fallback, code: "MODEL_FAILED", usedFallback: true };
+  }
+  try {
+    return { raw: JSON.parse(content) as RawTrustResult, code: "OK", usedFallback: false };
+  } catch {
+    return { raw: fallback, code: "MODEL_FAILED", usedFallback: true };
+  }
 }
 
 export async function POST(request: Request) {
   const body = await request.json();
   const subject = String(body?.subject ?? "");
+  const image = typeof body?.image === "string" ? body.image : null;
   const language = (body?.language as LanguageCode) ?? "en";
 
-  if (!subject.trim()) {
-    return NextResponse.json(
-      { error: "Subject is required." },
-      { status: 400 },
-    );
+  if (!subject.trim() && !image) {
+    return NextResponse.json({ error: "Subject or a photo is required." }, { status: 400 });
   }
 
-  const { result: fallback, priced } = buildFallback(subject);
+  const catalog = await loadPriceCatalog();
+  const subjectForFallback =
+    subject.trim() ||
+    (image ? "Photo price check" : "");
+  const { result: fallback, priced } = buildFallback(subjectForFallback, catalog.updatedAt);
 
-  let raw: RawTrustResult;
-  try {
-    raw = await runOpenAIJson<RawTrustResult>({
-      systemPrompt: buildTrustCheckPrompt(language),
-      userPrompt: subject,
-      fallback,
-    });
-  } catch {
-    raw = fallback;
-  }
+  const { raw, code, usedFallback } = await runTrustModel({
+    subject,
+    image,
+    language,
+    catalogItems: catalog.items,
+    catalogUpdatedAt: catalog.updatedAt,
+    catalogSource: catalog.source,
+    fallback,
+  });
 
   const rawWarnings = Array.isArray(raw.warnings)
     ? raw.warnings.filter((item) => typeof item === "string" && item.trim().length > 0)
@@ -182,29 +212,85 @@ export async function POST(request: Request) {
   const supportingReasons = rawReasons.length > 0 ? rawReasons : fallback.supportingReasons;
   const verdict = raw.verdict?.trim() || fallback.verdict;
 
-  // The model is reliable for text (verdict wording, semantic warning
-  // matches) but not for the numeric trustScore — it sometimes reports a
-  // high score for a situation its own verdict just called untrustworthy,
-  // and it always writes *some* reasoning text even when there's no real
-  // data (e.g. explaining that nothing matched). So the score always comes
-  // from our own logic, anchored to our own keyword-matched reports rather
-  // than the model's prose, never from the model's raw number.
-  const hasReportSignal = fallback.supportingReasons.length > 0;
+  const extractedItems = Array.isArray(raw.extractedItems)
+    ? raw.extractedItems
+        .map((entry) => ({
+          name: String(entry?.name ?? "").trim(),
+          priceVnd: Number(entry?.priceVnd),
+        }))
+        .filter((entry) => entry.name && Number.isFinite(entry.priceVnd) && entry.priceVnd > 0)
+    : [];
+
+  // Prefer deterministic catalog match when text/photo extract yields an amount+item.
+  const probeText =
+    subject.trim() ||
+    extractedItems.map((entry) => `${entry.name} ${entry.priceVnd}`).join(" ");
+  const alarm = evaluatePriceAlarm(probeText || subjectForFallback);
+  const groundingMatches =
+    alarm.matched && alarm.range
+      ? [
+          {
+            label: alarm.label,
+            rangeVnd: alarm.range,
+            updatedAt: catalog.updatedAt,
+            source: "catalog",
+          },
+        ]
+      : fallback.groundingMatches;
+
+  if (raw.groundingMatch?.trim() && (!groundingMatches || groundingMatches.length === 0)) {
+    // Keep model citation as a soft match line in reasons.
+    supportingReasons.unshift(raw.groundingMatch.trim());
+  }
+
+  const hasCommunitySignal = communityReports.some((item) =>
+    (probeText || subjectForFallback)
+      .toLowerCase()
+      .includes(item.subject.toLowerCase().slice(0, 8)),
+  );
   const trustScore = priced
     ? fallback.trustScore
-    : warnings.length > 0
-      ? Math.max(1, 3 - warnings.length)
-      : hasReportSignal
-        ? 9
-        : 6;
+    : alarm.matched
+      ? alarm.alarmed
+        ? 2
+        : 9
+      : warnings.length > 0
+        ? Math.max(1, 3 - warnings.length)
+        : hasCommunitySignal
+          ? 9
+          : 6;
 
   const result: TrustCheckResult = {
-    subject,
+    subject: subject.trim() || (extractedItems[0] ? `${extractedItems[0].name} ${extractedItems[0].priceVnd}` : "Photo price check"),
     trustScore,
     verdict,
     supportingReasons,
     warnings,
+    groundingMatches,
+    extractedItems: extractedItems.length ? extractedItems : undefined,
+    liveEstimates: buildLiveEstimates(probeText || subjectForFallback),
+    usedFallback,
+    code,
   };
 
-  return NextResponse.json(result);
+  // Surface explicit citation string first in reasons when we have a match.
+  if (groundingMatches?.[0]) {
+    const cite = formatCatalogMatch({
+      city: groundingMatches[0].city ?? "",
+      category: "goods",
+      item: groundingMatches[0].label,
+      priceRangeVnd: groundingMatches[0].rangeVnd,
+      updatedAt: groundingMatches[0].updatedAt,
+      source: groundingMatches[0].source,
+    });
+    if (!result.supportingReasons.some((line) => line.startsWith("Matched:"))) {
+      result.supportingReasons = [cite, ...result.supportingReasons];
+    }
+  }
+
+  return NextResponse.json({
+    ...result,
+    catalogUpdatedAt: catalog.updatedAt,
+    catalogSource: catalog.source,
+  });
 }

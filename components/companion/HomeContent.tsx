@@ -177,7 +177,7 @@ export function HomeContent({
             </ScrollSection>
 
             <ScrollSection preset="rise" delay={0.1}>
-              <NearbySuggestions />
+              <NearbySuggestions linkToLocation />
             </ScrollSection>
           </div>
         </div>

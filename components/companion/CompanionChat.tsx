@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import type { AppMode } from "../../lib/ai/types";
 import { useVoiceRecorder } from "../../lib/utils/useVoiceRecorder";
 import { useLanguage } from "../../lib/i18n/LanguageContext";
+import { theme } from "../../lib/theme";
+import { Camera, Mic, Square } from "lucide-react";
 
 type Bubble = {
   id: string;
@@ -55,15 +57,16 @@ const iconButton = (active = false): CSSProperties => ({
   flexShrink: 0,
   width: 44,
   height: 44,
-  borderRadius: 14,
-  border: "1px solid #cbd5e1",
-  background: active ? "#dc2626" : "#ffffff",
-  color: active ? "#ffffff" : "#334155",
-  fontSize: 18,
+  borderRadius: theme.borderRadius.button,
+  border: `1px solid ${active ? theme.colors.primary : theme.colors.border}`,
+  background: active ? theme.colors.primary : "rgba(155, 44, 31, 0.06)",
+  color: active ? "#ffffff" : theme.colors.primary,
   cursor: "pointer",
-  display: "flex",
+  display: "inline-flex",
   alignItems: "center",
   justifyContent: "center",
+  padding: 0,
+  lineHeight: 0,
 });
 
 const inputStyle: CSSProperties = {
@@ -256,7 +259,7 @@ export function CompanionChat() {
           aria-label={t("companion.addPhoto")}
           title={t("companion.addPhoto")}
         >
-          📷
+          <Camera size={20} strokeWidth={2} aria-hidden />
         </button>
         <button
           type="button"
@@ -266,7 +269,11 @@ export function CompanionChat() {
           aria-label={recorder.recording ? t("scamCheck.stop") : t("scamCheck.speak")}
           title={recorder.recording ? t("scamCheck.stop") : t("scamCheck.speak")}
         >
-          {recorder.recording ? "■" : "🎤"}
+          {recorder.recording ? (
+            <Square size={16} strokeWidth={2.5} fill="currentColor" aria-hidden />
+          ) : (
+            <Mic size={20} strokeWidth={2} aria-hidden />
+          )}
         </button>
         <input
           value={text}

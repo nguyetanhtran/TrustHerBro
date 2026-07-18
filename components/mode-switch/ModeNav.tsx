@@ -1,30 +1,38 @@
 "use client";
 
 import type { CSSProperties } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { AppMode } from "../../lib/ai/types";
 import { AccountMenu } from "../auth/AccountMenu";
 import { theme } from "../../lib/theme";
+import { motion, AnimatePresence } from "framer-motion";
 
-import { motion } from "framer-motion";
-
-type ModeLink = {
+type NavLink = {
   mode: string;
   href: string;
   label: string;
 };
 
-const MODES: ModeLink[] = [
+const TOP_LINKS: NavLink[] = [
   { mode: "translate", href: "/translate", label: "Translate" },
   { mode: "location", href: "/location", label: "Location" },
-  { mode: "assistant", href: "/assistant", label: "Chat" },
+];
+
+const APP_MODES: NavLink[] = [
+  { mode: "first-night", href: "/onboarding", label: "First Night" },
+  { mode: "assistant", href: "/assistant", label: "Assistant" },
+  { mode: "safety", href: "/safety", label: "Safety" },
+  { mode: "emergency", href: "/emergency", label: "Emergency" },
 ];
 
 function modeForPath(pathname: string): string | null {
   if (pathname.startsWith("/translate")) return "translate";
   if (pathname.startsWith("/location")) return "location";
+  if (pathname.startsWith("/onboarding") || pathname.startsWith("/timeline")) return "first-night";
   if (pathname.startsWith("/assistant")) return "assistant";
+  if (pathname.startsWith("/safety")) return "safety";
+  if (pathname.startsWith("/emergency")) return "emergency";
   return null;
 }
 
@@ -75,81 +83,149 @@ const linkBase: CSSProperties = {
   fontSize: 15,
   transition: "color 0.2s ease",
   borderRadius: 999,
-  display: "flex",
+  display: "inline-flex",
   alignItems: "center",
   justifyContent: "center",
+  whiteSpace: "nowrap",
+  border: "none",
+  background: "transparent",
+  cursor: "pointer",
+  fontFamily: "inherit",
 };
+
+function ActivePill() {
+  return (
+    <motion.div
+      layoutId="activeTab"
+      style={{
+        position: "absolute",
+        inset: 0,
+        background: "rgba(155, 44, 31, 0.1)",
+        borderRadius: 999,
+        zIndex: -1,
+      }}
+      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+    />
+  );
+}
+
+function ModeMenu({ current }: { current: string | null }) {
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const modeActive = APP_MODES.some((item) => item.mode === current);
+
+  useEffect(() => {
+    if (!open) return;
+    function onPointerDown(event: MouseEvent | TouchEvent) {
+      const target = event.target as Node;
+      if (rootRef.current && !rootRef.current.contains(target)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", onPointerDown);
+    document.addEventListener("touchstart", onPointerDown);
+    return () => {
+      document.removeEventListener("mousedown", onPointerDown);
+      document.removeEventListener("touchstart", onPointerDown);
+    };
+  }, [open]);
+
+  return (
+    <div
+      ref={rootRef}
+      style={{ display: "flex", alignItems: "center", gap: 4 }}
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+    >
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-haspopup="true"
+        onClick={() => setOpen((value) => !value)}
+        style={{
+          ...linkBase,
+          color: modeActive || open ? theme.colors.primary : theme.colors.textLight,
+        }}
+      >
+        {modeActive && !open ? <ActivePill /> : null}
+        Mode
+      </button>
+
+      <AnimatePresence initial={false}>
+        {open ? (
+          <motion.div
+            key="modes"
+            initial={{ width: 0, opacity: 0 }}
+            animate={{ width: "auto", opacity: 1 }}
+            exit={{ width: 0, opacity: 0 }}
+            transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+            style={{
+              overflow: "hidden",
+              display: "flex",
+              alignItems: "center",
+              gap: 4,
+            }}
+          >
+            {APP_MODES.map((item) => {
+              const isActive = item.mode === current;
+              return (
+                <Link
+                  key={item.mode}
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  style={{
+                    ...linkBase,
+                    color: isActive ? theme.colors.primary : theme.colors.textLight,
+                  }}
+                  aria-current={isActive ? "page" : undefined}
+                >
+                  {isActive ? <ActivePill /> : null}
+                  {item.label}
+                </Link>
+              );
+            })}
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+    </div>
+  );
+}
 
 export function ModeNav() {
   const pathname = usePathname() ?? "/";
 
-  // No chrome on the pre-app screens.
   if (pathname === "/login" || pathname === "/welcome") return null;
 
   const current = modeForPath(pathname);
   const isLanding = pathname === "/";
 
-  let left;
-  if (isLanding) {
-    left = (
-      <>
-        <Link href="/" style={brandStyle}>
-          TrustHerBro
-        </Link>
-        <div style={{ width: 1, height: 16, background: theme.colors.border }} aria-hidden />
-        {MODES.map((item) => (
-           <Link
-             key={item.mode}
-             href={item.href}
-             style={{ ...linkBase, color: theme.colors.textLight }}
-           >
-             {item.label}
-           </Link>
-        ))}
-      </>
-    );
-  } else {
-    left = (
-      <>
-        <Link href="/" style={brandStyle}>TrustHerBro</Link>
-        <div style={{ width: 1, height: 16, background: theme.colors.border }} aria-hidden />
-        {MODES.map((item) => {
-          const isActive = item.mode === current;
-          return (
-            <Link
-              key={item.mode}
-              href={item.href}
-              style={{
-                ...linkBase,
-                color: isActive ? theme.colors.primary : theme.colors.textLight,
-              }}
-              aria-current={isActive ? "page" : undefined}
-            >
-              {isActive && (
-                <motion.div
-                  layoutId="activeTab"
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    background: "rgba(155, 44, 31, 0.1)",
-                    borderRadius: 999,
-                    zIndex: -1,
-                  }}
-                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                />
-              )}
-              {item.label}
-            </Link>
-          );
-        })}
-      </>
-    );
-  }
-
   return (
     <nav style={barStyle} aria-label="Navigation">
       <div style={innerStyle}>
-        <div style={leftGroupStyle}>{left}</div>
+        <div style={leftGroupStyle}>
+          <Link href="/" style={brandStyle}>
+            TrustHerBro
+          </Link>
+          <div style={{ width: 1, height: 16, background: theme.colors.border }} aria-hidden />
+          {TOP_LINKS.map((item) => {
+            const isActive = item.mode === current;
+            return (
+              <Link
+                key={item.mode}
+                href={item.href}
+                style={{
+                  ...linkBase,
+                  color: isActive ? theme.colors.primary : theme.colors.textLight,
+                }}
+                aria-current={isActive ? "page" : undefined}
+              >
+                {!isLanding && isActive ? <ActivePill /> : null}
+                {item.label}
+              </Link>
+            );
+          })}
+          <ModeMenu current={current} />
+        </div>
         <AccountMenu />
       </div>
     </nav>

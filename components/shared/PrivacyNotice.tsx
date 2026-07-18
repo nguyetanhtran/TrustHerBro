@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import Link from "next/link";
+import { theme } from "../../lib/theme";
 
 const wrapStyle: CSSProperties = {
   display: "flex",
@@ -7,10 +8,10 @@ const wrapStyle: CSSProperties = {
   gap: 8,
   padding: "10px 12px",
   borderRadius: 12,
-  background: "#f1f5f9",
-  border: "1px solid #e2e8f0",
+  background: "rgba(196, 163, 90, 0.12)",
+  border: `1px solid ${theme.colors.border}`,
   fontSize: 13,
-  color: "#475569",
+  color: theme.colors.textLight,
   lineHeight: 1.5,
 };
 
@@ -23,7 +24,7 @@ export function PrivacyNotice({ what }: { what: string }) {
       <span>
         {what} is sent to OpenAI to generate a response, then discarded — we
         don't store it or link it to you.{" "}
-        <Link href="/privacy" style={{ color: "#1d4ed8" }}>
+        <Link href="/privacy" style={{ color: theme.colors.primary, fontWeight: 600 }}>
           How we handle your data
         </Link>
       </span>

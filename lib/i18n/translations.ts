@@ -37,6 +37,14 @@ export type TranslationKey =
   | "assistant.qa1Answer"
   | "assistant.qa2Question"
   | "assistant.qa2Answer"
+  | "assistant.cardScam"
+  | "assistant.cardDirections"
+  | "assistant.cardCompare"
+  | "assistant.cardSituation"
+  | "assistant.promptScam"
+  | "assistant.promptDirections"
+  | "assistant.promptCompare"
+  | "assistant.promptSituation"
   | "scamCheck.verdictScam"
   | "scamCheck.verdictCheck"
   | "scamCheck.verdictClear"
@@ -48,6 +56,21 @@ export type TranslationKey =
   | "scamCheck.checking"
   | "scamCheck.checkIt"
   | "scamCheck.transcribing"
+  | "scamCheck.takePhoto"
+  | "scamCheck.uploadPhoto"
+  | "scamCheck.privacyWhat"
+  | "fairPrice.title"
+  | "fairPrice.description"
+  | "fairPrice.placeholder"
+  | "fairPrice.checking"
+  | "fairPrice.checkPrice"
+  | "fairPrice.catalogUpdated"
+  | "fairPrice.privacyWhat"
+  | "fairPrice.reportTitle"
+  | "fairPrice.reportHint"
+  | "fairPrice.reportAmount"
+  | "fairPrice.reportItem"
+  | "fairPrice.reportSubmit"
   | "safety.welcome"
   | "safety.inputPlaceholder"
   | "safety.shareLocation"
@@ -70,6 +93,8 @@ export type TranslationKey =
   | "emergency.localNumbers"
   | "emergency.touristHotlines"
   | "emergency.showLocal"
+  | "emergency.translateCta"
+  | "emergency.helpPhrase"
   | "emergency.nearestHospital"
   | "emergency.embassyContact"
   | "home.entryMode"
@@ -169,7 +194,7 @@ export const translations: Record<LanguageCode, Record<TranslationKey, string>> 
     "welcome.greeting": "Welcome",
     "assistant.title": "Ask about a price, place, or person",
     "assistant.description":
-      "Type a taxi fare, a hotel name, or a situation and get a trust check based on community reports and known scam warnings.",
+      "Type a taxi fare, a hotel name, or a situation — or tap a suggestion below.",
     "assistant.placeholder": "Example: Grand Palace Hotel airport pickup",
     "assistant.warnings": "Warnings:",
     "assistant.travelersSay": "What travelers say:",
@@ -179,18 +204,44 @@ export const translations: Record<LanguageCode, Record<TranslationKey, string>> 
     "assistant.qa2Question": "A stranger says my hotel is closed and offers help.",
     "assistant.qa2Answer":
       "Treat it as suspicious. Verify directly with your hotel and avoid handing over your phone, bag, or booking details.",
+    "assistant.cardScam": "Check Scam",
+    "assistant.cardDirections": "Directions",
+    "assistant.cardCompare": "Compare",
+    "assistant.cardSituation": "Handle Situation",
+    "assistant.promptScam":
+      "Someone offered me a cheap tour and asked me to follow them. Is this a scam?",
+    "assistant.promptDirections": "How do I get from the airport to my hotel safely?",
+    "assistant.promptCompare": "Is 500k VND from the airport to the Old Quarter a fair taxi price?",
+    "assistant.promptSituation":
+      "A stranger says my hotel is closed and offers to help. What should I do?",
     "scamCheck.verdictScam": "Likely a known scam",
     "scamCheck.verdictCheck": "Worth double-checking",
     "scamCheck.verdictClear": "No clear scam signal",
-    "scamCheck.title": "Is this a scam?",
+    "scamCheck.title": "Do you need any help?",
     "scamCheck.description":
-      "Describe what's happening — speak or type, in any language. I'll check it against known scam patterns and tell you how to handle it.",
+      "Describe what's happening or add a photo — speak or type, in any language. I'll check it and tell you how to handle it.",
     "scamCheck.placeholder": "Example: The driver won't turn on the meter and wants a fixed price.",
     "scamCheck.stop": "Stop",
     "scamCheck.speak": "Speak",
     "scamCheck.checking": "Checking…",
     "scamCheck.checkIt": "Check it",
     "scamCheck.transcribing": "Transcribing your voice…",
+    "scamCheck.takePhoto": "Take photo",
+    "scamCheck.uploadPhoto": "Upload photo",
+    "scamCheck.privacyWhat": "What you type or photograph here",
+    "fairPrice.title": "Fair price check",
+    "fairPrice.description":
+      "Photograph a receipt, menu, or price board — or type a quote. I'll compare it to regional reference ranges and only flag clear markups (~30%+) to avoid false alarms.",
+    "fairPrice.placeholder": "Example: Phở 120k in Old Quarter, or airport taxi 500k",
+    "fairPrice.checking": "Checking price…",
+    "fairPrice.checkPrice": "Check price",
+    "fairPrice.catalogUpdated": "Price catalog updated",
+    "fairPrice.privacyWhat": "Your photo and price text",
+    "fairPrice.reportTitle": "Help keep prices updated",
+    "fairPrice.reportHint": "Share a fair price you just paid. We queue it for review before changing the public catalog.",
+    "fairPrice.reportAmount": "Amount (VND)",
+    "fairPrice.reportItem": "What did you pay for?",
+    "fairPrice.reportSubmit": "Submit price report",
     "safety.welcome":
       "I'm right here with you. Tell me what feels off — we'll sort it out together, calmly.",
     "safety.inputPlaceholder": "Or type it in your own words…",
@@ -217,6 +268,9 @@ export const translations: Record<LanguageCode, Record<TranslationKey, string>> 
     "emergency.localNumbers": "Local emergency numbers",
     "emergency.touristHotlines": "Tourist support hotlines",
     "emergency.showLocal": "Show this to a local for help",
+    "emergency.translateCta": "Need two-way translation now",
+    "emergency.helpPhrase":
+      "Sorry, I am in danger and need help. Please call 113 (police) or 115 (ambulance) for me. Thank you.",
     "emergency.nearestHospital": "Nearest hospital",
     "emergency.embassyContact": "Embassy contact",
     "home.entryMode": "Entry Mode",
@@ -322,8 +376,7 @@ export const translations: Record<LanguageCode, Record<TranslationKey, string>> 
     "language.label": "언어",
     "welcome.greeting": "환영합니다",
     "assistant.title": "가격, 장소, 사람에 대해 물어보세요",
-    "assistant.description":
-      "택시 요금, 호텔 이름 또는 상황을 입력하면 커뮤니티 후기와 알려진 사기 경고를 바탕으로 신뢰도를 확인해 드립니다.",
+    "assistant.description": "택시 요금, 호텔 이름, 상황을 입력하거나 아래 제안을 눌러 보세요.",
     "assistant.placeholder": "예: Grand Palace Hotel 공항 픽업",
     "assistant.warnings": "경고:",
     "assistant.travelersSay": "여행자들의 의견:",
@@ -333,18 +386,42 @@ export const translations: Record<LanguageCode, Record<TranslationKey, string>> 
     "assistant.qa2Question": "낯선 사람이 제 호텔이 문을 닫았다며 도와주겠다고 합니다.",
     "assistant.qa2Answer":
       "의심스러운 상황으로 간주하세요. 호텔에 직접 확인하고 휴대폰, 가방, 예약 정보를 건네지 마세요.",
+    "assistant.cardScam": "사기 확인",
+    "assistant.cardDirections": "길 안내",
+    "assistant.cardCompare": "비교하기",
+    "assistant.cardSituation": "상황 대처",
+    "assistant.promptScam": "싼 투어를 권유하며 따라오라고 해요. 사기인가요?",
+    "assistant.promptDirections": "공항에서 호텔까지 안전하게 가려면 어떻게 해야 하나요?",
+    "assistant.promptCompare": "공항에서 구시가지까지 택시 50만 동이면 적정한가요?",
+    "assistant.promptSituation": "낯선 사람이 호텔이 문을 닫았다며 도와주겠다고 해요. 어떻게 해야 하나요?",
     "scamCheck.verdictScam": "알려진 사기일 가능성이 높음",
     "scamCheck.verdictCheck": "다시 확인해볼 필요가 있음",
     "scamCheck.verdictClear": "명확한 사기 신호 없음",
-    "scamCheck.title": "이거 사기인가요?",
+    "scamCheck.title": "도움이 필요하신가요?",
     "scamCheck.description":
-      "무슨 일이 있었는지 말하거나 입력해 주세요 — 어떤 언어든 괜찮습니다. 알려진 사기 패턴과 비교하고 대처 방법을 알려드릴게요.",
+      "무슨 일이 있었는지 말하거나 사진을 추가해 주세요 — 어떤 언어든 괜찮습니다. 확인하고 대처 방법을 알려드릴게요.",
     "scamCheck.placeholder": "예: 기사가 미터기를 켜지 않고 고정 요금을 요구해요.",
     "scamCheck.stop": "정지",
     "scamCheck.speak": "말하기",
     "scamCheck.checking": "확인 중…",
     "scamCheck.checkIt": "확인하기",
     "scamCheck.transcribing": "음성을 변환하는 중…",
+    "scamCheck.takePhoto": "사진 촬영",
+    "scamCheck.uploadPhoto": "사진 업로드",
+    "scamCheck.privacyWhat": "여기에 입력하거나 촬영한 내용",
+    "fairPrice.title": "공정 가격 확인",
+    "fairPrice.description":
+      "영수증·메뉴·가격표를 찍거나 금액을 입력하세요. 지역 참고 가격과 비교하며, 오탐을 줄이기 위해 약 30% 이상 높을 때만 경고합니다.",
+    "fairPrice.placeholder": "예: 구시가지 쌀국수 120k, 공항 택시 500k",
+    "fairPrice.checking": "가격 확인 중…",
+    "fairPrice.checkPrice": "가격 확인",
+    "fairPrice.catalogUpdated": "가격 카탈로그 업데이트",
+    "fairPrice.privacyWhat": "사진과 가격 텍스트",
+    "fairPrice.reportTitle": "가격 업데이트에 도와주세요",
+    "fairPrice.reportHint": "방금 지불한 적정 가격을 알려 주세요. 공개 카탈로그 반영 전 검수합니다.",
+    "fairPrice.reportAmount": "금액 (VND)",
+    "fairPrice.reportItem": "무엇을 결제하셨나요?",
+    "fairPrice.reportSubmit": "가격 제보 보내기",
     "safety.welcome": "제가 바로 옆에 있어요. 무엇이 이상한지 말씀해 주세요 — 차분히 함께 해결해요.",
     "safety.inputPlaceholder": "또는 직접 입력해 주세요…",
     "safety.shareLocation": "내 위치 공유",
@@ -370,6 +447,9 @@ export const translations: Record<LanguageCode, Record<TranslationKey, string>> 
     "emergency.localNumbers": "현지 긴급 연락처",
     "emergency.touristHotlines": "관광객 지원 핫라인",
     "emergency.showLocal": "도움을 요청할 때 현지인에게 보여주세요",
+    "emergency.translateCta": "지금 바로 양방향 번역이 필요해요",
+    "emergency.helpPhrase":
+      "죄송합니다. 위험해서 도움이 필요합니다. 113(경찰) 또는 115(응급)로 전화해 주세요. 감사합니다.",
     "emergency.nearestHospital": "가장 가까운 병원",
     "emergency.embassyContact": "대사관 연락처",
     "home.entryMode": "시작 모드",
@@ -473,8 +553,7 @@ export const translations: Record<LanguageCode, Record<TranslationKey, string>> 
     "language.label": "语言",
     "welcome.greeting": "欢迎",
     "assistant.title": "查询价格、地点或人物",
-    "assistant.description":
-      "输入出租车费、酒店名称或情况描述,即可根据社区报告和已知诈骗警告获得可信度评估。",
+    "assistant.description": "输入车费、酒店名或情况，也可点下面的建议。",
     "assistant.placeholder": "例如:Grand Palace Hotel 机场接送",
     "assistant.warnings": "警告:",
     "assistant.travelersSay": "旅行者怎么说:",
@@ -483,18 +562,42 @@ export const translations: Record<LanguageCode, Record<TranslationKey, string>> 
       "出发前请司机确认使用计价器或固定总价,然后与打车软件的预估价格进行比较。",
     "assistant.qa2Question": "一个陌生人说我的酒店已关闭并提出帮助。",
     "assistant.qa2Answer": "请保持警惕。直接联系酒店确认,不要交出手机、包或预订信息。",
+    "assistant.cardScam": "查诈骗",
+    "assistant.cardDirections": "问路",
+    "assistant.cardCompare": "比一比",
+    "assistant.cardSituation": "应对情况",
+    "assistant.promptScam": "有人推荐便宜旅行并让我跟着走。这是诈骗吗？",
+    "assistant.promptDirections": "从机场安全到酒店该怎么走？",
+    "assistant.promptCompare": "机场到古城出租车50万越盾合理吗？",
+    "assistant.promptSituation": "陌生人说我的酒店关门了并提出帮忙。我该怎么办？",
     "scamCheck.verdictScam": "很可能是已知诈骗",
     "scamCheck.verdictCheck": "值得再次确认",
     "scamCheck.verdictClear": "没有明显诈骗迹象",
-    "scamCheck.title": "这是诈骗吗?",
+    "scamCheck.title": "需要帮忙吗？",
     "scamCheck.description":
-      "描述发生的事情——可以说话或打字,任何语言都可以。我会对照已知诈骗模式进行核对,并告诉你如何处理。",
+      "描述发生的事情或添加照片——可以说话或打字,任何语言都可以。我会检查并告诉你如何处理。",
     "scamCheck.placeholder": "例如:司机不肯打表,要求固定价格。",
     "scamCheck.stop": "停止",
     "scamCheck.speak": "说话",
     "scamCheck.checking": "检查中…",
     "scamCheck.checkIt": "检查一下",
     "scamCheck.transcribing": "正在转换你的语音…",
+    "scamCheck.takePhoto": "拍照",
+    "scamCheck.uploadPhoto": "上传照片",
+    "scamCheck.privacyWhat": "您在此输入或拍摄的内容",
+    "fairPrice.title": "公允价格核对",
+    "fairPrice.description":
+      "拍摄收据、菜单或价目表，或输入报价。我会对照地区参考价，仅在明显高于约30%时提醒，以减少误报。",
+    "fairPrice.placeholder": "例如：古城牛肉粉 120k，机场出租车 500k",
+    "fairPrice.checking": "正在核对价格…",
+    "fairPrice.checkPrice": "核对价格",
+    "fairPrice.catalogUpdated": "价格目录更新于",
+    "fairPrice.privacyWhat": "您的照片和价格文字",
+    "fairPrice.reportTitle": "帮助更新价格",
+    "fairPrice.reportHint": "分享您刚支付的合理价格。我们会先审核再更新公开目录。",
+    "fairPrice.reportAmount": "金额（越南盾）",
+    "fairPrice.reportItem": "您为了什么付款？",
+    "fairPrice.reportSubmit": "提交价格报告",
     "safety.welcome": "我就在你身边。告诉我哪里感觉不对——我们会冷静地一起解决。",
     "safety.inputPlaceholder": "或用你自己的话描述…",
     "safety.shareLocation": "分享我的位置",
@@ -520,6 +623,9 @@ export const translations: Record<LanguageCode, Record<TranslationKey, string>> 
     "emergency.localNumbers": "本地紧急电话",
     "emergency.touristHotlines": "游客支持热线",
     "emergency.showLocal": "将此内容展示给当地人以寻求帮助",
+    "emergency.translateCta": "现在需要双向翻译",
+    "emergency.helpPhrase":
+      "对不起，我遇到危险，需要帮助。请帮我拨打113（警察）或115（急救）。谢谢。",
     "emergency.nearestHospital": "最近的医院",
     "emergency.embassyContact": "大使馆联系方式",
     "home.entryMode": "入口模式",
@@ -624,7 +730,7 @@ export const translations: Record<LanguageCode, Record<TranslationKey, string>> 
     "welcome.greeting": "Добро пожаловать",
     "assistant.title": "Спросите о цене, месте или человеке",
     "assistant.description":
-      "Введите стоимость такси, название отеля или опишите ситуацию — и получите оценку надёжности на основе отчётов путешественников и известных схем мошенничества.",
+      "Введите цену такси, название отеля или ситуацию — или нажмите подсказку ниже.",
     "assistant.placeholder": "Например: Grand Palace Hotel, трансфер из аэропорта",
     "assistant.warnings": "Предупреждения:",
     "assistant.travelersSay": "Что говорят путешественники:",
@@ -634,18 +740,43 @@ export const translations: Record<LanguageCode, Record<TranslationKey, string>> 
     "assistant.qa2Question": "Незнакомец говорит, что мой отель закрыт, и предлагает помощь.",
     "assistant.qa2Answer":
       "Отнеситесь с подозрением. Проверьте напрямую у отеля и не передавайте телефон, сумку или данные бронирования.",
+    "assistant.cardScam": "Проверить обман",
+    "assistant.cardDirections": "Маршрут",
+    "assistant.cardCompare": "Сравнить",
+    "assistant.cardSituation": "Разбор ситуации",
+    "assistant.promptScam": "Мне предлагают дешёвый тур и просят идти за ними. Это мошенничество?",
+    "assistant.promptDirections": "Как безопасно добраться из аэропорта до отеля?",
+    "assistant.promptCompare": "Нормальна ли цена 500 тыс. донгов на такси из аэропорта в Старый квартал?",
+    "assistant.promptSituation":
+      "Незнакомец говорит, что мой отель закрыт, и предлагает помощь. Что делать?",
     "scamCheck.verdictScam": "Похоже на известное мошенничество",
     "scamCheck.verdictCheck": "Стоит перепроверить",
     "scamCheck.verdictClear": "Явных признаков мошенничества нет",
-    "scamCheck.title": "Это мошенничество?",
+    "scamCheck.title": "Вам нужна помощь?",
     "scamCheck.description":
-      "Опишите, что происходит — говорите или печатайте на любом языке. Я сверю это с известными схемами мошенничества и подскажу, как поступить.",
+      "Опишите, что происходит, или добавьте фото — говорите или печатайте на любом языке. Я проверю и подскажу, как поступить.",
     "scamCheck.placeholder": "Например: водитель не включает счётчик и просит фиксированную цену.",
     "scamCheck.stop": "Стоп",
     "scamCheck.speak": "Говорить",
     "scamCheck.checking": "Проверяю…",
     "scamCheck.checkIt": "Проверить",
     "scamCheck.transcribing": "Расшифровываю ваш голос…",
+    "scamCheck.takePhoto": "Сделать фото",
+    "scamCheck.uploadPhoto": "Загрузить фото",
+    "scamCheck.privacyWhat": "То, что вы вводите или снимаете здесь",
+    "fairPrice.title": "Проверка справедливой цены",
+    "fairPrice.description":
+      "Сфотографируйте чек, меню или ценник — или введите сумму. Сверю с региональными ориентирами и отмечу завышение только примерно от +30%, чтобы меньше ложных тревог.",
+    "fairPrice.placeholder": "Например: фо 120k в Старом квартале или такси из аэропорта 500k",
+    "fairPrice.checking": "Проверяю цену…",
+    "fairPrice.checkPrice": "Проверить цену",
+    "fairPrice.catalogUpdated": "Каталог цен обновлён",
+    "fairPrice.privacyWhat": "Ваше фото и текст о цене",
+    "fairPrice.reportTitle": "Помогите обновлять цены",
+    "fairPrice.reportHint": "Сообщите справедливую цену, которую вы только что заплатили. Мы проверим перед обновлением каталога.",
+    "fairPrice.reportAmount": "Сумма (VND)",
+    "fairPrice.reportItem": "За что вы платили?",
+    "fairPrice.reportSubmit": "Отправить отчёт о цене",
     "safety.welcome":
       "Я рядом с вами. Расскажите, что кажется не так — мы спокойно во всём разберёмся вместе.",
     "safety.inputPlaceholder": "Или напишите своими словами…",
@@ -673,6 +804,9 @@ export const translations: Record<LanguageCode, Record<TranslationKey, string>> 
     "emergency.localNumbers": "Местные экстренные номера",
     "emergency.touristHotlines": "Горячие линии для туристов",
     "emergency.showLocal": "Покажите это местному жителю, чтобы попросить помощь",
+    "emergency.translateCta": "Нужен двусторонний перевод сейчас",
+    "emergency.helpPhrase":
+      "Извините, мне угрожает опасность и нужна помощь. Пожалуйста, позвоните 113 (полиция) или 115 (скорая). Спасибо.",
     "emergency.nearestHospital": "Ближайшая больница",
     "emergency.embassyContact": "Контакты посольства",
     "home.entryMode": "Режим входа",
@@ -779,7 +913,7 @@ export const translations: Record<LanguageCode, Record<TranslationKey, string>> 
     "welcome.greeting": "Chào mừng",
     "assistant.title": "Hỏi về giá, địa điểm hoặc một người nào đó",
     "assistant.description":
-      "Gõ giá taxi, tên khách sạn hoặc mô tả tình huống để nhận đánh giá độ tin cậy dựa trên báo cáo cộng đồng và các cảnh báo lừa đảo đã biết.",
+      "Gõ giá taxi, tên khách sạn hoặc tình huống — hoặc chạm gợi ý bên dưới.",
     "assistant.placeholder": "Ví dụ: đón sân bay Grand Palace Hotel",
     "assistant.warnings": "Cảnh báo:",
     "assistant.travelersSay": "Khách du lịch nói gì:",
@@ -789,18 +923,44 @@ export const translations: Record<LanguageCode, Record<TranslationKey, string>> 
     "assistant.qa2Question": "Một người lạ nói khách sạn của tôi đã đóng cửa và đề nghị giúp đỡ.",
     "assistant.qa2Answer":
       "Hãy coi đây là dấu hiệu đáng ngờ. Gọi trực tiếp cho khách sạn để xác nhận, và không đưa điện thoại, túi xách hay thông tin đặt phòng cho ai.",
+    "assistant.cardScam": "Check Scam",
+    "assistant.cardDirections": "Hỏi đường",
+    "assistant.cardCompare": "So sánh",
+    "assistant.cardSituation": "Xử lý tình huống",
+    "assistant.promptScam":
+      "Có người mời tour giá rẻ và bảo tôi đi theo. Đây có phải lừa đảo không?",
+    "assistant.promptDirections": "Làm sao để từ sân bay về khách sạn an toàn?",
+    "assistant.promptCompare": "Taxi 500k từ sân bay về Phố Cổ có hợp lý không?",
+    "assistant.promptSituation":
+      "Một người lạ nói khách sạn của tôi đã đóng cửa và đề nghị giúp. Tôi nên làm gì?",
     "scamCheck.verdictScam": "Rất có thể là lừa đảo đã biết",
     "scamCheck.verdictCheck": "Nên kiểm tra lại",
     "scamCheck.verdictClear": "Không có dấu hiệu lừa đảo rõ ràng",
-    "scamCheck.title": "Đây có phải lừa đảo không?",
+    "scamCheck.title": "Bạn cần giúp đỡ không?",
     "scamCheck.description":
-      "Mô tả chuyện gì đang xảy ra — nói hoặc gõ, bằng bất kỳ ngôn ngữ nào. Tôi sẽ đối chiếu với các kiểu lừa đảo đã biết và hướng dẫn cách xử lý.",
+      "Mô tả chuyện gì đang xảy ra hoặc thêm ảnh — nói hoặc gõ, bằng bất kỳ ngôn ngữ nào. Tôi sẽ kiểm tra và hướng dẫn cách xử lý.",
     "scamCheck.placeholder": "Ví dụ: tài xế không chịu bật đồng hồ và đòi giá cố định.",
     "scamCheck.stop": "Dừng",
     "scamCheck.speak": "Nói",
     "scamCheck.checking": "Đang kiểm tra…",
     "scamCheck.checkIt": "Kiểm tra",
     "scamCheck.transcribing": "Đang chuyển giọng nói thành chữ…",
+    "scamCheck.takePhoto": "Chụp ảnh",
+    "scamCheck.uploadPhoto": "Tải ảnh lên",
+    "scamCheck.privacyWhat": "Những gì bạn gõ hoặc chụp tại đây",
+    "fairPrice.title": "Kiểm tra giá công bằng",
+    "fairPrice.description":
+      "Chụp hóa đơn, menu hoặc bảng giá — hoặc gõ báo giá. Tôi đối chiếu khoảng giá tham chiếu và chỉ cảnh báo khi cao hơn khoảng 30% để giảm báo động giả.",
+    "fairPrice.placeholder": "Ví dụ: phở 120k Phố Cổ, hoặc taxi sân bay 500k",
+    "fairPrice.checking": "Đang kiểm tra giá…",
+    "fairPrice.checkPrice": "Kiểm tra giá",
+    "fairPrice.catalogUpdated": "Catalog giá cập nhật",
+    "fairPrice.privacyWhat": "Ảnh và nội dung giá của bạn",
+    "fairPrice.reportTitle": "Giúp cập nhật giá",
+    "fairPrice.reportHint": "Chia sẻ mức giá hợp lý bạn vừa trả. Chúng tôi duyệt trước khi đưa vào catalog công khai.",
+    "fairPrice.reportAmount": "Số tiền (VND)",
+    "fairPrice.reportItem": "Bạn trả cho món gì?",
+    "fairPrice.reportSubmit": "Gửi báo cáo giá",
     "safety.welcome":
       "Tôi đang ở ngay đây với bạn. Hãy cho tôi biết điều gì khiến bạn thấy không ổn — chúng ta sẽ cùng nhau giải quyết, thật bình tĩnh.",
     "safety.inputPlaceholder": "Hoặc gõ theo cách của riêng bạn…",
@@ -827,6 +987,9 @@ export const translations: Record<LanguageCode, Record<TranslationKey, string>> 
     "emergency.localNumbers": "Số khẩn cấp địa phương",
     "emergency.touristHotlines": "Đường dây hỗ trợ du khách",
     "emergency.showLocal": "Đưa cho người dân địa phương xem để nhờ giúp đỡ",
+    "emergency.translateCta": "Cần dịch hai chiều ngay",
+    "emergency.helpPhrase":
+      "Xin lỗi, tôi đang gặp nguy hiểm và cần giúp đỡ. Xin hãy gọi số 113 (công an) hoặc 115 (cấp cứu) giúp tôi. Cảm ơn bạn.",
     "emergency.nearestHospital": "Bệnh viện gần nhất",
     "emergency.embassyContact": "Liên hệ đại sứ quán",
     "home.entryMode": "Chế độ khởi đầu",
