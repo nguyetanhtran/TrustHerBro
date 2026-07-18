@@ -108,6 +108,23 @@ export type TrustCheckResult = {
   warnings: string[];
 };
 
+export type NearbyPlace = {
+  id: string;
+  name: string;
+  address: string;
+  rating?: number;
+  userRatingsTotal?: number;
+  priceLevel?: number;
+  mapsQuery: string;
+  category: "food" | "fun";
+};
+
+export type NearbySuggestionsResult = {
+  food: NearbyPlace[];
+  fun: NearbyPlace[];
+  areaLabel: string;
+};
+
 export type UserProfile = {
   /** BCP-47-ish language code, e.g. "en", "ko", "zh", "ru", "vi". */
   language: string;
