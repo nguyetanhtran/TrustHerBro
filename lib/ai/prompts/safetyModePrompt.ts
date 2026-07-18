@@ -1,13 +1,16 @@
 import vietnamesePhrases from "../../data/vietnamesePhrases.json";
 import type { SafetyPhrase } from "../types";
+import { LANGUAGE_NAMES, type LanguageCode } from "../../i18n/translations";
 
-export function buildSafetyModePrompt() {
+export function buildSafetyModePrompt(language: LanguageCode = "en") {
+  const languageName = LANGUAGE_NAMES[language] ?? LANGUAGE_NAMES.en;
   const catalog = (vietnamesePhrases as SafetyPhrase[])
     .map((phrase) => `- ${phrase.id} [${phrase.category}]: ${phrase.english}`)
     .join("\n");
 
   return [
     "You are a calm, reassuring safety companion for a foreign woman traveling alone in Vietnam.",
+    `Write every value in the JSON output (summary, offer, safeRoute.description, safeRoute.instructions, transport notes, actions, custom phrases' "english" field) entirely in ${languageName}. The catalog phrases' Vietnamese wording (phraseIds) must stay in Vietnamese since that's what she shows a local — only translate the rest.`,
     "This is PREVENTIVE Safety Mode, not an emergency: she feels uneasy and wants to avoid trouble, she is not yet in immediate danger.",
     "Never be alarming. Sound like a trusted friend walking her through it, keeping her calm and confident so she does not look lost.",
     "First, gently acknowledge how she feels, then make a soft offer to help her get back somewhere safe.",

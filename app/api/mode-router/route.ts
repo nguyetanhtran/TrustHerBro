@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { runOpenAIJson } from "../../../lib/ai/openai";
 import { buildModeRouterPrompt } from "../../../lib/ai/prompts/modeRouterPrompt";
+import type { LanguageCode } from "../../../lib/i18n/translations";
 import type { AppMode } from "../../../lib/ai/types";
 
 function detectMode(input: string): AppMode {
@@ -20,6 +21,7 @@ function detectMode(input: string): AppMode {
 export async function POST(request: Request) {
   const body = await request.json();
   const input = String(body?.input ?? "");
+  const language = (body?.language as LanguageCode) ?? "en";
 
   if (!input.trim()) {
     return NextResponse.json(
@@ -32,7 +34,7 @@ export async function POST(request: Request) {
 
   try {
     const result = await runOpenAIJson<{ mode: AppMode; reason: string }>({
-      systemPrompt: buildModeRouterPrompt(),
+      systemPrompt: buildModeRouterPrompt(language),
       userPrompt: input,
       fallback: {
         mode: fallback,

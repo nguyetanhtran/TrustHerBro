@@ -6,6 +6,7 @@ import type { TrustCheckResult } from "../../lib/ai/types";
 import { ChatInput } from "../../components/shared/ChatInput";
 import { TrustBadge } from "../../components/shared/TrustBadge";
 import { VoiceScamCheck } from "../../components/assistant/VoiceScamCheck";
+import { useLanguage } from "../../lib/i18n/LanguageContext";
 
 const cardStyle: CSSProperties = {
   padding: 20,
@@ -16,6 +17,7 @@ const cardStyle: CSSProperties = {
 };
 
 export default function AssistantPage() {
+  const { language, t } = useLanguage();
   const [result, setResult] = useState<TrustCheckResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -27,7 +29,7 @@ export default function AssistantPage() {
       const response = await fetch("/api/trust-check", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ subject }),
+        body: JSON.stringify({ subject, language }),
       });
       if (!response.ok) {
         const data = await response.json();
@@ -44,15 +46,12 @@ export default function AssistantPage() {
 
   return (
     <main style={{ maxWidth: 860, margin: "0 auto", padding: "40px 24px 72px" }}>
-      <h1>Ask about a price, place, or person</h1>
-      <p>
-        Type a taxi fare, a hotel name, or a situation and get a trust check
-        based on community reports and known scam warnings.
-      </p>
+      <h1>{t("assistant.title")}</h1>
+      <p>{t("assistant.description")}</p>
 
       <ChatInput
         disabled={loading}
-        placeholder="Example: Grand Palace Hotel airport pickup"
+        placeholder={t("assistant.placeholder")}
         onSend={handleSend}
       />
 
@@ -70,7 +69,7 @@ export default function AssistantPage() {
           </p>
           {result.warnings.length > 0 ? (
             <div>
-              <strong>Warnings:</strong>
+              <strong>{t("assistant.warnings")}</strong>
               <ul>
                 {result.warnings.map((warning) => (
                   <li key={warning}>{warning}</li>
@@ -80,7 +79,7 @@ export default function AssistantPage() {
           ) : null}
           {result.supportingReasons.length > 0 ? (
             <div>
-              <strong>What travelers say:</strong>
+              <strong>{t("assistant.travelersSay")}</strong>
               <ul>
                 {result.supportingReasons.map((reason) => (
                   <li key={reason}>{reason}</li>
@@ -94,18 +93,16 @@ export default function AssistantPage() {
       <VoiceScamCheck />
 
       <section style={cardStyle}>
-        <strong>Q:</strong> Is this taxi price normal from the airport?
+        <strong>Q:</strong> {t("assistant.qa1Question")}
         <p>
-          <strong>A:</strong> Ask the driver to confirm meter or fixed total
-          price before departure, then compare with a ride-hailing estimate.
+          <strong>A:</strong> {t("assistant.qa1Answer")}
         </p>
       </section>
 
       <section style={cardStyle}>
-        <strong>Q:</strong> A stranger says my hotel is closed and offers help.
+        <strong>Q:</strong> {t("assistant.qa2Question")}
         <p>
-          <strong>A:</strong> Treat it as suspicious. Verify directly with your
-          hotel and avoid handing over your phone, bag, or booking details.
+          <strong>A:</strong> {t("assistant.qa2Answer")}
         </p>
       </section>
     </main>

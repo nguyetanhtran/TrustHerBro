@@ -4,6 +4,7 @@ import type { CSSProperties, FormEvent } from "react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "../../utils/supabase/client";
+import { useLanguage } from "../../lib/i18n/LanguageContext";
 
 const pageStyle: CSSProperties = {
   maxWidth: 420,
@@ -42,6 +43,7 @@ const buttonStyle: CSSProperties = {
 
 export default function LoginPage() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -66,9 +68,7 @@ export default function LoginPage() {
           router.refresh();
           router.push("/welcome");
         } else {
-          setNotice(
-            "We sent a confirmation link to your email. Confirm it, then sign in.",
-          );
+          setNotice(t("login.confirmationNotice"));
           setMode("signin");
         }
       } else {
@@ -78,7 +78,7 @@ export default function LoginPage() {
         router.push("/"); // middleware routes to /welcome if not onboarded
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong.");
+      setError(err instanceof Error ? err.message : t("login.genericError"));
     } finally {
       setLoading(false);
     }
@@ -88,11 +88,9 @@ export default function LoginPage() {
     <main style={pageStyle}>
       <div style={cardStyle}>
         <h1 style={{ marginTop: 0, fontSize: 28 }}>
-          {mode === "signin" ? "Welcome back" : "Create your account"}
+          {mode === "signin" ? t("login.titleSignin") : t("login.titleSignup")}
         </h1>
-        <p style={{ color: "#64748b", marginTop: 0 }}>
-          Your safety companion for your first hours in Vietnam.
-        </p>
+        <p style={{ color: "#64748b", marginTop: 0 }}>{t("login.subtitle")}</p>
 
         <form onSubmit={handleSubmit} style={{ display: "grid", gap: 12, marginTop: 8 }}>
           <input
@@ -100,7 +98,7 @@ export default function LoginPage() {
             required
             value={email}
             onChange={(event) => setEmail(event.target.value)}
-            placeholder="Email"
+            placeholder={t("login.emailPlaceholder")}
             style={inputStyle}
             autoComplete="email"
           />
@@ -110,16 +108,16 @@ export default function LoginPage() {
             minLength={6}
             value={password}
             onChange={(event) => setPassword(event.target.value)}
-            placeholder="Password"
+            placeholder={t("login.passwordPlaceholder")}
             style={inputStyle}
             autoComplete={mode === "signin" ? "current-password" : "new-password"}
           />
           <button type="submit" disabled={loading} style={buttonStyle}>
             {loading
-              ? "Please wait…"
+              ? t("login.pleaseWait")
               : mode === "signin"
-                ? "Sign in"
-                : "Create account"}
+                ? t("login.signIn")
+                : t("login.createAccount")}
           </button>
         </form>
 
@@ -131,7 +129,7 @@ export default function LoginPage() {
         ) : null}
 
         <p style={{ marginTop: 18, marginBottom: 0, color: "#475569" }}>
-          {mode === "signin" ? "New here?" : "Already have an account?"}{" "}
+          {mode === "signin" ? t("login.newHere") : t("login.alreadyHaveAccount")}{" "}
           <button
             type="button"
             onClick={() => {
@@ -148,7 +146,7 @@ export default function LoginPage() {
               padding: 0,
             }}
           >
-            {mode === "signin" ? "Create an account" : "Sign in"}
+            {mode === "signin" ? t("login.createAccount") : t("login.signIn")}
           </button>
         </p>
       </div>

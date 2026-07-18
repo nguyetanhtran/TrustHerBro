@@ -9,6 +9,7 @@ import type {
 } from "../../../lib/ai/types";
 import { normalizeCoordinates, findNearestCity } from "../../../lib/utils/geolocation";
 import { calculateRiskScore, scoreToLevel } from "../../../lib/utils/riskScore";
+import type { LanguageCode } from "../../../lib/i18n/translations";
 
 const phraseCatalog = vietnamesePhrases as SafetyPhrase[];
 const phraseById = new Map(phraseCatalog.map((phrase) => [phrase.id, phrase]));
@@ -86,6 +87,7 @@ export async function POST(request: Request) {
   const body = await request.json();
   const message = String(body?.message ?? "");
   const coords = normalizeCoordinates(body?.location);
+  const language = (body?.language as LanguageCode) ?? "en";
 
   if (!message.trim()) {
     return NextResponse.json({ error: "Message is required." }, { status: 400 });
@@ -101,7 +103,7 @@ export async function POST(request: Request) {
 
   try {
     const result = await runOpenAIJson<RiskAssessment & { phraseIds?: string[] }>({
-      systemPrompt: buildSafetyModePrompt(),
+      systemPrompt: buildSafetyModePrompt(language),
       userPrompt,
       fallback,
     });

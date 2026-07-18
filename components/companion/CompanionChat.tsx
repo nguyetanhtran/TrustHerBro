@@ -5,6 +5,7 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { AppMode } from "../../lib/ai/types";
 import { useVoiceRecorder } from "../../lib/utils/useVoiceRecorder";
+import { useLanguage } from "../../lib/i18n/LanguageContext";
 
 type Bubble = {
   id: string;
@@ -85,19 +86,16 @@ const sendStyle: CSSProperties = {
   cursor: "pointer",
 };
 
-const WELCOME: Bubble = {
-  id: "welcome",
-  role: "assistant",
-  text: "Hi, I'm your companion. Ask me anything, tap the mic to speak, or add a photo of a receipt or price board and I'll check it for you.",
-};
-
 export function CompanionChat() {
   const router = useRouter();
+  const { language, t } = useLanguage();
   const recorder = useVoiceRecorder();
   const fileRef = useRef<HTMLInputElement>(null);
   const threadRef = useRef<HTMLDivElement>(null);
 
-  const [messages, setMessages] = useState<Bubble[]>([WELCOME]);
+  const [messages, setMessages] = useState<Bubble[]>(() => [
+    { id: "welcome", role: "assistant", text: t("companion.welcome") },
+  ]);
   const [text, setText] = useState("");
   const [image, setImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -157,7 +155,7 @@ export function CompanionChat() {
       const res = await fetch("/api/companion", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: sentText, image: sentImage }),
+        body: JSON.stringify({ message: sentText, image: sentImage, language }),
       });
       const data = await res.json();
       setMessages((cur) => [
@@ -165,7 +163,7 @@ export function CompanionChat() {
         {
           id: crypto.randomUUID(),
           role: "assistant",
-          text: data.reply ?? "I'm here to help.",
+          text: data.reply ?? t("companion.fallbackReply"),
           suggestedMode: data.suggestedMode ?? null,
           suggestedLabel: data.suggestedLabel ?? null,
         },
@@ -217,13 +215,13 @@ export function CompanionChat() {
                   cursor: "pointer",
                 }}
               >
-                {message.suggestedLabel ?? "Open"} →
+                {message.suggestedLabel ?? t("companion.open")} →
               </button>
             ) : null}
           </div>
         ))}
         {loading ? (
-          <div style={{ justifySelf: "start", color: "#64748b" }}>Thinking…</div>
+          <div style={{ justifySelf: "start", color: "#64748b" }}>{t("companion.thinking")}</div>
         ) : null}
       </div>
 
@@ -231,13 +229,13 @@ export function CompanionChat() {
         <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 12px", background: "#f1f5f9" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={image} alt="preview" style={{ height: 44, borderRadius: 8 }} />
-          <span style={{ fontSize: 13, color: "#475569" }}>Photo attached</span>
+          <span style={{ fontSize: 13, color: "#475569" }}>{t("companion.photoAttached")}</span>
           <button
             type="button"
             onClick={() => setImage(null)}
             style={{ marginLeft: "auto", border: "none", background: "none", color: "#dc2626", cursor: "pointer", fontWeight: 700 }}
           >
-            Remove
+            {t("companion.remove")}
           </button>
         </div>
       ) : null}
@@ -255,8 +253,8 @@ export function CompanionChat() {
           type="button"
           style={iconButton()}
           onClick={() => fileRef.current?.click()}
-          aria-label="Add photo"
-          title="Add photo"
+          aria-label={t("companion.addPhoto")}
+          title={t("companion.addPhoto")}
         >
           📷
         </button>
@@ -265,8 +263,8 @@ export function CompanionChat() {
           style={iconButton(recorder.recording)}
           onClick={handleMic}
           disabled={transcribing || !recorder.supported}
-          aria-label={recorder.recording ? "Stop recording" : "Speak"}
-          title={recorder.recording ? "Stop" : "Speak"}
+          aria-label={recorder.recording ? t("scamCheck.stop") : t("scamCheck.speak")}
+          title={recorder.recording ? t("scamCheck.stop") : t("scamCheck.speak")}
         >
           {recorder.recording ? "■" : "🎤"}
         </button>
@@ -276,7 +274,7 @@ export function CompanionChat() {
           onKeyDown={(event) => {
             if (event.key === "Enter") handleSend();
           }}
-          placeholder={transcribing ? "Transcribing…" : "Ask me anything…"}
+          placeholder={transcribing ? t("scamCheck.transcribing") : t("companion.inputPlaceholder")}
           style={inputStyle}
           disabled={loading}
         />
@@ -286,7 +284,7 @@ export function CompanionChat() {
           disabled={loading || transcribing || (!text.trim() && !image)}
           style={sendStyle}
         >
-          Send
+          {t("companion.send")}
         </button>
       </div>
     </div>

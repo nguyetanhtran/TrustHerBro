@@ -1,5 +1,8 @@
+"use client";
+
 import type { CSSProperties } from "react";
 import { SafetyChat } from "../../components/safety/SafetyChat";
+import { useLanguage } from "../../lib/i18n/LanguageContext";
 
 const pageStyle: CSSProperties = {
   maxWidth: 960,
@@ -8,15 +11,12 @@ const pageStyle: CSSProperties = {
 };
 
 export default function SafetyPage() {
+  const { t } = useLanguage();
+
   return (
     <main style={pageStyle}>
-      <h1>I've got you</h1>
-      <p style={{ lineHeight: 1.7, color: "#475569" }}>
-        Feeling uneasy? That instinct is worth trusting. I'll help you get back
-        somewhere safe — a brighter, busier route, a trusted ride, the right
-        words in Vietnamese, and a quiet check-in until you're okay. No alarms,
-        just a calm plan.
-      </p>
+      <h1>{t("safetyPage.title")}</h1>
+      <p style={{ lineHeight: 1.7, color: "#475569" }}>{t("safetyPage.description")}</p>
       <SafetyChat />
     </main>
   );

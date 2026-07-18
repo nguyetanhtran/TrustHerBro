@@ -1,5 +1,8 @@
+"use client";
+
 import type { CSSProperties } from "react";
 import emergencyContacts from "../../lib/data/emergencyContacts.json";
+import { useLanguage } from "../../lib/i18n/LanguageContext";
 
 const cardStyle: CSSProperties = {
   padding: 20,
@@ -37,20 +40,19 @@ const numberButtonStyle: CSSProperties = {
 };
 
 export default function EmergencyPage() {
+  const { t } = useLanguage();
+
   return (
     <main style={{ maxWidth: 860, margin: "0 auto", padding: "40px 24px 72px" }}>
-      <h1>Get help now</h1>
-      <p>
-        Big buttons, no typing required. This page works even on a weak
-        connection - the numbers below dial directly from your phone.
-      </p>
+      <h1>{t("emergency.title")}</h1>
+      <p>{t("emergency.description")}</p>
 
       <a href="tel:113" style={sosButtonStyle}>
-        SOS - Call Police (113)
+        {t("emergency.sos")}
       </a>
 
       <section style={cardStyle}>
-        <strong>Local emergency numbers</strong>
+        <strong>{t("emergency.localNumbers")}</strong>
         <div style={{ display: "grid", gap: 12, marginTop: 12 }}>
           {emergencyContacts.localEmergencyNumbers.map((entry) => (
             <a key={entry.number} href={`tel:${entry.number}`} style={numberButtonStyle}>
@@ -61,7 +63,7 @@ export default function EmergencyPage() {
       </section>
 
       <section style={cardStyle}>
-        <strong>Tourist support hotlines</strong>
+        <strong>{t("emergency.touristHotlines")}</strong>
         <div style={{ display: "grid", gap: 12, marginTop: 12 }}>
           {emergencyContacts.touristSupportNumbers.map((entry) => (
             <a
@@ -76,7 +78,7 @@ export default function EmergencyPage() {
       </section>
 
       <section style={cardStyle}>
-        <strong>Show this to a local for help</strong>
+        <strong>{t("emergency.showLocal")}</strong>
         <p style={{ fontSize: 20, fontWeight: 700, marginBottom: 4 }}>
           {emergencyContacts.helpPhrase.vietnamese}
         </p>
@@ -86,7 +88,7 @@ export default function EmergencyPage() {
       </section>
 
       <section style={cardStyle}>
-        <strong>Nearest hospital</strong>
+        <strong>{t("emergency.nearestHospital")}</strong>
         <p>{emergencyContacts.hospitalGuidance}</p>
         <div style={{ display: "grid", gap: 12 }}>
           {emergencyContacts.hospitals.map((hospital) => (
@@ -102,7 +104,7 @@ export default function EmergencyPage() {
       </section>
 
       <section style={cardStyle}>
-        <strong>Embassy contact</strong>
+        <strong>{t("emergency.embassyContact")}</strong>
         <p>{emergencyContacts.embassyGuidance}</p>
         <div style={{ display: "grid", gap: 12 }}>
           {emergencyContacts.embassies.map((embassy) => (

@@ -5,6 +5,7 @@ import communityReports from "../../../lib/data/communityReports.json";
 import scamWarnings from "../../../lib/data/scamWarnings.json";
 import transportPrices from "../../../lib/data/transportPrices.json";
 import type { TrustCheckResult } from "../../../lib/ai/types";
+import type { LanguageCode } from "../../../lib/i18n/translations";
 
 type TransportPrice = {
   city: string;
@@ -149,6 +150,7 @@ function buildFallback(subject: string): { result: TrustCheckResult; priced: boo
 export async function POST(request: Request) {
   const body = await request.json();
   const subject = String(body?.subject ?? "");
+  const language = (body?.language as LanguageCode) ?? "en";
 
   if (!subject.trim()) {
     return NextResponse.json(
@@ -162,7 +164,7 @@ export async function POST(request: Request) {
   let raw: RawTrustResult;
   try {
     raw = await runOpenAIJson<RawTrustResult>({
-      systemPrompt: buildTrustCheckPrompt(),
+      systemPrompt: buildTrustCheckPrompt(language),
       userPrompt: subject,
       fallback,
     });
