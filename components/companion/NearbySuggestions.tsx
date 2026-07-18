@@ -79,7 +79,11 @@ function PlaceCard({ place }: { place: NearbyPlace }) {
   );
 }
 
-export function NearbySuggestions() {
+export function NearbySuggestions({
+  secondCategory = "fun",
+}: {
+  secondCategory?: "fun" | "convenience";
+}) {
   const { t } = useLanguage();
   const [data, setData] = useState<NearbySuggestionsResult | null>(null);
   const [loading, setLoading] = useState(false);
@@ -132,8 +136,8 @@ export function NearbySuggestions() {
       <div style={shellStyle}>
         <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center" }}>
           <div>
-            <h2 style={{ margin: 0, fontSize: 24, color: theme.colors.text }}>Recommended Nearby</h2>
-            <p style={{ margin: "6px 0 0", color: theme.colors.textLight }}>Well-rated places near your current location.</p>
+            <h2 style={{ margin: 0, fontSize: 24, color: theme.colors.text }}>{t("nearby.title")}</h2>
+            <p style={{ margin: "6px 0 0", color: theme.colors.textLight }}>{t("nearby.description")}</p>
           </div>
           <button type="button" onClick={handleFindNearby} disabled={loading} style={{ ...buttonStyle, opacity: loading ? 0.7 : 1 }}>
             {loading ? t("nearby.finding") : t("nearby.findButton")}
@@ -165,12 +169,18 @@ export function NearbySuggestions() {
               </div>
 
               <div>
-                <h3 style={{ fontSize: 18, marginBottom: 12 }}>{t("nearby.placesToExplore")}</h3>
+                <h3 style={{ fontSize: 18, marginBottom: 12 }}>
+                  {secondCategory === "convenience" ? t("nearby.placesConvenience") : t("nearby.placesToExplore")}
+                </h3>
                 <div style={{ display: "grid", gap: 12 }}>
-                  {data.fun.length ? (
-                    data.fun.map((place) => <PlaceCard key={place.id} place={place} />)
+                  {(secondCategory === "convenience" ? data.essentials ?? [] : data.fun).length ? (
+                    (secondCategory === "convenience" ? data.essentials ?? [] : data.fun).map((place) => (
+                      <PlaceCard key={place.id} place={place} />
+                    ))
                   ) : (
-                    <p style={{ color: theme.colors.textLight }}>{t("nearby.noFun")}</p>
+                    <p style={{ color: theme.colors.textLight }}>
+                      {secondCategory === "convenience" ? t("nearby.noConvenience") : t("nearby.noFun")}
+                    </p>
                   )}
                 </div>
               </div>

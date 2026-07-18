@@ -114,7 +114,7 @@ export async function GET(request: Request) {
       fetchNearbyCategory({ lat, lng, query: "restaurant", category: "food", apiKey }),
       fetchNearbyCategory({ lat, lng, query: "tourist attraction", category: "fun", apiKey }),
       fetchNearbyCategory({ lat, lng, query: "cafe", category: "cafe", apiKey }),
-      fetchNearbyCategory({ lat, lng, query: "pharmacy", category: "essentials", apiKey }),
+      fetchNearbyCategory({ lat, lng, query: "convenience store", category: "essentials", apiKey }),
     ]);
 
     const result: NearbySuggestionsResult = {

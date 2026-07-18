@@ -24,6 +24,7 @@ export function buildFirstNightPrompt(
     `TRAVELER_CONTEXT: ${JSON.stringify(answers)}`,
     "Return valid JSON only, matching this shape:",
     '{"title": string, "summary": string, "steps": [{"id": string, "time": string, "title": string, "description": string, "riskLevel": "low"|"medium"|"high", "trustScore"?: number}]}',
+    'For each step\'s "time" field, write a clear clock-time range the traveler can read at a glance, e.g. "11:45 PM – 12:30 AM" — never a plain duration like "0-30 min" and never a vague label. Base it on the traveler\'s actual arrival time from TRAVELER_CONTEXT: the first step starts at that arrival time, and each following step\'s range starts right where the previous one ends.',
     "Generate 4-6 steps covering, in order: transport from the arrival point, checking into the accommodation, food or essentials nearby, and one scam warning relevant to the traveler's destination city.",
     'Only set "trustScore" on a step when it comes directly from the matched accommodation\'s femaleRating in REFERENCE_ACCOMMODATIONS — omit it otherwise.',
   ].join("\n");
