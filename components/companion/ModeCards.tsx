@@ -54,23 +54,26 @@ const cardStyle: CSSProperties = {
   flexDirection: "column",
   alignItems: "center",
   justifyContent: "center",
-  padding: 24,
-  borderRadius: theme.borderRadius.card,
+  padding: "28px 20px",
+  borderRadius: 24,
   background: theme.colors.card,
   color: theme.colors.text,
   textDecoration: "none",
-  border: `1px solid ${theme.colors.border}`,
+  border: "none",
   boxShadow: theme.shadows.soft,
   textAlign: "center",
   outline: "none",
 };
 
 const iconStyle: CSSProperties = {
-  marginBottom: 12,
-  padding: 12,
-  borderRadius: 16,
-  background: "rgba(155, 44, 31, 0.1)",
-  color: theme.colors.primary,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  width: 64,
+  height: 64,
+  marginBottom: 14,
+  borderRadius: "26%",
+  color: "#ffffff",
 };
 
 const triggerCardStyle: CSSProperties = {
@@ -91,11 +94,12 @@ const triggerCardStyle: CSSProperties = {
   cursor: "pointer",
 };
 
+// iOS-style app-icon colors, one per mode — matched to Apple's system palette.
 const modes = [
-  { href: "/onboarding", label: "First Night", icon: Moon },
-  { href: "/assistant", label: "Assistant", icon: Bot },
-  { href: "/safety", label: "Safety", icon: Shield },
-  { href: "/emergency", label: "Emergency", icon: ShieldAlert },
+  { href: "/onboarding", label: "First Night", icon: Moon, from: "#5AC8FA", to: "#0A84FF" },
+  { href: "/assistant", label: "Assistant", icon: Bot, from: "#C77DFF", to: "#AF52DE" },
+  { href: "/safety", label: "Safety", icon: Shield, from: "#5FE096", to: "#30D158" },
+  { href: "/emergency", label: "Emergency", icon: ShieldAlert, from: "#FF6961", to: "#FF3B30" },
 ];
 
 export function ModeCards({ firstName }: { firstName?: string }) {
@@ -168,14 +172,21 @@ export function ModeCards({ firstName }: { firstName?: string }) {
                 },
               }}
               whileHover={{ y: -6, boxShadow: "0 14px 28px rgba(110, 26, 18, 0.1)" }}
-              whileTap={{ scale: 0.98 }}
-              style={{ borderRadius: theme.borderRadius.card }}
+              whileTap={{ scale: 0.94 }}
+              style={{ borderRadius: 24 }}
             >
               <Link href={mode.href} style={cardStyle}>
-                <div style={iconStyle} aria-hidden>
-                  <Icon size={32} strokeWidth={1.5} />
+                <div
+                  style={{
+                    ...iconStyle,
+                    background: `linear-gradient(160deg, ${mode.from}, ${mode.to})`,
+                    boxShadow: `0 8px 16px -4px ${mode.to}80, inset 0 1px 1px rgba(255,255,255,0.4)`,
+                  }}
+                  aria-hidden
+                >
+                  <Icon size={30} strokeWidth={2} />
                 </div>
-                <strong style={{ fontSize: 19, color: theme.colors.primary }}>
+                <strong style={{ fontSize: 17, color: theme.colors.text }}>
                   {mode.label}
                 </strong>
               </Link>
