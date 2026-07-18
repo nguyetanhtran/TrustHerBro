@@ -7,7 +7,15 @@ import type { OnboardingAnswers } from "../../lib/ai/types";
 import { saveOnboardingAnswers } from "../../lib/store";
 import { findNearestCity, normalizeCoordinates } from "../../lib/utils/geolocation";
 
-const CITY_OPTIONS = ["Hà Nội", "TP. Hồ Chí Minh", "Đà Nẵng"];
+const CITY_OPTIONS = [
+  "Hà Nội",
+  "TP. Hồ Chí Minh",
+  "Đà Nẵng",
+  "Nha Trang",
+  "Phú Quốc",
+  "Huế",
+  "Đà Lạt",
+];
 
 function currentTimeLabel() {
   return new Date().toTimeString().slice(0, 5); // "HH:MM"

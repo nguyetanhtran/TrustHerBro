@@ -23,6 +23,10 @@ const KNOWN_CITIES: { name: string; coords: Coordinates }[] = [
   { name: "Hà Nội", coords: { lat: 21.0285, lng: 105.8542 } },
   { name: "TP. Hồ Chí Minh", coords: { lat: 10.8231, lng: 106.6297 } },
   { name: "Đà Nẵng", coords: { lat: 16.0544, lng: 108.2022 } },
+  { name: "Nha Trang", coords: { lat: 12.2451, lng: 109.1943 } },
+  { name: "Phú Quốc", coords: { lat: 10.2202, lng: 103.9663 } },
+  { name: "Huế", coords: { lat: 16.4637, lng: 107.5909 } },
+  { name: "Đà Lạt", coords: { lat: 11.9404, lng: 108.4583 } },
 ];
 
 function haversineDistanceKm(a: Coordinates, b: Coordinates): number {
