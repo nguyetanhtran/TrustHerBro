@@ -1,12 +1,19 @@
 import type { OnboardingAnswers } from "../types";
+import { LANGUAGE_NAMES, type LanguageCode } from "../../i18n/translations";
 import transportPrices from "../../data/transportPrices.json";
 import accommodations from "../../data/accommodations.json";
 import scamWarnings from "../../data/scamWarnings.json";
 import communityReports from "../../data/communityReports.json";
 
-export function buildFirstNightPrompt(answers: Partial<OnboardingAnswers>) {
+export function buildFirstNightPrompt(
+  answers: Partial<OnboardingAnswers>,
+  language: LanguageCode = "en",
+) {
+  const languageName = LANGUAGE_NAMES[language] ?? LANGUAGE_NAMES.en;
+
   return [
     "You are a travel safety assistant for solo female travelers arriving in Vietnam.",
+    `Write every value in the JSON output (title, summary, each step's title and description) entirely in ${languageName}. Do not mix languages within a single value.`,
     "Use ONLY the reference data below for prices, ratings, and scam warnings — never invent numbers or facts that are not present in this data.",
     "Transport prices in REFERENCE_TRANSPORT_PRICES are a general estimate for arriving into that city's center, not an exact quote to the traveler's specific address — say so explicitly whenever you mention a price.",
     "If the traveler's accommodation name does not match any entry in REFERENCE_ACCOMMODATIONS, mention the name plainly and do not invent a rating for it.",

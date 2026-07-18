@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import type { OnboardingAnswers } from "../../lib/ai/types";
 import { saveOnboardingAnswers } from "../../lib/store";
 import { findNearestCity, normalizeCoordinates } from "../../lib/utils/geolocation";
+import { useLanguage } from "../../lib/i18n/LanguageContext";
+import { LanguageSwitcher } from "../shared/LanguageSwitcher";
 
 const CITY_OPTIONS = [
   "Hà Nội",
@@ -99,19 +101,23 @@ function YesNoField({
   label,
   value,
   onChange,
+  yesLabel,
+  noLabel,
 }: {
   label: string;
   value: boolean;
   onChange: (value: boolean) => void;
+  yesLabel: string;
+  noLabel: string;
 }) {
   return (
     <Field label={label}>
       <div style={{ display: "flex", gap: 8 }}>
         <button type="button" onClick={() => onChange(true)} style={chipStyle(value === true)}>
-          Yes
+          {yesLabel}
         </button>
         <button type="button" onClick={() => onChange(false)} style={chipStyle(value === false)}>
-          No
+          {noLabel}
         </button>
       </div>
     </Field>
@@ -120,6 +126,7 @@ function YesNoField({
 
 export function OnboardingForm() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [answers, setAnswers] = useState<OnboardingAnswers>(defaultAnswers);
 
   useEffect(() => {
@@ -155,7 +162,9 @@ export function OnboardingForm() {
 
   return (
     <form onSubmit={handleSubmit} style={formStyle}>
-      <Field label="Bạn đến thành phố nào?">
+      <LanguageSwitcher />
+
+      <Field label={t("onboarding.city")}>
         <ChipGroup
           options={CITY_OPTIONS}
           value={answers.city}
@@ -163,7 +172,7 @@ export function OnboardingForm() {
         />
       </Field>
 
-      <Field label="Bạn đến lúc mấy giờ?">
+      <Field label={t("onboarding.arrivalTime")}>
         <input
           type="time"
           value={answers.arrivalTime}
@@ -172,34 +181,42 @@ export function OnboardingForm() {
         />
       </Field>
 
-      <Field label="Bạn ở đâu tối nay?">
+      <Field label={t("onboarding.accommodation")}>
         <input
           value={answers.accommodation}
           onChange={(event) => updateField("accommodation", event.target.value)}
-          placeholder="Tên khách sạn / hostel"
+          placeholder={t("onboarding.accommodationPlaceholder")}
           style={inputStyle}
         />
       </Field>
 
       <YesNoField
-        label="Bạn đi một mình?"
+        label={t("onboarding.travelingAlone")}
         value={answers.travelingAlone}
         onChange={(value) => updateField("travelingAlone", value)}
+        yesLabel={t("onboarding.yes")}
+        noLabel={t("onboarding.no")}
       />
       <YesNoField
-        label="Đây là lần đầu bạn ở Việt Nam?"
+        label={t("onboarding.firstTimeInVN")}
         value={answers.firstTimeInVN}
         onChange={(value) => updateField("firstTimeInVN", value)}
+        yesLabel={t("onboarding.yes")}
+        noLabel={t("onboarding.no")}
       />
       <YesNoField
-        label="Bạn đã có phương tiện di chuyển chưa?"
+        label={t("onboarding.hasTransport")}
         value={answers.hasTransport}
         onChange={(value) => updateField("hasTransport", value)}
+        yesLabel={t("onboarding.yes")}
+        noLabel={t("onboarding.no")}
       />
       <YesNoField
-        label="Bạn có mạng data chưa?"
+        label={t("onboarding.hasMobileData")}
         value={answers.hasMobileData}
         onChange={(value) => updateField("hasMobileData", value)}
+        yesLabel={t("onboarding.yes")}
+        noLabel={t("onboarding.no")}
       />
 
       <button
@@ -214,7 +231,7 @@ export function OnboardingForm() {
           cursor: "pointer",
         }}
       >
-        Tạo Survival Timeline
+        {t("onboarding.submit")}
       </button>
     </form>
   );

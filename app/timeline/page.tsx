@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { SurvivalTimeline } from "../../components/timeline/SurvivalTimeline";
 import { loadOnboardingAnswers } from "../../lib/store";
+import { useLanguage } from "../../lib/i18n/LanguageContext";
 import type { OnboardingAnswers, SurvivalTimelinePayload } from "../../lib/ai/types";
 
 const pageStyle: CSSProperties = {
@@ -15,6 +16,7 @@ const pageStyle: CSSProperties = {
 
 export default function TimelinePage() {
   const router = useRouter();
+  const { language, t } = useLanguage();
   const [timeline, setTimeline] = useState<SurvivalTimelinePayload | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [answers, setAnswers] = useState<OnboardingAnswers | null>(null);
@@ -32,22 +34,22 @@ export default function TimelinePage() {
     fetch("/api/first-night", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ answers: storedAnswers }),
+      body: JSON.stringify({ answers: storedAnswers, language }),
     })
       .then((response) => response.json())
       .then((data: SurvivalTimelinePayload) => setTimeline(data))
-      .catch(() => setError("Could not reach the server. Check your connection and try again."));
-  }, [router]);
+      .catch(() => setError(t("timeline.error")));
+  }, [router, language, t]);
 
   return (
     <main style={pageStyle}>
-      <h1>Survival Timeline</h1>
+      <h1>{t("timeline.title")}</h1>
 
       {error ? (
         <div>
           <p style={{ color: "#b91c1c" }}>{error}</p>
           <button type="button" onClick={() => window.location.reload()}>
-            Try again
+            {t("timeline.retry")}
           </button>
         </div>
       ) : timeline ? (
@@ -57,7 +59,7 @@ export default function TimelinePage() {
           accommodation={answers?.accommodation}
         />
       ) : (
-        <p style={{ lineHeight: 1.7 }}>Preparing your first-night plan...</p>
+        <p style={{ lineHeight: 1.7 }}>{t("timeline.loading")}</p>
       )}
     </main>
   );
