@@ -64,6 +64,11 @@ const statValueStyle: CSSProperties = {
   color: theme.colors.text,
 };
 
+const hintStyle: CSSProperties = {
+  fontSize: 12,
+  color: theme.colors.textLight,
+};
+
 export function SafetyStatusCard() {
   return (
     <section style={sectionStyle}>
@@ -85,6 +90,7 @@ export function SafetyStatusCard() {
           <div style={statStyle}>
             <span style={statLabelStyle}>Weather</span>
             <span style={statValueStyle}>32°C ☀️</span>
+            <span style={hintStyle}>Likely rain at 3pm</span>
           </div>
           <div style={statStyle}>
             <span style={statLabelStyle}>Crowd Level</span>
