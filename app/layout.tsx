@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import type { CSSProperties, ReactNode } from "react";
-import { Archivo_Black, Great_Vibes, Source_Sans_3 } from "next/font/google";
+import { Archivo_Black, Great_Vibes, Plus_Jakarta_Sans } from "next/font/google";
 import { ModeNav } from "../components/mode-switch/ModeNav";
 import { LanguageProvider } from "../lib/i18n/LanguageContext";
 import { BackgroundDecorations } from "../components/companion/BackgroundDecorations";
@@ -19,8 +19,8 @@ const script = Great_Vibes({
   display: "swap",
 });
 
-const body = Source_Sans_3({
-  weight: ["400", "600", "700"],
+const body = Plus_Jakarta_Sans({
+  weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
   variable: "--font-body",
   display: "swap",
