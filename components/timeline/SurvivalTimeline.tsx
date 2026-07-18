@@ -11,10 +11,12 @@ export function SurvivalTimeline({
   title,
   steps,
   accommodation,
+  needsSimCard,
 }: {
   title: string;
   steps: TimelineStep[];
   accommodation?: string;
+  needsSimCard?: boolean;
 }) {
   return (
     <section
@@ -51,7 +53,7 @@ export function SurvivalTimeline({
               ) : null}
             </div>
             <div style={{ flex: 1, paddingBottom: isLast ? 0 : 4 }}>
-              <TimelineStepCard step={step} accommodation={accommodation} />
+              <TimelineStepCard step={step} accommodation={accommodation} needsSimCard={needsSimCard} />
             </div>
           </div>
         );

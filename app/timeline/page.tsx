@@ -59,6 +59,7 @@ export default function TimelinePage() {
           title={timeline.title}
           steps={timeline.steps}
           accommodation={answers?.accommodation}
+          needsSimCard={answers ? !answers.hasMobileData : false}
         />
       ) : (
         <p style={{ lineHeight: 1.7 }}>{t("timeline.loading")}</p>
