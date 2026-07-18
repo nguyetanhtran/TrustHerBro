@@ -1,6 +1,7 @@
 import transportPrices from "../../data/transportPrices.json";
 import scamWarnings from "../../data/scamWarnings.json";
 import communityReports from "../../data/communityReports.json";
+import type { CatalogItem } from "../../data/priceCatalog";
 import type { ScamPattern } from "../types";
 import { LANGUAGE_NAMES, type LanguageCode } from "../../i18n/translations";
 
@@ -8,7 +9,7 @@ type TransportPrice = {
   city: string;
   route: string;
   method: string;
-  priceRangeVnd: [number, number];
+  priceRangeVnd: number[];
   etaMin: number;
   note?: string;
 };
@@ -23,12 +24,25 @@ function formatVnd(value: number) {
   return value.toLocaleString("en-US");
 }
 
-export function buildTrustCheckPrompt(language: LanguageCode = "en") {
+export function buildTrustCheckPrompt(
+  language: LanguageCode = "en",
+  catalogItems: CatalogItem[] = [],
+  catalogUpdatedAt = "n/a",
+  catalogSource = "",
+) {
   const languageName = LANGUAGE_NAMES[language] ?? LANGUAGE_NAMES.en;
-  const prices = (transportPrices as TransportPrice[])
+
+  const transport = (transportPrices as TransportPrice[])
     .map(
       (entry) =>
         `- [${entry.city}] ${entry.route} via ${entry.method}: ${formatVnd(entry.priceRangeVnd[0])}-${formatVnd(entry.priceRangeVnd[1])} VND (~${entry.etaMin} min)${entry.note ? ` — ${entry.note}` : ""}`,
+    )
+    .join("\n");
+
+  const goods = catalogItems
+    .map(
+      (entry) =>
+        `- [${entry.city}] ${entry.item} (${entry.category}): ${formatVnd(entry.priceRangeVnd[0])}-${formatVnd(entry.priceRangeVnd[1])} VND${entry.note ? ` — ${entry.note}` : ""}${entry.source ? ` [source:${entry.source}]` : ""}`,
     )
     .join("\n");
 
@@ -41,13 +55,20 @@ export function buildTrustCheckPrompt(language: LanguageCode = "en") {
     .join("\n");
 
   return [
-    "You are a trust-check assistant for solo female travelers in Vietnam.",
+    "You are a fair-price / trust-check assistant for solo female travelers in Vietnam.",
     `Write "verdict" and every string in "supportingReasons" and "warnings" entirely in ${languageName}.`,
-    'The traveler describes a price, place, or situation (e.g. "500k đi Phố Cổ" = 500,000 VND to Old Quarter, a hotel name, a stranger\'s offer). Input may be Vietnamese, English, or mixed, and may use shorthand like "500k" for 500,000 VND or "1tr" for 1,000,000 VND.',
-    "Ground your answer in the reference data below — do not invent prices, places, or facts that aren't supported by it.",
+    "The traveler may type a fare/quote OR attach ONLY a photo of a receipt, menu, price board, or meter (photo-only is allowed).",
+    "If a photo is attached: OCR every visible item name and price first into extractedItems, then compare each to the reference ranges.",
+    "Input may be Vietnamese, English, or mixed; shorthand like \"500k\" = 500,000 VND or \"1tr\" = 1,000,000 VND.",
+    "Ground answers in the reference data — do not invent prices. Prefer saying \"not enough data\" over a false alarm.",
+    "",
+    `Reference data freshness: updated ${catalogUpdatedAt}. ${catalogSource}`,
     "",
     "Known transport fares:",
-    prices,
+    transport,
+    "",
+    "Known food / goods reference prices (tourist areas + traveler overrides):",
+    goods,
     "",
     "Known scam patterns:",
     scams,
@@ -56,24 +77,21 @@ export function buildTrustCheckPrompt(language: LanguageCode = "en") {
     reports,
     "",
     "Reasoning rules:",
-    "- If a price and a route/place are both mentioned, compare the price to the closest matching fare range above. If it's clearly above the range (roughly 30%+ over the top), call it overpriced and state the normal range and method. If it's within or near the range, say it looks fair.",
-    "- If the situation matches a known scam pattern's signals, name that pattern in the warnings.",
-    "- If community reports mention the subject or a very similar place, weave in a short, relevant reason.",
-    "- If there isn't enough matching reference data for a firm answer, say so plainly instead of guessing, and reflect that uncertainty with a mid-range trustScore.",
+    "- Compare quoted/photo prices to the closest matching range. Flag overpriced only if clearly above ~30% of the top of the range.",
+    "- If within or near the range, say it looks fair and state the normal band.",
+    "- Put the best catalog row label into groundingMatch (city + item + range).",
+    "- If reference data does not cover the item, say so and suggest Grab estimate / another stall.",
     "",
-    "trustScore rules — read carefully, this is the most common mistake:",
-    "trustScore measures how much the traveler can TRUST the situation. It is NOT a danger/concern/severity score, so it does NOT go up when something is more alarming.",
-    "- HIGH trustScore (8-10) = safe, fair, trustworthy. Use this for a fair price or a positive community report.",
-    "- LOW trustScore (0-3) = do NOT trust this. Use this for an overpriced quote OR a situation matching a scam pattern — a scam match must always score LOW, e.g. 1-2, never high.",
-    "- MID trustScore (4-7) = mixed signal or not enough data.",
-    'Worked example: subject "driver refuses to use the meter" matches the taxi-meter-refusal scam pattern, so trustScore must be LOW (e.g. 1), verdict should warn the traveler, and warnings should include "Taxi meter refusal". A score of 8+ here would be wrong.',
+    "trustScore: HIGH 8-10 fair; LOW 0-3 overpriced/scam; MID 4-7 uncertain.",
     "",
-    "Return valid JSON only, matching this exact shape:",
+    "Return valid JSON only:",
     JSON.stringify({
       trustScore: "number 0-10",
-      verdict: "short verdict, e.g. 'Overpriced — normal fare is 180,000-220,000 VND via Grab'",
-      supportingReasons: ["short reason strings grounded in the reference data above"],
-      warnings: ["short warning strings, e.g. matched scam pattern titles"],
+      verdict: "short verdict with normal range when known",
+      supportingReasons: ["short reasons grounded in reference data"],
+      warnings: ["short warnings"],
+      extractedItems: [{ name: "item from photo/text", priceVnd: 0 }],
+      groundingMatch: "Phở bò · Hà Nội · 40000-70000 VND",
     }),
   ].join("\n");
 }

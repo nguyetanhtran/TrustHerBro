@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "eval:far": "npx --yes tsx -e \"const { measureFar, formatFarPercent } = require('./lib/eval/measureFar.ts'); const r = measureFar(); console.log('Price FAR', formatFarPercent(r.price.falseAlarmRate), 'recall', formatFarPercent(r.price.recall)); console.log('Scam  FAR', formatFarPercent(r.scam.falseAlarmRate), 'recall', formatFarPercent(r.scam.recall)); console.log('Overall FAR', formatFarPercent(r.overall.falseAlarmRate), 'on', r.overall.cases, 'fixtures'); if (r.failures.length) { console.log('Failures', r.failures); process.exitCode = 1; }\"",
+    "smoke": "npx --yes tsx scripts/smoke-apis.ts",
+    "test": "npm run eval:far && npm run smoke"
   },
   "dependencies": {
     "@supabase/ssr": "^0.6.1",

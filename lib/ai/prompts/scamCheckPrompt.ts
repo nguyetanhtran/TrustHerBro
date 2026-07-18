@@ -15,6 +15,7 @@ export function buildScamCheckPrompt(language: LanguageCode = "en") {
     "You help a tourist in Vietnam figure out if a situation they describe is a known scam.",
     `Write "advice" and each match's "why" entirely in ${languageName}.`,
     "The description may be spoken and transcribed, in any language, and may be vague or worded very differently from the catalog — reason about the meaning, not the exact words.",
+    "If a photo is attached (receipt, menu, price board, sign, meter, chat screenshot), read any visible text and prices and use them as part of the situation description.",
     "Match it against the scam-pattern catalog below and return the pattern ids that genuinely fit.",
     "",
     "IMPORTANT — avoid false alarms. Most sellers and drivers are honest. Only set isLikelyScam true when the described signals clearly point to a scam.",

@@ -1,7 +1,7 @@
 "use client";
 
-import type { CSSProperties } from "react";
-import { useMemo, useState } from "react";
+import type { CSSProperties, FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   MapPin,
   Navigation,
@@ -16,6 +16,7 @@ import {
   ShieldCheck,
   Locate,
   Smartphone,
+  Search,
 } from "lucide-react";
 import type {
   NearbyCategory,
@@ -71,7 +72,7 @@ const GUIDE_STEPS = [
   {
     icon: Locate,
     title: "Share your location",
-    body: "Tap the button below and allow location access so we can look around you.",
+    body: "Use GPS, or type a hotel / street / landmark and search around that spot.",
   },
   {
     icon: MapPin,
@@ -118,6 +119,7 @@ function formatPriceLevel(level?: number) {
 
 function PlaceRow({ place }: { place: NearbyPlace }) {
   const [copied, setCopied] = useState(false);
+  const [showAllHours, setShowAllHours] = useState(false);
   const price = formatPriceLevel(place.priceLevel);
   const distance = formatDistance(place.distanceMeters);
   const meta = CATEGORY_META[place.category];
@@ -161,25 +163,79 @@ function PlaceRow({ place }: { place: NearbyPlace }) {
       </div>
 
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-          <strong style={{ fontSize: 15.5, color: theme.colors.text }}>{place.name}</strong>
-          {typeof place.openNow === "boolean" && (
-            <span
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 10,
+            flexWrap: "wrap",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", minWidth: 0, flex: "1 1 140px" }}>
+            <strong style={{ fontSize: 15.5, color: theme.colors.text }}>{place.name}</strong>
+            {typeof place.openNow === "boolean" && (
+              <span
+                style={{
+                  fontSize: 11,
+                  fontWeight: 700,
+                  padding: "2px 8px",
+                  borderRadius: 999,
+                  background: place.openNow ? "rgba(45,120,80,0.14)" : "rgba(120,60,40,0.12)",
+                  color: place.openNow ? "#2f6b45" : "#8a4a2f",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 4,
+                }}
+              >
+                <Clock size={11} /> {place.openNow ? "Open now" : "Closed"}
+              </span>
+            )}
+          </div>
+
+          <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
+            <a
+              href={buildMapsSearchLink(place.mapsQuery)}
+              target="_blank"
+              rel="noreferrer"
               style={{
-                fontSize: 11,
-                fontWeight: 700,
-                padding: "2px 8px",
-                borderRadius: 999,
-                background: place.openNow ? "rgba(45,120,80,0.14)" : "rgba(120,60,40,0.12)",
-                color: place.openNow ? "#2f6b45" : "#8a4a2f",
                 display: "inline-flex",
                 alignItems: "center",
-                gap: 4,
+                gap: 5,
+                padding: "6px 11px",
+                borderRadius: 9,
+                background: theme.colors.primary,
+                color: "#fff",
+                fontWeight: 700,
+                fontSize: 12,
+                textDecoration: "none",
+                whiteSpace: "nowrap",
               }}
             >
-              <Clock size={11} /> {place.openNow ? "Open now" : "Closed"}
-            </span>
-          )}
+              <Navigation size={13} /> Directions
+            </a>
+            <button
+              type="button"
+              onClick={copyAddress}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 5,
+                padding: "6px 11px",
+                borderRadius: 9,
+                background: "transparent",
+                border: `1px solid ${theme.colors.border}`,
+                color: theme.colors.text,
+                fontWeight: 600,
+                fontSize: 12,
+                cursor: "pointer",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {copied ? <Check size={13} /> : <Copy size={13} />}
+              {copied ? "Copied" : "Copy address"}
+            </button>
+          </div>
         </div>
 
         <div
@@ -209,61 +265,79 @@ function PlaceRow({ place }: { place: NearbyPlace }) {
           {price && <span style={{ color: theme.colors.textLight }}>{price}</span>}
         </div>
 
-        <p style={{ margin: "0 0 12px", fontSize: 13, color: theme.colors.textLight, lineHeight: 1.5 }}>
-          {place.address}
-        </p>
+        {place.address && place.address !== "Address unavailable" && (
+          <p style={{ margin: "0 0 8px", fontSize: 13, color: theme.colors.textLight, lineHeight: 1.5 }}>
+            {place.address}
+          </p>
+        )}
 
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-          <a
-            href={buildMapsSearchLink(place.mapsQuery)}
-            target="_blank"
-            rel="noreferrer"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-              padding: "7px 14px",
-              borderRadius: 10,
-              background: theme.colors.primary,
-              color: "#fff",
-              fontWeight: 700,
-              fontSize: 13,
-              textDecoration: "none",
-            }}
-          >
-            <Navigation size={14} /> Directions
-          </a>
-          <button
-            type="button"
-            onClick={copyAddress}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-              padding: "7px 14px",
-              borderRadius: 10,
-              background: "transparent",
-              border: `1px solid ${theme.colors.border}`,
-              color: theme.colors.text,
-              fontWeight: 600,
-              fontSize: 13,
-              cursor: "pointer",
-            }}
-          >
-            {copied ? <Check size={14} /> : <Copy size={14} />}
-            {copied ? "Copied" : "Copy address"}
-          </button>
-        </div>
+        {(place.hoursToday || place.weekdayHours?.length) && (
+          <div style={{ margin: place.address && place.address !== "Address unavailable" ? "0" : "0 0 0" }}>
+            {place.hoursToday && (
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: 13,
+                  color: theme.colors.text,
+                  display: "flex",
+                  alignItems: "flex-start",
+                  gap: 6,
+                  lineHeight: 1.45,
+                }}
+              >
+                <Clock size={13} style={{ marginTop: 2, flexShrink: 0, color: theme.colors.bronze }} />
+                <span>{place.hoursToday}</span>
+              </p>
+            )}
+            {place.weekdayHours && place.weekdayHours.length > 0 && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => setShowAllHours((v) => !v)}
+                  style={{
+                    marginTop: 4,
+                    padding: 0,
+                    border: "none",
+                    background: "transparent",
+                    color: theme.colors.primary,
+                    fontSize: 12,
+                    fontWeight: 700,
+                    cursor: "pointer",
+                  }}
+                >
+                  {showAllHours ? "Hide weekly hours" : "Show weekly hours"}
+                </button>
+                {showAllHours && (
+                  <ul
+                    style={{
+                      margin: "6px 0 0",
+                      paddingLeft: 18,
+                      fontSize: 12,
+                      color: theme.colors.textLight,
+                      lineHeight: 1.55,
+                    }}
+                  >
+                    {place.weekdayHours.map((line) => (
+                      <li key={line}>{line}</li>
+                    ))}
+                  </ul>
+                )}
+              </>
+            )}
+          </div>
+        )}
       </div>
     </article>
   );
 }
 
-export function NearbyGuide() {
+export function NearbyGuide({ autoFind = false }: { autoFind?: boolean }) {
   const [data, setData] = useState<NearbySuggestionsResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<FilterKey>("all");
+  const [address, setAddress] = useState("");
+  const autoStarted = useRef(false);
 
   const allPlaces = useMemo<NearbyPlace[]>(() => {
     if (!data) return [];
@@ -294,7 +368,22 @@ export function NearbyGuide() {
     return c;
   }, [allPlaces]);
 
-  function handleFind() {
+  async function fetchNearby(params: URLSearchParams) {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(`/api/nearby?${params.toString()}`);
+      const result = (await res.json()) as NearbySuggestionsResult & { error?: string };
+      if (!res.ok) throw new Error(result.error || "Could not load nearby places.");
+      setData(result);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not load nearby places.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function handleFindGps() {
     if (typeof navigator === "undefined" || !navigator.geolocation) {
       setError("Your browser does not support location. Try a different device or browser.");
       return;
@@ -303,20 +392,11 @@ export function NearbyGuide() {
     setError(null);
     navigator.geolocation.getCurrentPosition(
       async (position) => {
-        try {
-          const params = new URLSearchParams({
-            lat: String(position.coords.latitude),
-            lng: String(position.coords.longitude),
-          });
-          const res = await fetch(`/api/nearby?${params.toString()}`);
-          const result = (await res.json()) as NearbySuggestionsResult & { error?: string };
-          if (!res.ok) throw new Error(result.error || "Could not load nearby places.");
-          setData(result);
-        } catch (err) {
-          setError(err instanceof Error ? err.message : "Could not load nearby places.");
-        } finally {
-          setLoading(false);
-        }
+        const params = new URLSearchParams({
+          lat: String(position.coords.latitude),
+          lng: String(position.coords.longitude),
+        });
+        await fetchNearby(params);
       },
       (geoErr) => {
         setLoading(false);
@@ -330,6 +410,22 @@ export function NearbyGuide() {
     );
   }
 
+  async function handleFindAddress(event?: FormEvent) {
+    event?.preventDefault();
+    const query = address.trim();
+    if (!query) {
+      setError("Enter an address, hotel name, or landmark to search around.");
+      return;
+    }
+    await fetchNearby(new URLSearchParams({ address: query }));
+  }
+
+  useEffect(() => {
+    if (!autoFind || autoStarted.current) return;
+    autoStarted.current = true;
+    handleFindGps();
+  }, [autoFind]);
+
   return (
     <div style={wrapStyle}>
       {/* Guide / how-it-works */}
@@ -340,7 +436,7 @@ export function NearbyGuide() {
         </div>
         <p style={{ margin: "0 0 20px", color: theme.colors.textLight, lineHeight: 1.6 }}>
           A quick, safety-first way to discover trusted food, cafés, sights and essentials near
-          your current spot — with distance, opening hours and one-tap directions.
+          your current spot — or any address you type in.
         </p>
 
         <div
@@ -390,9 +486,78 @@ export function NearbyGuide() {
           })}
         </div>
 
+        <form
+          onSubmit={handleFindAddress}
+          style={{
+            display: "flex",
+            gap: 10,
+            flexWrap: "wrap",
+            marginBottom: 14,
+          }}
+        >
+          <input
+            type="text"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+            placeholder="Hotel, street, or landmark — e.g. Hoan Kiem Lake, Hanoi"
+            disabled={loading}
+            style={{
+              flex: "1 1 240px",
+              minWidth: 0,
+              padding: "13px 14px",
+              borderRadius: 12,
+              border: `1px solid ${theme.colors.border}`,
+              background: "#FAF7F2",
+              color: theme.colors.text,
+              fontSize: 15,
+              fontFamily: "inherit",
+              outline: "none",
+            }}
+          />
+          <button
+            type="submit"
+            disabled={loading || !address.trim()}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              padding: "13px 18px",
+              borderRadius: 12,
+              border: "none",
+              background: theme.colors.primary,
+              color: "#fff",
+              fontWeight: 700,
+              fontSize: 15,
+              cursor: loading || !address.trim() ? "default" : "pointer",
+              opacity: loading || !address.trim() ? 0.7 : 1,
+            }}
+          >
+            <Search size={17} />
+            Search around address
+          </button>
+        </form>
+
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            marginBottom: 14,
+            color: theme.colors.textLight,
+            fontSize: 12,
+            fontWeight: 600,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+          }}
+        >
+          <span style={{ flex: 1, height: 1, background: theme.colors.border }} />
+          or
+          <span style={{ flex: 1, height: 1, background: theme.colors.border }} />
+        </div>
+
         <button
           type="button"
-          onClick={handleFind}
+          onClick={handleFindGps}
           disabled={loading}
           style={{
             display: "inline-flex",
@@ -400,9 +565,9 @@ export function NearbyGuide() {
             gap: 8,
             padding: "13px 22px",
             borderRadius: 12,
-            border: "none",
-            background: theme.colors.primary,
-            color: "#fff",
+            border: `1.5px solid ${theme.colors.primary}`,
+            background: "transparent",
+            color: theme.colors.primary,
             fontWeight: 700,
             fontSize: 15,
             cursor: loading ? "default" : "pointer",
@@ -410,7 +575,7 @@ export function NearbyGuide() {
           }}
         >
           <Locate size={17} />
-          {loading ? "Locating you…" : data ? "Refresh nearby places" : "Use my location"}
+          {loading ? "Searching…" : data ? "Use my current location" : "Use my location"}
         </button>
 
         {data && (

@@ -2,6 +2,7 @@
 
 import type { CSSProperties } from "react";
 import { useState } from "react";
+import Link from "next/link";
 import type { NearbyPlace, NearbySuggestionsResult } from "../../lib/ai/types";
 import { buildMapsSearchLink } from "../../lib/utils/mapsLink";
 import { useLanguage } from "../../lib/i18n/LanguageContext";
@@ -82,9 +83,12 @@ function PlaceCard({ place }: { place: NearbyPlace }) {
 export function NearbySuggestions({
   secondCategory = "fun",
   showSimCards = false,
+  linkToLocation = false,
 }: {
   secondCategory?: "fun" | "convenience";
   showSimCards?: boolean;
+  /** When true, the CTA navigates to /location instead of searching inline. */
+  linkToLocation?: boolean;
 }) {
   const { t } = useLanguage();
   const [data, setData] = useState<NearbySuggestionsResult | null>(null);
@@ -141,9 +145,15 @@ export function NearbySuggestions({
             <h2 style={{ margin: 0, fontSize: 24, color: theme.colors.text }}>{t("nearby.title")}</h2>
             <p style={{ margin: "6px 0 0", color: theme.colors.textLight }}>{t("nearby.description")}</p>
           </div>
-          <button type="button" onClick={handleFindNearby} disabled={loading} style={{ ...buttonStyle, opacity: loading ? 0.7 : 1 }}>
-            {loading ? t("nearby.finding") : t("nearby.findButton")}
-          </button>
+          {linkToLocation ? (
+            <Link href="/location" style={{ ...buttonStyle, textDecoration: "none", display: "inline-block" }}>
+              {t("nearby.findButton")}
+            </Link>
+          ) : (
+            <button type="button" onClick={handleFindNearby} disabled={loading} style={{ ...buttonStyle, opacity: loading ? 0.7 : 1 }}>
+              {loading ? t("nearby.finding") : t("nearby.findButton")}
+            </button>
+          )}
         </div>
 
         {error ? (

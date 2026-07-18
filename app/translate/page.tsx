@@ -1,7 +1,9 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 import { useLanguage } from "../../lib/i18n/LanguageContext";
 import { LANGUAGE_NAMES } from "../../lib/i18n/translations";
 import { useVoiceRecorder } from "../../lib/utils/useVoiceRecorder";
@@ -15,6 +17,8 @@ import {
   type TranslateSpeaker,
 } from "../../lib/utils/translateHistory";
 import { theme } from "../../lib/theme";
+import { Camera, Mic, Square } from "lucide-react";
+import { PrivacyNotice } from "../../components/shared/PrivacyNotice";
 
 const LOCAL_LANGUAGE_CODE = "vi";
 const LOCAL_LANGUAGE_NAME = "Tiếng Việt (Vietnamese)";
@@ -53,6 +57,7 @@ const inputStyle: CSSProperties = {
   fontSize: 15,
   background: "#ffffff",
   color: theme.colors.text,
+  boxSizing: "border-box",
 };
 
 const iconButton = (active = false): CSSProperties => ({
@@ -60,11 +65,15 @@ const iconButton = (active = false): CSSProperties => ({
   width: 44,
   height: 44,
   borderRadius: theme.borderRadius.button,
-  border: `1px solid ${theme.colors.border}`,
-  background: active ? theme.colors.primary : "#ffffff",
-  color: active ? "#ffffff" : theme.colors.text,
-  fontSize: 18,
+  border: `1px solid ${active ? theme.colors.primary : theme.colors.border}`,
+  background: active ? theme.colors.primary : "rgba(155, 44, 31, 0.06)",
+  color: active ? "#ffffff" : theme.colors.primary,
   cursor: "pointer",
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  padding: 0,
+  lineHeight: 0,
 });
 
 const sendButton: CSSProperties = {
@@ -140,7 +149,21 @@ function MessageBubble({
 }
 
 export default function TranslatePage() {
+  return (
+    <Suspense
+      fallback={
+        <div style={{ textAlign: "center", padding: 40, color: theme.colors.textLight }}>Loading...</div>
+      }
+    >
+      <TranslateContent />
+    </Suspense>
+  );
+}
+
+function TranslateContent() {
   const { language, t } = useLanguage();
+  const searchParams = useSearchParams();
+  const isIncident = searchParams.get("incident") === "1";
   const recorder = useVoiceRecorder();
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -232,6 +255,24 @@ export default function TranslatePage() {
         {t("translate.description")}
       </p>
 
+      {isIncident ? (
+        <div
+          style={{
+            ...cardShell,
+            marginBottom: 16,
+            background: "rgba(155, 44, 31, 0.08)",
+            borderColor: theme.colors.primary,
+          }}
+        >
+          <strong style={{ color: theme.colors.primary }}>{t("emergency.translateCta")}</strong>
+          <p style={{ margin: "8px 0 0", color: theme.colors.textLight }}>
+            <Link href="/emergency" style={{ color: theme.colors.primary, fontWeight: 600 }}>
+              ← {t("emergency.title")}
+            </Link>
+          </p>
+        </div>
+      ) : null}
+
       <div style={{ ...cardShell, marginBottom: 20 }}>
         <div style={{ display: "flex", gap: 10, marginBottom: 16 }}>
           <button
@@ -280,7 +321,7 @@ export default function TranslatePage() {
             aria-label={t("translate.addPhoto")}
             title={t("translate.addPhoto")}
           >
-            📷
+            <Camera size={20} strokeWidth={2} aria-hidden />
           </button>
           <button
             type="button"
@@ -290,7 +331,11 @@ export default function TranslatePage() {
             aria-label={recorder.recording ? t("scamCheck.stop") : t("scamCheck.speak")}
             title={recorder.recording ? t("scamCheck.stop") : t("scamCheck.speak")}
           >
-            {recorder.recording ? "■" : "🎤"}
+            {recorder.recording ? (
+              <Square size={16} strokeWidth={2.5} fill="currentColor" aria-hidden />
+            ) : (
+              <Mic size={20} strokeWidth={2} aria-hidden />
+            )}
           </button>
           <input
             value={text}
@@ -310,6 +355,10 @@ export default function TranslatePage() {
           >
             {sending ? t("translate.sending") : t("translate.send")}
           </button>
+        </div>
+
+        <div style={{ marginTop: 14 }}>
+          <PrivacyNotice what={t("scamCheck.privacyWhat")} />
         </div>
       </div>
 

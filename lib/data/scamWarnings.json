@@ -97,6 +97,22 @@
     ]
   },
   {
+    "id": "money-exchange-scam",
+    "title": "Street money-exchange scam",
+    "category": "money",
+    "description": "An unofficial changer offers a great rate, then short-changes, swaps notes, or uses a confusing count.",
+    "signals": [
+      "better-than-bank rate offered on the street",
+      "counting happens very fast or in a crowd",
+      "they insist you put money away before recounting"
+    ],
+    "howToHandle": [
+      "Use a bank, official exchange, or your hotel desk.",
+      "Count every note yourself before leaving the counter.",
+      "Walk away if the rate sounds too good or they rush you."
+    ]
+  },
+  {
     "id": "hotel-closed-redirect",
     "title": "Hotel closed redirect",
     "category": "accommodation",

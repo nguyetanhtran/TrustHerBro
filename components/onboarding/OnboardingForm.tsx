@@ -8,6 +8,7 @@ import { saveOnboardingAnswers } from "../../lib/store";
 import { findNearestCity, normalizeCoordinates } from "../../lib/utils/geolocation";
 import { useLanguage } from "../../lib/i18n/LanguageContext";
 import { LanguageSwitcher } from "../shared/LanguageSwitcher";
+import { theme } from "../../lib/theme";
 
 const CITY_OPTIONS = [
   "Hà Nội",
@@ -38,35 +39,51 @@ function defaultAnswers(): OnboardingAnswers {
 const formStyle: CSSProperties = {
   display: "grid",
   gap: 20,
-  background: "#ffffff",
+  background: theme.colors.card,
   padding: 24,
-  borderRadius: 24,
-  border: "1px solid #e2e8f0",
+  borderRadius: theme.borderRadius.card,
+  border: `1px solid ${theme.colors.border}`,
+  boxShadow: theme.shadows.soft,
+  boxSizing: "border-box",
+  width: "100%",
+  maxWidth: "100%",
+  overflow: "hidden",
+  color: theme.colors.text,
 };
 
 const inputStyle: CSSProperties = {
   padding: "12px 14px",
-  borderRadius: 12,
-  border: "1px solid #cbd5e1",
+  borderRadius: theme.borderRadius.button,
+  border: `1px solid ${theme.colors.border}`,
   width: "100%",
+  maxWidth: "100%",
+  boxSizing: "border-box",
   fontSize: 15,
+  fontFamily: "inherit",
+  background: "#FAF7F2",
+  color: theme.colors.text,
+  outline: "none",
 };
 
 function chipStyle(selected: boolean): CSSProperties {
   return {
     padding: "10px 16px",
     borderRadius: 999,
-    border: selected ? "2px solid #ea580c" : "1px solid #cbd5e1",
-    background: selected ? "#fff7ed" : "#ffffff",
+    border: selected ? `2px solid ${theme.colors.primary}` : `1px solid ${theme.colors.border}`,
+    background: selected ? "rgba(155, 44, 31, 0.08)" : theme.colors.card,
+    color: theme.colors.text,
     fontWeight: selected ? 700 : 500,
     cursor: "pointer",
+    fontFamily: "inherit",
+    maxWidth: "100%",
+    boxSizing: "border-box",
   };
 }
 
 function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <label style={{ display: "grid", gap: 8 }}>
-      <span style={{ fontWeight: 600 }}>{label}</span>
+    <label style={{ display: "grid", gap: 8, minWidth: 0 }}>
+      <span style={{ fontWeight: 600, color: theme.colors.text }}>{label}</span>
       {children}
     </label>
   );
@@ -82,7 +99,7 @@ function ChipGroup({
   onChange: (value: string) => void;
 }) {
   return (
-    <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+    <div style={{ display: "flex", gap: 8, flexWrap: "wrap", minWidth: 0, maxWidth: "100%" }}>
       {options.map((option) => (
         <button
           key={option}
@@ -112,7 +129,7 @@ function YesNoField({
 }) {
   return (
     <Field label={label}>
-      <div style={{ display: "flex", gap: 8 }}>
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
         <button type="button" onClick={() => onChange(true)} style={chipStyle(value === true)}>
           {yesLabel}
         </button>
@@ -223,12 +240,15 @@ export function OnboardingForm() {
         type="submit"
         style={{
           padding: "14px 16px",
-          borderRadius: 14,
+          borderRadius: theme.borderRadius.button,
           border: "none",
-          background: "#ea580c",
+          background: theme.colors.primary,
           color: "#ffffff",
           fontWeight: 700,
           cursor: "pointer",
+          fontFamily: "inherit",
+          width: "100%",
+          boxSizing: "border-box",
         }}
       >
         {t("onboarding.submit")}

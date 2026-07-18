@@ -1,5 +1,7 @@
 "use client";
 
+import { theme } from "../../lib/theme";
+
 export function DiscreetModeToggle({
   enabled,
   onChange,
@@ -15,14 +17,18 @@ export function DiscreetModeToggle({
         justifyContent: "space-between",
         gap: 12,
         padding: 14,
-        borderRadius: 14,
-        background: "#eff6ff",
+        borderRadius: theme.borderRadius.button,
+        background: "rgba(196, 163, 90, 0.12)",
+        border: `1px solid ${theme.colors.border}`,
+        color: theme.colors.text,
       }}
     >
       <span>
         <strong>Discreet Mode</strong>
         <br />
-        <small>English guidance read quietly through your earphones</small>
+        <small style={{ color: theme.colors.textLight }}>
+          English guidance read quietly through your earphones
+        </small>
       </span>
       <input
         type="checkbox"

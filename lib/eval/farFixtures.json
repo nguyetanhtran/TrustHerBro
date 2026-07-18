@@ -1,0 +1,122 @@
+[
+  {
+    "id": "price-fair-grab-hn",
+    "kind": "price",
+    "label": "honest",
+    "text": "Grab from Noi Bai Airport to Old Quarter 200000 VND"
+  },
+  {
+    "id": "price-fair-pho-hn",
+    "kind": "price",
+    "label": "honest",
+    "text": "Phở bò in Hà Nội 55000 VND"
+  },
+  {
+    "id": "price-fair-coffee-hcm",
+    "kind": "price",
+    "label": "honest",
+    "text": "Cà phê sữa đá coffee in TP. Hồ Chí Minh 40000 VND"
+  },
+  {
+    "id": "price-fair-water",
+    "kind": "price",
+    "label": "honest",
+    "text": "Bottled water 500ml in Hà Nội 15000 VND"
+  },
+  {
+    "id": "price-fair-taxi-danang",
+    "kind": "price",
+    "label": "honest",
+    "text": "Metered taxi Da Nang Airport to City Center 100000 VND"
+  },
+  {
+    "id": "price-fair-bus-hn",
+    "kind": "price",
+    "label": "honest",
+    "text": "Airport bus 86 Noi Bai Old Quarter 40000 VND"
+  },
+  {
+    "id": "price-over-grab-hn",
+    "kind": "price",
+    "label": "alarm",
+    "text": "Taxi Noi Bai Airport to Old Quarter 500000 VND"
+  },
+  {
+    "id": "price-over-pho",
+    "kind": "price",
+    "label": "alarm",
+    "text": "Phở bò bowl in Hà Nội 150000 VND"
+  },
+  {
+    "id": "price-over-hcm-taxi",
+    "kind": "price",
+    "label": "alarm",
+    "text": "Metered taxi Tan Son Nhat Airport to District 1 400000 VND"
+  },
+  {
+    "id": "price-over-water",
+    "kind": "price",
+    "label": "alarm",
+    "text": "Bottled water 500ml in Hà Nội 80000 VND"
+  },
+  {
+    "id": "scam-honest-cafe",
+    "kind": "scam",
+    "label": "honest",
+    "text": "The cafe showed clear printed prices and my bill matched the order."
+  },
+  {
+    "id": "scam-honest-grab",
+    "kind": "scam",
+    "label": "honest",
+    "text": "My Grab driver followed the app and the fare matched the estimate."
+  },
+  {
+    "id": "scam-honest-hotel",
+    "kind": "scam",
+    "label": "honest",
+    "text": "Reception confirmed my booking and helped me check in with no surprise fees."
+  },
+  {
+    "id": "scam-honest-market",
+    "kind": "scam",
+    "label": "honest",
+    "text": "I confirmed the amount before buying at the stall and paid exactly that."
+  },
+  {
+    "id": "scam-honest-bus",
+    "kind": "scam",
+    "label": "honest",
+    "text": "The airport bus booth posted a fixed fare and gave me a ticket receipt."
+  },
+  {
+    "id": "scam-meter-refusal",
+    "kind": "scam",
+    "label": "alarm",
+    "text": "The driver refuses to start the meter and only offers a fixed price after I get in that feels much higher than a ride-hailing estimate."
+  },
+  {
+    "id": "scam-bird-food",
+    "kind": "scam",
+    "label": "alarm",
+    "text": "Someone insists I hold bird food for a photo around Hoan Kiem Lake, a photo is taken before any price is mentioned, then payment is demanded afterwards."
+  },
+  {
+    "id": "scam-hotel-redirect",
+    "kind": "scam",
+    "label": "alarm",
+    "text": "A stranger says my hotel is closed or full and pushes a different hotel they know while discouraging me from calling my hotel."
+  },
+  {
+    "id": "scam-money-exchange",
+    "kind": "scam",
+    "label": "alarm",
+    "text": "A street changer offers a better-than-bank rate, counts very fast in a crowd, and insists I put money away before recounting."
+  },
+  {
+    "id": "scam-ghost-tour",
+    "kind": "scam",
+    "label": "alarm",
+    "text": "A stranger sold me a cheap tour and demanded full payment upfront in cash with no company name, license, or reviews I can check."
+  }
+]

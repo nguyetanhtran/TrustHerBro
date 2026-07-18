@@ -2,6 +2,7 @@
 
 import type { FormEvent } from "react";
 import { useState } from "react";
+import { theme } from "../../lib/theme";
 
 export function ChatInput({
   onSend,
@@ -34,9 +35,16 @@ export function ChatInput({
         placeholder={placeholder ?? "Type your message"}
         style={{
           flex: 1,
+          minWidth: 0,
           padding: "12px 14px",
-          borderRadius: 14,
-          border: "1px solid #cbd5e1",
+          borderRadius: theme.borderRadius.button,
+          border: `1px solid ${theme.colors.border}`,
+          background: "#FAF7F2",
+          color: theme.colors.text,
+          fontFamily: "inherit",
+          fontSize: 15,
+          outline: "none",
+          boxSizing: "border-box",
         }}
       />
       <button
@@ -44,12 +52,13 @@ export function ChatInput({
         disabled={disabled}
         style={{
           padding: "12px 16px",
-          borderRadius: 14,
+          borderRadius: theme.borderRadius.button,
           border: "none",
-          background: "#1d4ed8",
+          background: theme.colors.primary,
           color: "#ffffff",
           fontWeight: 700,
-          cursor: "pointer",
+          cursor: disabled ? "default" : "pointer",
+          opacity: disabled ? 0.7 : 1,
         }}
       >
         Send
