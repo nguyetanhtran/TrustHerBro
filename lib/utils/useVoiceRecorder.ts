@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type RecorderState = {
   recording: boolean;
@@ -17,11 +17,17 @@ export function useVoiceRecorder(): RecorderState {
   const recorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
 
-  const supported =
-    typeof navigator !== "undefined" &&
-    !!navigator.mediaDevices &&
-    typeof window !== "undefined" &&
-    "MediaRecorder" in window;
+  // Compute support only after mount so the server and first client render
+  // agree (avoids a hydration mismatch on the mic button's disabled attr).
+  const [supported, setSupported] = useState(false);
+  useEffect(() => {
+    setSupported(
+      typeof navigator !== "undefined" &&
+        !!navigator.mediaDevices &&
+        typeof window !== "undefined" &&
+        "MediaRecorder" in window,
+    );
+  }, []);
 
   async function start() {
     setError(null);

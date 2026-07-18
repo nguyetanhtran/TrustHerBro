@@ -108,6 +108,17 @@ export type TrustCheckResult = {
   warnings: string[];
 };
 
+export type UserProfile = {
+  /** BCP-47-ish language code, e.g. "en", "ko", "zh", "ru", "vi". */
+  language: string;
+  /** Chosen travel interests. */
+  interests: string[];
+  /** Whether she allowed location during onboarding. */
+  locationEnabled: boolean;
+  /** True once the welcome flow is complete. */
+  onboarded: boolean;
+};
+
 export type ChatMessage = {
   id: string;
   role: "user" | "assistant";
