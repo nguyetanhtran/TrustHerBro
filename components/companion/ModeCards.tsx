@@ -143,7 +143,7 @@ export function ModeCards({ firstName }: { firstName?: string }) {
           >
             <Search size={18} strokeWidth={2} />
           </span>
-          <span>Ask Viet anything...</span>
+          <span>Find a trendy cute photobooth nearby...</span>
         </Link>
       </motion.div>
 
