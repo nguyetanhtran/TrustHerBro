@@ -70,13 +70,13 @@ export function SafetyStatusCard() {
       <div style={containerStyle}>
         <div style={headerStyle}>
           <h2 style={titleStyle}>Current Safety</h2>
-          <span style={badgeStyle}>Demo Status</span>
+          <span style={badgeStyle}>Status</span>
         </div>
-        
+
         <div style={gridStyle}>
           <div style={statStyle}>
             <span style={statLabelStyle}>Safe Level</span>
-            <span style={statValueStyle} aria-label="Safe Level High">High 🟢</span>
+            <span style={statValueStyle} aria-label="Safe Level High">High 🔴</span>
           </div>
           <div style={statStyle}>
             <span style={statLabelStyle}>Scam Risk</span>
