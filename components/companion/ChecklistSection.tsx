@@ -76,7 +76,11 @@ export function ChecklistSection({ todos }: { todos: Todo[] | null }) {
               </li>
             ))
           ) : (
-            <li style={{ color: theme.colors.textLight }}>Nothing on the checklist yet.</li>
+            <li style={{ color: theme.colors.textLight }}>
+              <Link href="/onboarding" style={linkStyle}>
+                Click here to update your travel checklist
+              </Link>
+            </li>
           )}
         </ul>
       </div>
