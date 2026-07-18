@@ -1,5 +1,6 @@
 import type { TimelineStep } from "../../lib/ai/types";
 import { buildMapsSearchLink } from "../../lib/utils/mapsLink";
+import { useLanguage } from "../../lib/i18n/LanguageContext";
 import { TrustBadge } from "../shared/TrustBadge";
 
 const colors: Record<TimelineStep["riskLevel"], string> = {
@@ -15,6 +16,7 @@ export function TimelineStepCard({
   step: TimelineStep;
   accommodation?: string;
 }) {
+  const { t } = useLanguage();
   const isCheckinStep = step.id === "checkin" || step.id === "hotel";
 
   return (
@@ -51,7 +53,7 @@ export function TimelineStepCard({
             rel="noreferrer"
             style={{ fontSize: 13, fontWeight: 600, color: "#ea580c" }}
           >
-            Open in Google Maps
+            {t("timeline.openMaps")}
           </a>
         ) : null}
       </div>

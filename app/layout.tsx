@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { CSSProperties, ReactNode } from "react";
 import { ModeNav } from "../components/mode-switch/ModeNav";
+import { LanguageProvider } from "../lib/i18n/LanguageContext";
 
 export const metadata: Metadata = {
   title: "TrustHerBro",
@@ -22,10 +23,12 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   return (
-    <html lang="vi">
+    <html lang="en">
       <body style={bodyStyle}>
-        <ModeNav />
-        {children}
+        <LanguageProvider>
+          <ModeNav />
+          {children}
+        </LanguageProvider>
       </body>
     </html>
   );
