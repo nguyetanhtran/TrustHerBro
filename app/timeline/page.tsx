@@ -4,7 +4,6 @@ import type { CSSProperties } from "react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { SurvivalTimeline } from "../../components/timeline/SurvivalTimeline";
-import { NearbySuggestions } from "../../components/companion/NearbySuggestions";
 import { loadOnboardingAnswers } from "../../lib/store";
 import { useLanguage } from "../../lib/i18n/LanguageContext";
 import type { OnboardingAnswers, SurvivalTimelinePayload } from "../../lib/ai/types";
@@ -56,14 +55,11 @@ export default function TimelinePage() {
           </button>
         </div>
       ) : timeline ? (
-        <>
-          <SurvivalTimeline
-            title={timeline.title}
-            steps={timeline.steps}
-            accommodation={answers?.accommodation}
-          />
-          <NearbySuggestions />
-        </>
+        <SurvivalTimeline
+          title={timeline.title}
+          steps={timeline.steps}
+          accommodation={answers?.accommodation}
+        />
       ) : (
         <p style={{ lineHeight: 1.7 }}>{t("timeline.loading")}</p>
       )}

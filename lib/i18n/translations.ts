@@ -128,7 +128,9 @@ export type TranslationKey =
   | "nearby.placesToEat"
   | "nearby.noFood"
   | "nearby.placesToExplore"
-  | "nearby.noFun";
+  | "nearby.noFun"
+  | "nearby.placesConvenience"
+  | "nearby.noConvenience";
 
 export const translations: Record<LanguageCode, Record<TranslationKey, string>> = {
   en: {
@@ -267,6 +269,8 @@ export const translations: Record<LanguageCode, Record<TranslationKey, string>> 
     "nearby.noFood": "No nearby food suggestions found.",
     "nearby.placesToExplore": "Places to explore",
     "nearby.noFun": "No nearby activity suggestions found.",
+    "nearby.placesConvenience": "Convenience stores nearby",
+    "nearby.noConvenience": "No nearby convenience stores found.",
   },
   ko: {
     "onboarding.city": "어느 도시에 도착하셨나요?",
@@ -401,6 +405,8 @@ export const translations: Record<LanguageCode, Record<TranslationKey, string>> 
     "nearby.noFood": "주변 음식점 추천을 찾을 수 없습니다.",
     "nearby.placesToExplore": "둘러볼 곳",
     "nearby.noFun": "주변 활동 추천을 찾을 수 없습니다.",
+    "nearby.placesConvenience": "근처 편의점",
+    "nearby.noConvenience": "주변 편의점 추천을 찾을 수 없습니다.",
   },
   zh: {
     "onboarding.city": "您到达的是哪个城市?",
@@ -534,6 +540,8 @@ export const translations: Record<LanguageCode, Record<TranslationKey, string>> 
     "nearby.noFood": "未找到附近的美食推荐。",
     "nearby.placesToExplore": "探索地点",
     "nearby.noFun": "未找到附近的活动推荐。",
+    "nearby.placesConvenience": "附近的便利店",
+    "nearby.noConvenience": "未找到附近的便利店推荐。",
   },
   ru: {
     "onboarding.city": "В какой город вы прибыли?",
@@ -672,6 +680,8 @@ export const translations: Record<LanguageCode, Record<TranslationKey, string>> 
     "nearby.noFood": "Рекомендации по еде поблизости не найдены.",
     "nearby.placesToExplore": "Места для изучения",
     "nearby.noFun": "Рекомендации по развлечениям поблизости не найдены.",
+    "nearby.placesConvenience": "Магазины у дома поблизости",
+    "nearby.noConvenience": "Рекомендации по магазинам у дома поблизости не найдены.",
   },
   vi: {
     "onboarding.city": "Bạn đến thành phố nào?",
@@ -807,5 +817,7 @@ export const translations: Record<LanguageCode, Record<TranslationKey, string>> 
     "nearby.noFood": "Không tìm thấy gợi ý quán ăn gần đây.",
     "nearby.placesToExplore": "Chỗ khám phá",
     "nearby.noFun": "Không tìm thấy gợi ý hoạt động gần đây.",
+    "nearby.placesConvenience": "Cửa hàng tiện lợi gần đây",
+    "nearby.noConvenience": "Không tìm thấy gợi ý cửa hàng tiện lợi gần đây.",
   },
 };
