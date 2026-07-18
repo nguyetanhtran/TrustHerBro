@@ -3,6 +3,7 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 import { ModeIndicator } from "../components/mode-switch/ModeIndicator";
 import { CompanionChat } from "../components/companion/CompanionChat";
+import { NearbySuggestions } from "../components/companion/NearbySuggestions";
 import { createClient } from "../utils/supabase/server";
 
 const shellStyle: CSSProperties = {
@@ -56,6 +57,8 @@ export default async function HomePage() {
         <div style={{ marginTop: 24 }}>
           <CompanionChat />
         </div>
+
+        <NearbySuggestions />
 
         <section
           style={{
