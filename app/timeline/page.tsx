@@ -16,12 +16,14 @@ const pageStyle: CSSProperties = {
 
 export default function TimelinePage() {
   const router = useRouter();
-  const { language, t } = useLanguage();
+  const { language, t, isReady } = useLanguage();
   const [timeline, setTimeline] = useState<SurvivalTimelinePayload | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [answers, setAnswers] = useState<OnboardingAnswers | null>(null);
 
   useEffect(() => {
+    if (!isReady) return;
+
     const storedAnswers = loadOnboardingAnswers();
 
     if (!storedAnswers) {
@@ -39,7 +41,7 @@ export default function TimelinePage() {
       .then((response) => response.json())
       .then((data: SurvivalTimelinePayload) => setTimeline(data))
       .catch(() => setError(t("timeline.error")));
-  }, [router, language, t]);
+  }, [router, language, t, isReady]);
 
   return (
     <main style={pageStyle}>

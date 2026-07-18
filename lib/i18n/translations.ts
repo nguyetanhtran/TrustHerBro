@@ -1,4 +1,4 @@
-export const SUPPORTED_LANGUAGES = ["en", "ko", "zh", "ru"] as const;
+export const SUPPORTED_LANGUAGES = ["en", "ko", "zh", "ru", "vi"] as const;
 export type LanguageCode = (typeof SUPPORTED_LANGUAGES)[number];
 
 export const LANGUAGE_NAMES: Record<LanguageCode, string> = {
@@ -6,6 +6,7 @@ export const LANGUAGE_NAMES: Record<LanguageCode, string> = {
   ko: "한국어",
   zh: "中文",
   ru: "Русский",
+  vi: "Tiếng Việt",
 };
 
 export type TranslationKey =
@@ -25,7 +26,8 @@ export type TranslationKey =
   | "timeline.error"
   | "timeline.retry"
   | "timeline.openMaps"
-  | "language.label";
+  | "language.label"
+  | "welcome.greeting";
 
 export const translations: Record<LanguageCode, Record<TranslationKey, string>> = {
   en: {
@@ -46,6 +48,7 @@ export const translations: Record<LanguageCode, Record<TranslationKey, string>> 
     "timeline.retry": "Try again",
     "timeline.openMaps": "Open in Google Maps",
     "language.label": "Language",
+    "welcome.greeting": "Welcome",
   },
   ko: {
     "onboarding.city": "어느 도시에 도착하셨나요?",
@@ -65,6 +68,7 @@ export const translations: Record<LanguageCode, Record<TranslationKey, string>> 
     "timeline.retry": "다시 시도",
     "timeline.openMaps": "구글 지도에서 열기",
     "language.label": "언어",
+    "welcome.greeting": "환영합니다",
   },
   zh: {
     "onboarding.city": "您到达的是哪个城市?",
@@ -84,6 +88,7 @@ export const translations: Record<LanguageCode, Record<TranslationKey, string>> 
     "timeline.retry": "重试",
     "timeline.openMaps": "在谷歌地图中打开",
     "language.label": "语言",
+    "welcome.greeting": "欢迎",
   },
   ru: {
     "onboarding.city": "В какой город вы прибыли?",
@@ -103,5 +108,26 @@ export const translations: Record<LanguageCode, Record<TranslationKey, string>> 
     "timeline.retry": "Повторить",
     "timeline.openMaps": "Открыть в Google Картах",
     "language.label": "Язык",
+    "welcome.greeting": "Добро пожаловать",
+  },
+  vi: {
+    "onboarding.city": "Bạn đến thành phố nào?",
+    "onboarding.arrivalTime": "Bạn đến lúc mấy giờ?",
+    "onboarding.accommodation": "Bạn ở đâu tối nay?",
+    "onboarding.accommodationPlaceholder": "Tên khách sạn / hostel",
+    "onboarding.travelingAlone": "Bạn đi một mình?",
+    "onboarding.firstTimeInVN": "Đây là lần đầu bạn ở Việt Nam?",
+    "onboarding.hasTransport": "Bạn đã có phương tiện di chuyển chưa?",
+    "onboarding.hasMobileData": "Bạn có mạng data chưa?",
+    "onboarding.yes": "Có",
+    "onboarding.no": "Không",
+    "onboarding.submit": "Tạo Survival Timeline",
+    "timeline.title": "Survival Timeline",
+    "timeline.loading": "Đang chuẩn bị hành trình cho bạn...",
+    "timeline.error": "Không thể kết nối máy chủ. Kiểm tra mạng và thử lại.",
+    "timeline.retry": "Thử lại",
+    "timeline.openMaps": "Mở trong Google Maps",
+    "language.label": "Ngôn ngữ",
+    "welcome.greeting": "Chào mừng",
   },
 };
