@@ -5,38 +5,46 @@ import { useState } from "react";
 import type { NearbyPlace, NearbySuggestionsResult } from "../../lib/ai/types";
 import { buildMapsSearchLink } from "../../lib/utils/mapsLink";
 import { useLanguage } from "../../lib/i18n/LanguageContext";
+import { theme } from "../../lib/theme";
+
+const sectionStyle: CSSProperties = {
+  maxWidth: 1100,
+  margin: "0 auto",
+  padding: "24px",
+};
 
 const shellStyle: CSSProperties = {
-  marginTop: 24,
-  padding: 20,
-  borderRadius: 20,
-  background: "#ffffff",
-  border: "1px solid #e2e8f0",
-  boxShadow: "0 12px 32px rgba(15, 23, 42, 0.06)",
+  padding: 24,
+  borderRadius: theme.borderRadius.card,
+  background: theme.colors.card,
+  border: `1px solid ${theme.colors.border}`,
+  boxShadow: theme.shadows.soft,
 };
 
 const buttonStyle: CSSProperties = {
-  padding: "12px 16px",
-  borderRadius: 14,
+  padding: "12px 20px",
+  borderRadius: theme.borderRadius.button,
   border: "none",
-  background: "#0f766e",
+  background: theme.colors.primary,
   color: "#ffffff",
   fontWeight: 700,
   cursor: "pointer",
+  transition: "opacity 0.2s",
 };
 
 const gridStyle: CSSProperties = {
   display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-  gap: 14,
-  marginTop: 16,
+  gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+  gap: 16,
+  marginTop: 20,
 };
 
 const cardStyle: CSSProperties = {
-  padding: 16,
-  borderRadius: 16,
-  border: "1px solid #e2e8f0",
-  background: "#f8fafc",
+  padding: 20,
+  borderRadius: theme.borderRadius.card,
+  border: `1px solid ${theme.colors.border}`,
+  background: "#FAF7F2",
+  boxShadow: "0 4px 12px rgba(45, 42, 38, 0.03)",
 };
 
 function formatPriceLevel(level?: number) {
@@ -50,9 +58,9 @@ function PlaceCard({ place }: { place: NearbyPlace }) {
 
   return (
     <article style={cardStyle}>
-      <strong style={{ display: "block", marginBottom: 6 }}>{place.name}</strong>
-      <p style={{ margin: "0 0 8px", color: "#475569", lineHeight: 1.5 }}>{place.address}</p>
-      <p style={{ margin: "0 0 12px", fontSize: 14, color: "#0f172a" }}>
+      <strong style={{ display: "block", marginBottom: 6, fontSize: 16, color: theme.colors.text }}>{place.name}</strong>
+      <p style={{ margin: "0 0 8px", color: theme.colors.textLight, lineHeight: 1.5, fontSize: 14 }}>{place.address}</p>
+      <p style={{ margin: "0 0 16px", fontSize: 13, color: theme.colors.text }}>
         {typeof place.rating === "number"
           ? `${t("nearby.rating")} ${place.rating.toFixed(1)}`
           : t("nearby.noRating")}
@@ -63,9 +71,9 @@ function PlaceCard({ place }: { place: NearbyPlace }) {
         href={buildMapsSearchLink(place.mapsQuery)}
         target="_blank"
         rel="noreferrer"
-        style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}
+        style={{ color: theme.colors.primary, fontWeight: 700, textDecoration: "none", fontSize: 14 }}
       >
-        {t("timeline.openMaps")}
+        {t("timeline.openMaps")} →
       </a>
     </article>
   );
@@ -120,52 +128,56 @@ export function NearbySuggestions() {
   }
 
   return (
-    <section style={shellStyle}>
-      <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
-        <div>
-          <h2 style={{ margin: 0 }}>{t("nearby.title")}</h2>
-          <p style={{ margin: "6px 0 0", color: "#475569" }}>{t("nearby.description")}</p>
-        </div>
-        <button type="button" onClick={handleFindNearby} disabled={loading} style={buttonStyle}>
-          {loading ? t("nearby.finding") : t("nearby.findButton")}
-        </button>
-      </div>
-
-      {error ? (
-        <p style={{ marginTop: 14, color: "#b91c1c" }}>{error}</p>
-      ) : null}
-
-      {data ? (
-        <>
-          <p style={{ marginTop: 14, color: "#475569" }}>
-            {t("nearby.usingLocation")} {data.areaLabel}
-          </p>
-
-          <div style={gridStyle}>
-            <div>
-              <h3>{t("nearby.placesToEat")}</h3>
-              <div style={{ display: "grid", gap: 12 }}>
-                {data.food.length ? (
-                  data.food.map((place) => <PlaceCard key={place.id} place={place} />)
-                ) : (
-                  <p style={{ color: "#64748b" }}>{t("nearby.noFood")}</p>
-                )}
-              </div>
-            </div>
-
-            <div>
-              <h3>{t("nearby.placesToExplore")}</h3>
-              <div style={{ display: "grid", gap: 12 }}>
-                {data.fun.length ? (
-                  data.fun.map((place) => <PlaceCard key={place.id} place={place} />)
-                ) : (
-                  <p style={{ color: "#64748b" }}>{t("nearby.noFun")}</p>
-                )}
-              </div>
-            </div>
+    <section style={sectionStyle}>
+      <div style={shellStyle}>
+        <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center" }}>
+          <div>
+            <h2 style={{ margin: 0, fontSize: 24, color: theme.colors.text }}>Recommended Nearby</h2>
+            <p style={{ margin: "6px 0 0", color: theme.colors.textLight }}>Well-rated places near your current location.</p>
           </div>
-        </>
-      ) : null}
+          <button type="button" onClick={handleFindNearby} disabled={loading} style={{ ...buttonStyle, opacity: loading ? 0.7 : 1 }}>
+            {loading ? t("nearby.finding") : t("nearby.findButton")}
+          </button>
+        </div>
+
+        {error ? (
+          <div style={{ marginTop: 16, padding: 12, background: "#fee2e2", color: "#991b1b", borderRadius: 8, fontSize: 14 }}>
+            {error}
+          </div>
+        ) : null}
+
+        {data ? (
+          <>
+            <p style={{ marginTop: 16, color: theme.colors.textLight, fontSize: 14 }}>
+              {t("nearby.usingLocation")} <strong>{data.areaLabel}</strong>
+            </p>
+
+            <div style={gridStyle}>
+              <div>
+                <h3 style={{ fontSize: 18, marginBottom: 12 }}>{t("nearby.placesToEat")}</h3>
+                <div style={{ display: "grid", gap: 12 }}>
+                  {data.food.length ? (
+                    data.food.map((place) => <PlaceCard key={place.id} place={place} />)
+                  ) : (
+                    <p style={{ color: theme.colors.textLight }}>{t("nearby.noFood")}</p>
+                  )}
+                </div>
+              </div>
+
+              <div>
+                <h3 style={{ fontSize: 18, marginBottom: 12 }}>{t("nearby.placesToExplore")}</h3>
+                <div style={{ display: "grid", gap: 12 }}>
+                  {data.fun.length ? (
+                    data.fun.map((place) => <PlaceCard key={place.id} place={place} />)
+                  ) : (
+                    <p style={{ color: theme.colors.textLight }}>{t("nearby.noFun")}</p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </>
+        ) : null}
+      </div>
     </section>
   );
 }

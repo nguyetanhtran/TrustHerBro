@@ -7,12 +7,14 @@ export function ChatInput({
   onSend,
   placeholder,
   disabled,
+  initialValue = "",
 }: {
   onSend: (value: string) => Promise<void> | void;
   placeholder?: string;
   disabled?: boolean;
+  initialValue?: string;
 }) {
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(initialValue);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

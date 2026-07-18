@@ -5,35 +5,26 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { AppMode } from "../../lib/ai/types";
 import { AccountMenu } from "../auth/AccountMenu";
+import { theme } from "../../lib/theme";
+
+import { motion } from "framer-motion";
 
 type ModeLink = {
-  mode: AppMode;
+  mode: string;
   href: string;
   label: string;
 };
 
 const MODES: ModeLink[] = [
-  { mode: "first-night", href: "/onboarding", label: "First Night" },
-  { mode: "assistant", href: "/assistant", label: "Assistant" },
-  { mode: "safety", href: "/safety", label: "Safety" },
-  { mode: "emergency", href: "/emergency", label: "Emergency" },
+  { mode: "translate", href: "/translate", label: "Translate" },
+  { mode: "location", href: "/location", label: "Location" },
+  { mode: "assistant", href: "/assistant", label: "Chat" },
 ];
 
-const activeColors: Record<AppMode, { bg: string; fg: string }> = {
-  "first-night": { bg: "#ffedd5", fg: "#9a3412" },
-  assistant: { bg: "#dbeafe", fg: "#1e40af" },
-  safety: { bg: "#e0e7ff", fg: "#3730a3" },
-  emergency: { bg: "#fee2e2", fg: "#991b1b" },
-};
-
-// Which mode a given path belongs to (Timeline is part of the First Night flow).
-function modeForPath(pathname: string): AppMode | null {
-  if (pathname.startsWith("/onboarding") || pathname.startsWith("/timeline")) {
-    return "first-night";
-  }
+function modeForPath(pathname: string): string | null {
+  if (pathname.startsWith("/translate")) return "translate";
+  if (pathname.startsWith("/location")) return "location";
   if (pathname.startsWith("/assistant")) return "assistant";
-  if (pathname.startsWith("/safety")) return "safety";
-  if (pathname.startsWith("/emergency")) return "emergency";
   return null;
 }
 
@@ -41,9 +32,10 @@ const barStyle: CSSProperties = {
   position: "sticky",
   top: 0,
   zIndex: 50,
-  background: "rgba(255,255,255,0.85)",
-  backdropFilter: "blur(8px)",
-  borderBottom: "1px solid #e2e8f0",
+  background: "rgba(243, 235, 216, 0.82)",
+  backdropFilter: "blur(14px)",
+  WebkitBackdropFilter: "blur(14px)",
+  borderBottom: `1px solid rgba(138, 107, 47, 0.18)`,
 };
 
 const innerStyle: CSSProperties = {
@@ -61,51 +53,33 @@ const leftGroupStyle: CSSProperties = {
   display: "flex",
   alignItems: "center",
   flexWrap: "wrap",
-  gap: 8,
+  gap: 16,
 };
 
 const brandStyle: CSSProperties = {
   fontWeight: 800,
-  color: "#0f172a",
+  color: theme.colors.primary,
   textDecoration: "none",
-  fontSize: 16,
+  fontSize: 17,
+  marginRight: 8,
+  letterSpacing: "-0.02em",
+  fontFamily: theme.fonts.display,
+  textTransform: "uppercase",
 };
 
-const homeStyle: CSSProperties = {
-  display: "inline-flex",
-  alignItems: "center",
-  gap: 6,
-  padding: "8px 14px",
-  borderRadius: 999,
-  background: "#ffffff",
-  border: "1px solid #cbd5e1",
-  color: "#0f172a",
-  fontWeight: 700,
-  textDecoration: "none",
-};
-
-const dividerStyle: CSSProperties = {
-  width: 1,
-  height: 22,
-  background: "#e2e8f0",
-  margin: "0 4px",
-};
-
-const pillBase: CSSProperties = {
-  padding: "8px 14px",
-  borderRadius: 999,
+const linkBase: CSSProperties = {
+  position: "relative",
+  padding: "6px 14px",
   textDecoration: "none",
   fontWeight: 600,
-  fontSize: 14,
-  border: "1px solid transparent",
+  fontSize: 15,
+  transition: "color 0.2s ease",
+  borderRadius: 999,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
 };
 
-// Global top bar. Rendered once from the root layout:
-//  - hidden on the auth/onboarding screens (/login, /welcome)
-//  - landing shows just the brand + account menu
-//  - Emergency keeps only Home (minimal UI) + account menu
-//  - every other mode gets Home + one-tap switching, current mode highlighted
-//  - the account menu (email + Log out) sits on the right everywhere it shows
 export function ModeNav() {
   const pathname = usePathname() ?? "/";
 
@@ -115,45 +89,55 @@ export function ModeNav() {
   const current = modeForPath(pathname);
   const isLanding = pathname === "/";
 
-  const homeLink = (
-    <Link href="/" style={homeStyle}>
-      <span aria-hidden>←</span> Home
-    </Link>
-  );
-
   let left;
   if (isLanding) {
     left = (
-      <Link href="/" style={brandStyle}>
-        TrustHerBro
-      </Link>
+      <>
+        <Link href="/" style={brandStyle}>
+          TrustHerBro
+        </Link>
+        <div style={{ width: 1, height: 16, background: theme.colors.border }} aria-hidden />
+        {MODES.map((item) => (
+           <Link
+             key={item.mode}
+             href={item.href}
+             style={{ ...linkBase, color: theme.colors.textLight }}
+           >
+             {item.label}
+           </Link>
+        ))}
+      </>
     );
-  } else if (current === "emergency") {
-    left = homeLink;
   } else {
     left = (
       <>
-        {homeLink}
-        <span style={dividerStyle} aria-hidden />
+        <Link href="/" style={brandStyle}>TrustHerBro</Link>
+        <div style={{ width: 1, height: 16, background: theme.colors.border }} aria-hidden />
         {MODES.map((item) => {
           const isActive = item.mode === current;
-          const colors = activeColors[item.mode];
-          const style: CSSProperties = isActive
-            ? { ...pillBase, background: colors.bg, color: colors.fg }
-            : {
-                ...pillBase,
-                background: "#ffffff",
-                color: "#64748b",
-                borderColor: "#e2e8f0",
-              };
-
           return (
             <Link
               key={item.mode}
               href={item.href}
-              style={style}
+              style={{
+                ...linkBase,
+                color: isActive ? theme.colors.primary : theme.colors.textLight,
+              }}
               aria-current={isActive ? "page" : undefined}
             >
+              {isActive && (
+                <motion.div
+                  layoutId="activeTab"
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    background: "rgba(155, 44, 31, 0.1)",
+                    borderRadius: 999,
+                    zIndex: -1,
+                  }}
+                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                />
+              )}
               {item.label}
             </Link>
           );
