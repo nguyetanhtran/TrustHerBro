@@ -108,6 +108,8 @@ export type TrustCheckResult = {
   warnings: string[];
 };
 
+export type NearbyCategory = "food" | "fun" | "cafe" | "essentials";
+
 export type NearbyPlace = {
   id: string;
   name: string;
@@ -116,12 +118,18 @@ export type NearbyPlace = {
   userRatingsTotal?: number;
   priceLevel?: number;
   mapsQuery: string;
-  category: "food" | "fun";
+  category: NearbyCategory;
+  /** Straight-line distance from the user, in metres. */
+  distanceMeters?: number;
+  /** Whether Google reports the place as open right now. */
+  openNow?: boolean;
 };
 
 export type NearbySuggestionsResult = {
   food: NearbyPlace[];
   fun: NearbyPlace[];
+  cafe?: NearbyPlace[];
+  essentials?: NearbyPlace[];
   areaLabel: string;
 };
 

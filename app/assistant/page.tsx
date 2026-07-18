@@ -1,7 +1,8 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { useState } from "react";
+import { useState, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import type { TrustCheckResult } from "../../lib/ai/types";
 import { ChatInput } from "../../components/shared/ChatInput";
 import { TrustBadge } from "../../components/shared/TrustBadge";
@@ -16,8 +17,11 @@ const cardStyle: CSSProperties = {
   marginTop: 16,
 };
 
-export default function AssistantPage() {
+function AssistantContent() {
   const { language, t } = useLanguage();
+  const searchParams = useSearchParams();
+  const initialQuery = searchParams.get("q") ?? "";
+
   const [result, setResult] = useState<TrustCheckResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -53,6 +57,7 @@ export default function AssistantPage() {
         disabled={loading}
         placeholder={t("assistant.placeholder")}
         onSend={handleSend}
+        initialValue={initialQuery}
       />
 
       {error ? (
@@ -106,5 +111,13 @@ export default function AssistantPage() {
         </p>
       </section>
     </main>
+  );
+}
+
+export default function AssistantPage() {
+  return (
+    <Suspense fallback={<div style={{ textAlign: "center", padding: 40 }}>Loading...</div>}>
+      <AssistantContent />
+    </Suspense>
   );
 }

@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server";
-import type { NearbyPlace, NearbySuggestionsResult } from "../../../lib/ai/types";
+import type {
+  NearbyCategory,
+  NearbyPlace,
+  NearbySuggestionsResult,
+} from "../../../lib/ai/types";
 
 const FOURSQUARE_SEARCH_URL = "https://places-api.foursquare.com/places/search";
 const FOURSQUARE_API_VERSION = "2025-06-17";
@@ -34,7 +38,7 @@ async function fetchNearbyCategory({
   lat: number;
   lng: number;
   query: string;
-  category: "food" | "fun";
+  category: NearbyCategory;
   apiKey: string;
 }): Promise<NearbyPlace[]> {
   const params = new URLSearchParams({
@@ -64,22 +68,28 @@ async function fetchNearbyCategory({
 
   const data = (await response.json()) as { results?: FoursquarePlaceResult[] };
 
-  return (data.results ?? []).slice(0, 6).map((place) => {
-    const address = place.location?.formatted_address ?? place.location?.address ?? "Address unavailable";
+  return (data.results ?? [])
+    .map((place) => {
+      const address =
+        place.location?.formatted_address ?? place.location?.address ?? "Address unavailable";
 
-    return {
-      id: place.fsq_place_id ?? `${category}-${place.name ?? "unknown"}`,
-      name: place.name ?? "Unnamed place",
-      address,
-      // Rating/price aren't requested (Premium fields) — left undefined so
-      // the UI simply omits that part instead of erroring.
-      rating: undefined,
-      userRatingsTotal: undefined,
-      priceLevel: undefined,
-      mapsQuery: buildMapsQuery(place.name, address),
-      category,
-    };
-  });
+      return {
+        id: place.fsq_place_id ?? `${category}-${place.name ?? "unknown"}`,
+        name: place.name ?? "Unnamed place",
+        address,
+        // Rating/price/openNow aren't available on the free tier — left
+        // undefined so the UI simply omits them instead of erroring.
+        rating: undefined,
+        userRatingsTotal: undefined,
+        priceLevel: undefined,
+        mapsQuery: buildMapsQuery(place.name, address),
+        category,
+        distanceMeters: typeof place.distance === "number" ? place.distance : undefined,
+        openNow: undefined,
+      } satisfies NearbyPlace;
+    })
+    .sort((a, b) => (a.distanceMeters ?? Infinity) - (b.distanceMeters ?? Infinity))
+    .slice(0, 6);
 }
 
 export async function GET(request: Request) {
@@ -100,26 +110,18 @@ export async function GET(request: Request) {
   }
 
   try {
-    const [food, fun] = await Promise.all([
-      fetchNearbyCategory({
-        lat,
-        lng,
-        query: "restaurant",
-        category: "food",
-        apiKey,
-      }),
-      fetchNearbyCategory({
-        lat,
-        lng,
-        query: "tourist attraction",
-        category: "fun",
-        apiKey,
-      }),
+    const [food, fun, cafe, essentials] = await Promise.all([
+      fetchNearbyCategory({ lat, lng, query: "restaurant", category: "food", apiKey }),
+      fetchNearbyCategory({ lat, lng, query: "tourist attraction", category: "fun", apiKey }),
+      fetchNearbyCategory({ lat, lng, query: "cafe", category: "cafe", apiKey }),
+      fetchNearbyCategory({ lat, lng, query: "pharmacy", category: "essentials", apiKey }),
     ]);
 
     const result: NearbySuggestionsResult = {
       food,
       fun,
+      cafe,
+      essentials,
       areaLabel: `${lat.toFixed(3)}, ${lng.toFixed(3)}`,
     };
 
