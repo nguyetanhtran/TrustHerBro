@@ -108,7 +108,7 @@ export type TrustCheckResult = {
   warnings: string[];
 };
 
-export type NearbyCategory = "food" | "fun" | "cafe" | "essentials";
+export type NearbyCategory = "food" | "fun" | "cafe" | "essentials" | "simCard";
 
 export type NearbyPlace = {
   id: string;
@@ -130,6 +130,7 @@ export type NearbySuggestionsResult = {
   fun: NearbyPlace[];
   cafe?: NearbyPlace[];
   essentials?: NearbyPlace[];
+  simCard?: NearbyPlace[];
   areaLabel: string;
 };
 

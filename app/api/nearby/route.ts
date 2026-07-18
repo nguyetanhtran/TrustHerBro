@@ -92,6 +92,38 @@ async function fetchNearbyCategory({
     .slice(0, 6);
 }
 
+// FPT is a hackathon sponsor and the brief itself names "FPT store" as the
+// expected SIM-card answer. A generic "mobile phone store" text query often
+// doesn't surface FPT Shop at all (different category tagging in
+// Foursquare), so it's searched for by name directly and merged to the
+// front — real alternatives (Viettel, Mobifone, etc.) still show right
+// after, deduplicated, never hidden.
+async function fetchSimCardPlaces({
+  lat,
+  lng,
+  apiKey,
+}: {
+  lat: number;
+  lng: number;
+  apiKey: string;
+}): Promise<NearbyPlace[]> {
+  const [fptResults, generalResults] = await Promise.all([
+    fetchNearbyCategory({ lat, lng, query: "FPT", category: "simCard", apiKey }),
+    fetchNearbyCategory({ lat, lng, query: "mobile phone store", category: "simCard", apiKey }),
+  ]);
+
+  const seen = new Set<string>();
+  const merged: NearbyPlace[] = [];
+
+  for (const place of [...fptResults, ...generalResults]) {
+    if (seen.has(place.id)) continue;
+    seen.add(place.id);
+    merged.push(place);
+  }
+
+  return merged.slice(0, 6);
+}
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const lat = parseCoordinate(searchParams.get("lat"));
@@ -110,11 +142,12 @@ export async function GET(request: Request) {
   }
 
   try {
-    const [food, fun, cafe, essentials] = await Promise.all([
+    const [food, fun, cafe, essentials, simCard] = await Promise.all([
       fetchNearbyCategory({ lat, lng, query: "restaurant", category: "food", apiKey }),
       fetchNearbyCategory({ lat, lng, query: "tourist attraction", category: "fun", apiKey }),
       fetchNearbyCategory({ lat, lng, query: "cafe", category: "cafe", apiKey }),
       fetchNearbyCategory({ lat, lng, query: "convenience store", category: "essentials", apiKey }),
+      fetchSimCardPlaces({ lat, lng, apiKey }),
     ]);
 
     const result: NearbySuggestionsResult = {
@@ -122,6 +155,7 @@ export async function GET(request: Request) {
       fun,
       cafe,
       essentials,
+      simCard,
       areaLabel: `${lat.toFixed(3)}, ${lng.toFixed(3)}`,
     };
 

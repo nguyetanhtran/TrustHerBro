@@ -23,9 +23,11 @@ function isFoodOrEssentialsStep(step: TimelineStep): boolean {
 export function TimelineStepCard({
   step,
   accommodation,
+  needsSimCard,
 }: {
   step: TimelineStep;
   accommodation?: string;
+  needsSimCard?: boolean;
 }) {
   const { t } = useLanguage();
 
@@ -89,7 +91,9 @@ export function TimelineStepCard({
         ) : null}
       </div>
 
-      {isFoodStep ? <NearbySuggestions secondCategory="convenience" /> : null}
+      {isFoodStep ? (
+        <NearbySuggestions secondCategory="convenience" showSimCards={needsSimCard} />
+      ) : null}
     </article>
   );
 }

@@ -15,6 +15,7 @@ import {
   Cross,
   ShieldCheck,
   Locate,
+  Smartphone,
 } from "lucide-react";
 import type {
   NearbyCategory,
@@ -48,7 +49,12 @@ const CATEGORY_META: Record<
   essentials: {
     label: "Essentials",
     icon: Cross,
-    tip: "Pharmacies & clinics for anything you need. Save the address offline.",
+    tip: "Convenience stores for water, snacks, and anything you need late at night. Save the address offline.",
+  },
+  simCard: {
+    label: "SIM Cards",
+    icon: Smartphone,
+    tip: "Buy a local SIM or eSIM here for mobile data — useful right after landing.",
   },
 };
 
@@ -58,6 +64,7 @@ const FILTERS: { key: FilterKey; label: string }[] = [
   { key: "cafe", label: "Cafés" },
   { key: "fun", label: "Explore" },
   { key: "essentials", label: "Essentials" },
+  { key: "simCard", label: "SIM Cards" },
 ];
 
 const GUIDE_STEPS = [
@@ -265,6 +272,7 @@ export function NearbyGuide() {
       ...(data.cafe ?? []),
       ...(data.fun ?? []),
       ...(data.essentials ?? []),
+      ...(data.simCard ?? []),
     ];
   }, [data]);
 
@@ -274,7 +282,14 @@ export function NearbyGuide() {
   }, [allPlaces, filter]);
 
   const counts = useMemo(() => {
-    const c: Record<FilterKey, number> = { all: allPlaces.length, food: 0, cafe: 0, fun: 0, essentials: 0 };
+    const c: Record<FilterKey, number> = {
+      all: allPlaces.length,
+      food: 0,
+      cafe: 0,
+      fun: 0,
+      essentials: 0,
+      simCard: 0,
+    };
     for (const p of allPlaces) c[p.category] += 1;
     return c;
   }, [allPlaces]);

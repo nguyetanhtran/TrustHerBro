@@ -81,8 +81,10 @@ function PlaceCard({ place }: { place: NearbyPlace }) {
 
 export function NearbySuggestions({
   secondCategory = "fun",
+  showSimCards = false,
 }: {
   secondCategory?: "fun" | "convenience";
+  showSimCards?: boolean;
 }) {
   const { t } = useLanguage();
   const [data, setData] = useState<NearbySuggestionsResult | null>(null);
@@ -184,6 +186,19 @@ export function NearbySuggestions({
                   )}
                 </div>
               </div>
+
+              {showSimCards ? (
+                <div>
+                  <h3 style={{ fontSize: 18, marginBottom: 12 }}>{t("nearby.placesSimCard")}</h3>
+                  <div style={{ display: "grid", gap: 12 }}>
+                    {data.simCard?.length ? (
+                      data.simCard.map((place) => <PlaceCard key={place.id} place={place} />)
+                    ) : (
+                      <p style={{ color: theme.colors.textLight }}>{t("nearby.noSimCard")}</p>
+                    )}
+                  </div>
+                </div>
+              ) : null}
             </div>
           </>
         ) : null}

@@ -130,7 +130,9 @@ export type TranslationKey =
   | "nearby.placesToExplore"
   | "nearby.noFun"
   | "nearby.placesConvenience"
-  | "nearby.noConvenience";
+  | "nearby.noConvenience"
+  | "nearby.placesSimCard"
+  | "nearby.noSimCard";
 
 export const translations: Record<LanguageCode, Record<TranslationKey, string>> = {
   en: {
@@ -271,6 +273,8 @@ export const translations: Record<LanguageCode, Record<TranslationKey, string>> 
     "nearby.noFun": "No nearby activity suggestions found.",
     "nearby.placesConvenience": "Convenience stores nearby",
     "nearby.noConvenience": "No nearby convenience stores found.",
+    "nearby.placesSimCard": "Buy a SIM / mobile data nearby",
+    "nearby.noSimCard": "No nearby SIM card shops found.",
   },
   ko: {
     "onboarding.city": "어느 도시에 도착하셨나요?",
@@ -407,6 +411,8 @@ export const translations: Record<LanguageCode, Record<TranslationKey, string>> 
     "nearby.noFun": "주변 활동 추천을 찾을 수 없습니다.",
     "nearby.placesConvenience": "근처 편의점",
     "nearby.noConvenience": "주변 편의점 추천을 찾을 수 없습니다.",
+    "nearby.placesSimCard": "근처에서 유심/모바일 데이터 구매",
+    "nearby.noSimCard": "주변 유심 매장을 찾을 수 없습니다.",
   },
   zh: {
     "onboarding.city": "您到达的是哪个城市?",
@@ -542,6 +548,8 @@ export const translations: Record<LanguageCode, Record<TranslationKey, string>> 
     "nearby.noFun": "未找到附近的活动推荐。",
     "nearby.placesConvenience": "附近的便利店",
     "nearby.noConvenience": "未找到附近的便利店推荐。",
+    "nearby.placesSimCard": "附近购买SIM卡/移动数据",
+    "nearby.noSimCard": "未找到附近的SIM卡店。",
   },
   ru: {
     "onboarding.city": "В какой город вы прибыли?",
@@ -682,6 +690,8 @@ export const translations: Record<LanguageCode, Record<TranslationKey, string>> 
     "nearby.noFun": "Рекомендации по развлечениям поблизости не найдены.",
     "nearby.placesConvenience": "Магазины у дома поблизости",
     "nearby.noConvenience": "Рекомендации по магазинам у дома поблизости не найдены.",
+    "nearby.placesSimCard": "Купить SIM-карту / мобильный интернет рядом",
+    "nearby.noSimCard": "Магазины SIM-карт поблизости не найдены.",
   },
   vi: {
     "onboarding.city": "Bạn đến thành phố nào?",
@@ -819,5 +829,7 @@ export const translations: Record<LanguageCode, Record<TranslationKey, string>> 
     "nearby.noFun": "Không tìm thấy gợi ý hoạt động gần đây.",
     "nearby.placesConvenience": "Cửa hàng tiện lợi gần đây",
     "nearby.noConvenience": "Không tìm thấy gợi ý cửa hàng tiện lợi gần đây.",
+    "nearby.placesSimCard": "Mua SIM / data di động gần đây",
+    "nearby.noSimCard": "Không tìm thấy cửa hàng SIM gần đây.",
   },
 };
