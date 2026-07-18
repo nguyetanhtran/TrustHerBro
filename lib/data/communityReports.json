@@ -1,14 +1,86 @@
 [
   {
+    "city": "Hà Nội",
     "subject": "airport taxi rank",
     "summary": "Multiple female travelers reported the official airport taxi rank felt organized and safer than random curbside offers."
   },
   {
+    "city": "Hà Nội",
     "subject": "old quarter pharmacy",
     "summary": "Travelers mentioned staff were helpful when they needed a bright, staffed place to pause and regroup."
   },
   {
+    "city": "Hà Nội",
+    "subject": "Ta Hien beer corner at night",
+    "summary": "Very crowded and loud on weekend nights, which most travelers found reassuring (lots of people around), though pickpocket awareness was mentioned."
+  },
+  {
+    "city": "Hà Nội",
+    "subject": "Hoan Kiem Lake evening walk",
+    "summary": "Popular and well-lit in the early evening; travelers noted it gets much quieter after midnight and recommended pairing it with a friend that late."
+  },
+  {
+    "city": "Hà Nội",
+    "subject": "24h convenience stores in Old Quarter",
+    "summary": "Circle K and VinMart branches were mentioned as reliable, well-lit stops for water or a quick snack late at night."
+  },
+  {
+    "city": "Hà Nội",
+    "subject": "Long Bien area at night",
+    "summary": "General guidance from travelers was to avoid walking alone in this area late at night; better visited during the day or in a group."
+  },
+  {
+    "city": "Đà Nẵng",
+    "subject": "My Khe Beach promenade",
+    "summary": "Consistently rated as relaxed and safe by female travelers, with a well-lit walking path and many hostels nearby."
+  },
+  {
+    "city": "Đà Nẵng",
+    "subject": "Dragon Bridge weekend nights",
+    "summary": "Very crowded on Saturday/Sunday nights for the fire-breathing show; travelers found the crowd reassuring but noted watching bags closely."
+  },
+  {
+    "city": "Đà Nẵng",
+    "subject": "Han Market (Cho Han) daytime",
+    "summary": "Travelers found daytime visits straightforward; a few mentioned light haggling was expected and normal, not a red flag on its own."
+  },
+  {
+    "city": "TP. Hồ Chí Minh",
+    "subject": "Bui Vien walking street",
+    "summary": "Backpacker-heavy and loud but busy and well-lit; multiple reports of pushy drink promoters and inflated bar tabs, so travelers recommended confirming prices before ordering."
+  },
+  {
+    "city": "TP. Hồ Chí Minh",
+    "subject": "Ben Thanh Market",
+    "summary": "Common tourist stop; travelers reported initial asking prices are often inflated for foreigners and bargaining is normal and expected there."
+  },
+  {
+    "city": "TP. Hồ Chí Minh",
+    "subject": "Nguyen Hue walking street at night",
+    "summary": "Wide, open, well-lit pedestrian street popular with local families in the evening; rated as one of the more comfortable areas for a solo night walk."
+  },
+  {
+    "city": "Nha Trang",
+    "subject": "Tran Phu beachfront street",
+    "summary": "Main tourist strip with hotels and lighting along the whole street; travelers felt comfortable walking it in the early evening, less so very late at night."
+  },
+  {
+    "city": "Nha Trang",
+    "subject": "Nha Trang night market",
+    "summary": "Popular with tourists; some reports of overpriced souvenirs and seafood, travelers suggested checking prices at a couple of stalls before buying."
+  },
+  {
+    "city": "Phú Quốc",
+    "subject": "Duong Dong night market",
+    "summary": "Busy and touristy, well-lit with lots of food stalls; a few travelers mentioned confirming seafood prices upfront since some stalls charge tourists more."
+  },
+  {
+    "city": "Phú Quốc",
+    "subject": "Long Beach (Bai Truong) resort strip",
+    "summary": "Quiet, resort-dominated area; travelers generally rated it as low-stress but noted it's spread out, so having transport arranged for the return trip helps."
+  },
+  {
     "subject": "late night walking street",
-    "summary": "Crowded and visible, but some reports mention aggressive upselling and bag awareness concerns."
+    "summary": "Crowded and visible in general across major tourist walking streets, but some reports mention aggressive upselling and bag awareness concerns."
   }
 ]
