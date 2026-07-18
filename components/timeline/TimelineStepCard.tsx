@@ -17,7 +17,15 @@ export function TimelineStepCard({
   accommodation?: string;
 }) {
   const { t } = useLanguage();
-  const isCheckinStep = step.id === "checkin" || step.id === "hotel";
+
+  // The AI picks its own step ids, so "checkin"/"hotel" only reliably matches
+  // the static fallback timeline. For real AI output, fall back to checking
+  // whether the accommodation name shows up in the step's own title (the
+  // prompt is instructed to name it there).
+  const isCheckinStep =
+    step.id === "checkin" ||
+    step.id === "hotel" ||
+    Boolean(accommodation && step.title.toLowerCase().includes(accommodation.toLowerCase()));
 
   return (
     <article
