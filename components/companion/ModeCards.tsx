@@ -33,7 +33,7 @@ const titleStyle: CSSProperties = {
 
 const welcomeStyle: CSSProperties = {
   margin: "0 0 28px",
-  fontFamily: theme.fonts.body,
+  fontFamily: theme.fonts.display,
   fontSize: "clamp(13px, 2.2vw, 15px)",
   fontWeight: 700,
   letterSpacing: "0.38em",
@@ -114,9 +114,9 @@ export function ModeCards({ firstName }: { firstName?: string }) {
         }}
       />
 
-      <p style={eyebrowStyle}>Your travel companion</p>
+      <p style={eyebrowStyle}>Your Viet local companion</p>
       <h2 style={titleStyle}>{greeting}</h2>
-      <p style={welcomeStyle}>How can I help you today?</p>
+      <p style={welcomeStyle}>What&apos;s ur plan for today?</p>
 
       <motion.div
         whileHover={{ y: -2 }}
