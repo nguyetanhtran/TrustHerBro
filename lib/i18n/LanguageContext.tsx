@@ -16,18 +16,21 @@ type LanguageContextValue = {
   language: LanguageCode;
   setLanguage: (language: LanguageCode) => void;
   t: (key: TranslationKey) => string;
+  isReady: boolean;
 };
 
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState<LanguageCode>("en");
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored && (SUPPORTED_LANGUAGES as readonly string[]).includes(stored)) {
       setLanguageState(stored as LanguageCode);
     }
+    setIsReady(true);
   }, []);
 
   function setLanguage(next: LanguageCode) {
@@ -40,7 +43,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t }}>
+    <LanguageContext.Provider value={{ language, setLanguage, t, isReady }}>
       {children}
     </LanguageContext.Provider>
   );

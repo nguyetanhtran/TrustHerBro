@@ -74,4 +74,21 @@ export const fallbackTimelineText: Record<LanguageCode, FallbackTimelineText> = 
     restDescription:
       "Зарядите устройства, настройте оффлайн-карту, уточните маршрут на завтра и избегайте поздних прогулок в первую ночь.",
   },
+  vi: {
+    title: (city) => `Kế hoạch đêm đầu tiên tại ${city}`,
+    summary:
+      "Kế hoạch đến nơi đơn giản, tập trung vào di chuyển, nhận phòng, ăn uống và nghỉ ngơi.",
+    arrivalTitle: "Đảm bảo phương tiện di chuyển trước",
+    arrivalDescription:
+      "Sử dụng bến taxi chính thức hoặc ứng dụng gọi xe, tránh những lời mời chào không chính thức trong sân bay hoặc nhà ga.",
+    checkinTitle: (hotel) => `Đến ${hotel}`,
+    checkinDescription:
+      "Kiểm tra địa chỉ trong ứng dụng trước khi di chuyển, giữ đồ có giá trị cẩn thận, và nhắn tin cho một người bạn tin tưởng khi đến nơi.",
+    essentialsTitle: "Mua đồ cần thiết gần đó",
+    essentialsDescription:
+      "Mua nước, đồ ăn nhẹ, và SIM/eSIM nếu cần, nhưng chỉ ở gần nơi bạn lưu trú.",
+    restTitle: "Chuẩn bị cho ngày mai",
+    restDescription:
+      "Sạc thiết bị, cài bản đồ ngoại tuyến, xác nhận lộ trình ngày mai, và tránh đi lại khuya vào đêm đầu tiên.",
+  },
 };

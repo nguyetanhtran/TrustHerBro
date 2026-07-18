@@ -4,13 +4,8 @@ import type { CSSProperties } from "react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "../../utils/supabase/client";
-import {
-  LANGUAGES,
-  INTERESTS,
-  DEFAULT_LANGUAGE,
-  greetingFor,
-  type LanguageCode,
-} from "../../lib/i18n";
+import { INTERESTS } from "../../lib/i18n";
+import { LANGUAGE_NAMES, SUPPORTED_LANGUAGES, useLanguage } from "../../lib/i18n/LanguageContext";
 
 const STEPS = ["welcome", "language", "interests", "location", "ready"] as const;
 type Step = (typeof STEPS)[number];
@@ -58,8 +53,8 @@ const chip = (active: boolean): CSSProperties => ({
 
 export function WelcomeWizard() {
   const router = useRouter();
+  const { language, setLanguage, t } = useLanguage();
   const [stepIndex, setStepIndex] = useState(0);
-  const [language, setLanguage] = useState<LanguageCode>(DEFAULT_LANGUAGE);
   const [interests, setInterests] = useState<string[]>([]);
   const [locationEnabled, setLocationEnabled] = useState(false);
   const [locationAsked, setLocationAsked] = useState(false);
@@ -131,7 +126,7 @@ export function WelcomeWizard() {
 
       {step === "welcome" ? (
         <>
-          <h1 style={{ marginTop: 0 }}>{greetingFor(language)} 👋</h1>
+          <h1 style={{ marginTop: 0 }}>{t("welcome.greeting")} 👋</h1>
           <p style={{ color: "#475569", lineHeight: 1.6 }}>
             I'm your safety companion for your first hours in Vietnam. Let's set
             things up in a few taps — it takes about 30 seconds.
@@ -146,14 +141,14 @@ export function WelcomeWizard() {
         <>
           <h2 style={{ marginTop: 0 }}>Choose your language</h2>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 10, margin: "16px 0" }}>
-            {LANGUAGES.map((lang) => (
+            {SUPPORTED_LANGUAGES.map((code) => (
               <button
-                key={lang.code}
+                key={code}
                 type="button"
-                style={chip(language === lang.code)}
-                onClick={() => setLanguage(lang.code)}
+                style={chip(language === code)}
+                onClick={() => setLanguage(code)}
               >
-                {lang.label}
+                {LANGUAGE_NAMES[code]}
               </button>
             ))}
           </div>
