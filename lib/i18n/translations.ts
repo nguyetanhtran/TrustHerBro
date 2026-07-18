@@ -292,7 +292,7 @@ export const translations: Record<LanguageCode, Record<TranslationKey, string>> 
     "translate.description": "Speak or type, and I'll translate for the person in front of you — in text and out loud.",
     "translate.travelerToggle": "You speak",
     "translate.localToggle": "Local person speaks",
-    "translate.inputPlaceholder": "Type or tap the mic…",
+    "translate.inputPlaceholder": "Type, upload a photo, or simply send a voice message",
     "translate.send": "Translate",
     "translate.sending": "Translating…",
     "translate.addPhoto": "Photo",
